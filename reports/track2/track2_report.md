@@ -221,7 +221,7 @@ A child with MVA1 may need cancer treatment at short notice. Genomic-instability
 | H4 Oligonucleotide | passes: raises BUBR1 by design | not yet assessed | not yet assessed | not yet assessed | not yet assessed | flag: long-acting by design |
 | H5 Senolytics | passes: dasatinib spares BUB1B (ChEMBL) | not yet assessed | not yet assessed | flag: navitoclax excluded (Mahadevan 2025) | not yet assessed | yes: adult pilots used short courses |
 
-"No flag found" means nothing surfaced in the sources we reviewed; it is not proof of safety. The drug-triage pipeline in this repository (work package R06) will fill the unassessed cells from public drug labels, so the screen scales beyond this report.
+"No flag found" means nothing surfaced in the sources we reviewed; it is not proof of safety. The drug-triage pipeline in this repository (work package R06, `pipeline/drug_triage/`) now screens these drugs, and every Open Targets candidate for a gene, against checkpoint, aneugen, CYP3A4, kidney, bone-marrow and paediatric-label criteria from public data. Its output is in `reports/track2/drug_triage/drug_triage_demo.md`. The unassessed cells above will be filled in version 2, after each text-mined flag has been checked by hand.
 
 ---
 
@@ -297,7 +297,7 @@ The mechanism map (§2), the six-point screen (§6) and the five-assay rule (§7
 - *MAD1L1* (MVA7) (Villarroya-Beltri 2022);
 - *CEP57* (MVA2), where the checkpoint defect is minimal (Yost 2017), so the ranking would change.
 
-Work package R06 automates the landscape and screening steps over public data (ChEMBL, Open Targets, drug labels) and will be demonstrated on *BUB1B*, *TRIP13* and *CEP57*.
+Work package R06 automates the landscape and screening steps over public data (ChEMBL, Open Targets, openFDA drug labels). It runs on *BUB1B*, *TRIP13* and *CEP57* from one configuration file, and adding a gene is one line. In the *BUB1B* demo, all 28 negative-control compounds (TTK, Aurora B and PLK1 inhibitors) were excluded automatically, as were 11 of the 12 HDAC2/3 candidates. That matches the do-not-use list (§5) without hand curation. The twelfth, mocetinostat, is held as "insufficient data": its recorded mechanism does not meet the broad-HDAC rule and it has no US label.
 
 ---
 

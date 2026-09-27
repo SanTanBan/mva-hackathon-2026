@@ -1,0 +1,14 @@
+{
+  "_about": "Demo configuration for work package R06. Public gene and drug names only. Each query gene pulls its own Open Targets candidates; 'modifier_targets' pull candidates for genes whose modulation a hypothesis proposes; 'named_drugs' are the Track 2 report's hypotheses and exclusions; 'negative_controls' are checkpoint kinases whose drugs the screen must exclude.",
+  "query_genes": {
+    "BUB1B": {"disorder": "MVA1", "dosage_deficient": true, "modifier_targets": ["HDAC2", "HDAC3", "SIRT2"]},
+    "TRIP13": {"disorder": "MVA3", "dosage_deficient": true, "modifier_targets": []},
+    "CEP57": {"disorder": "MVA2", "dosage_deficient": true, "modifier_targets": []}
+  },
+  "named_drugs": [
+    "metformin", "nicotinamide riboside", "valproic acid", "givinostat", "vorinostat",
+    "dasatinib", "quercetin", "sirolimus", "hydroxychloroquine", "navitoclax", "pimitespib",
+    "mebendazole", "albendazole"
+  ],
+  "negative_controls": ["TTK", "AURKB", "PLK1"]
+}
