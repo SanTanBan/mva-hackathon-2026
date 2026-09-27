@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-09-27T18:35+05:30",
+  "last_run": "2026-09-27T18:56+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -88,13 +88,15 @@
       "done_when": "Scripts, each with a tiny synthetic test: VCF QC and normalisation (no-chr contigs, add chr on output); rare-recessive filter and compound-het pairing; per-chromosome B-allele-fraction mosaicism from VCF AD; low-pass depth from head-of-FASTQ alignment; BUB1B locus k-mer baiting; ACMG SF v3.3 screen; ACMG points calculator. Designed for 4 threads and 7.8 GB RAM with nothing large on C:."
     },
     {
-      "id": "R06", "owner": "routine", "status": "todo", "needs": [],
+      "id": "R06", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
+      "progress": "pipeline/drug_triage (sources, flags, triage, panel.json), 10 offline tests; demo in reports/track2/drug_triage/. API cache at D:\\mva-hackathon\\refs\\drug_triage_cache; rerun with --offline.",
       "title": "Scalable drug-triage pipeline (public data only)",
       "outputs": ["pipeline/drug_triage/"],
       "done_when": "Given a set of checkpoint genes, it pulls public data (ChEMBL, Open Targets, openFDA labels) and flags paediatric approval, checkpoint-weakening mechanism, aneugen class, CYP3A4 interaction, nephrotoxicity and myelosuppression, then outputs a ranked table. Demo on BUB1B, TRIP13 and CEP57. This is the Scalability argument."
     },
     {
-      "id": "R07", "owner": "routine", "status": "todo", "needs": ["R02"],
+      "id": "R07", "owner": "routine", "status": "done", "needs": ["R02"], "completed": "2026-09-27",
+      "progress": "About 360 spoken words (2:35 at 140 wpm), 7 slides, opens with the veto rule. Refresh slide 4 after D08.",
       "title": "Pitch script and slide outline (3 minutes)",
       "outputs": ["reports/track2/pitch_script.md"],
       "done_when": "Timed to 3:00 or less and opens with the veto rule, not a biology lecture."
@@ -176,6 +178,7 @@
     }
   ],
   "notes": [
-    "2026-09-27: First routine run. Access still not granted (HTTP 403). Done: R02 Track 2 report v1 (69 PubMed-checked citations; landscape re-run), R03 locus dossier (classic hypomorphic alleles are VUS or conflicting in ClinVar; BUB1 paralog shares no 21-mer with BUB1B coding sequence; PanelApp cataract panel is red), R05 pipeline (20 tests). R04 partial. Nothing staged."
+    "2026-09-27: First routine run. Access still not granted (HTTP 403). Done: R02 Track 2 report v1 (69 PubMed-checked citations; landscape re-run), R03 locus dossier (classic hypomorphic alleles are VUS or conflicting in ClinVar; BUB1 paralog shares no 21-mer with BUB1B coding sequence; PanelApp cataract panel is red), R05 pipeline (20 tests). R04 partial. Nothing staged.",
+    "2026-09-27 (second run, evening): Access still 403. Done: R06 drug-triage pipeline (Open Targets + ChEMBL + openFDA; 133 rows over BUB1B/TRIP13/CEP57; all 28 TTK/AURKB/PLK1 controls and 11/12 HDAC2/3 candidates excluded automatically; 30 tests pass) and R07 pitch script. R04 still waits on the organisers' methods template (U3). Every remaining routine package is now blocked on U1/U2/U3/U5. Nothing staged."
   ]
 }

@@ -31,7 +31,7 @@
 
 ## Slide 4 · 1:20–2:00 · Five hypotheses, each with its weakness
 
-**On screen:** a five-row table: hypothesis · acts on · main weakness.
+**On screen:** a five-row table: hypothesis · main weakness.
 
 | | Hypothesis | Main weakness |
 |---|---|---|
