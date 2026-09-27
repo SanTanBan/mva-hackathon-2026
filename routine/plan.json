@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": null,
+  "last_run": "2026-09-27T18:35+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -63,26 +63,26 @@
       "done_when": "Enforces the published field spec, including the chr prefix; tested on synthetic rows."
     },
     {
-      "id": "R02", "owner": "routine", "status": "todo", "needs": [],
+      "id": "R02", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
       "title": "Track 2 scientific core: report draft v1",
       "inputs": ["research/memo-drug-repurposing.md", "research/memo-mva-biology.md", "research/memo-gaps.md", "research/memo-phenotype-mgmt.md", "research/memo-open-targets-bub1b.md"],
       "outputs": ["reports/track2/track2_report.md"],
       "done_when": "Covers the mechanism of BUBR1 insufficiency (dosage, pseudokinase, acetylation/degradation); the landscape check (ClinicalTrials.gov, ISRCTN incl. MILI, ChEMBL, Open Targets including the two tractability traps); ranked candidates, each with evidence and its honest problem; the do-not-use list (MPS1/TTK, Aurora B, PLK1, pan-HDAC at high dose, growth hormone); the six-point chemo-compatibility screen; the five-assay decision rule with the mitotic-duration veto; KIF18A and the oligonucleotide lane; limitations. Each claim is cited by PMID or DOI and spot-checked in PubMed. Fix the known memo errors: CEP57 is Snape et al. 2011, and there is no unsourced penetrance figure."
     },
     {
-      "id": "R03", "owner": "routine", "status": "todo", "needs": [],
+      "id": "R03", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
       "title": "BUB1B locus dossier from public data",
       "outputs": ["reports/track1/locus_dossier.md"],
       "done_when": "Covers the MANE Select transcript and exon/domain map; known P/LP variants cited by ClinVar ID and HGVS (no raw coordinates); the upstream regulatory interval and the deep-intronic/mobile-element precedents; the BUB1 paralog mapping caveat; Genomics England PanelApp panels; gnomAD constraint; the other MVA genes to exclude. Public data only."
     },
     {
-      "id": "R04", "owner": "routine", "status": "todo", "needs": [],
+      "id": "R04", "owner": "routine", "status": "in_progress", "needs": [], "progress": "2026-09-27: renderer (public/full split, Markdown + PDF via headless Edge, 10 tests) and a provisional skeleton with the LLM-usage section are committed. Left: align the skeleton with the organisers' methods template once U3 downloads it.",
       "title": "Report scaffolds with public and submitted variants",
       "outputs": ["reports/track1/methods_report.md", "tools/render_reports.py"],
       "done_when": "The Track 1 methods report skeleton follows the organizers' methods template sections, including the LLM-usage question. A renderer produces a redacted public version into reports/ and a full version into D:\\mva-hackathon\\submissions, as Markdown and PDF."
     },
     {
-      "id": "R05", "owner": "routine", "status": "todo", "needs": [],
+      "id": "R05", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27", "progress": "All seven components have scripts and synthetic tests (20 pass). End-to-end runs need the U3 toolchain and reference (minimap2, bcftools, GRCh38).",
       "title": "Analysis code, tested on synthetic data",
       "outputs": ["pipeline/"],
       "done_when": "Scripts, each with a tiny synthetic test: VCF QC and normalisation (no-chr contigs, add chr on output); rare-recessive filter and compound-het pairing; per-chromosome B-allele-fraction mosaicism from VCF AD; low-pass depth from head-of-FASTQ alignment; BUB1B locus k-mer baiting; ACMG SF v3.3 screen; ACMG points calculator. Designed for 4 threads and 7.8 GB RAM with nothing large on C:."
@@ -175,5 +175,7 @@
       "done_when": "The repo is public; D:\\mva-hackathon and the dataset under D:\\DevCache\\huggingface are deleted by 2026-11-23; the confirmation email is sent with a live yes."
     }
   ],
-  "notes": []
+  "notes": [
+    "2026-09-27: First routine run. Access still not granted (HTTP 403). Done: R02 Track 2 report v1 (69 PubMed-checked citations; landscape re-run), R03 locus dossier (classic hypomorphic alleles are VUS or conflicting in ClinVar; BUB1 paralog shares no 21-mer with BUB1B coding sequence; PanelApp cataract panel is red), R05 pipeline (20 tests). R04 partial. Nothing staged."
+  ]
 }
