@@ -1,0 +1,26 @@
+# Never in git: gated data, derived data, private notes. See CLAUDE.md.
+private/
+research/
+data/
+work/
+submissions/
+*.vcf
+*.vcf.gz
+*.bcf
+*.gvcf
+*.gvcf.gz
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.bai
+*.cram
+*.crai
+*.sam
+*.tbi
+*.csi
+
+*.local.json
+.env
+__pycache__/

@@ -1,0 +1,3 @@
+#!/bin/sh
+# Blocks gated or patient-derived data from entering git. See CLAUDE.md.
+exec python tools/guard_commit.py
