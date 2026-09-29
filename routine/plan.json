@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-09-27T18:56+05:30",
+  "last_run": "2026-09-29T15:10+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -15,7 +15,7 @@
   "gates": {
     "data_access_granted": {
       "value": false,
-      "checked": "2026-09-27",
+      "checked": "2026-09-29",
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
@@ -89,7 +89,7 @@
     },
     {
       "id": "R06", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
-      "progress": "pipeline/drug_triage (sources, flags, triage, panel.json), 10 offline tests; demo in reports/track2/drug_triage/. API cache at D:\\mva-hackathon\\refs\\drug_triage_cache; rerun with --offline.",
+      "progress": "pipeline/drug_triage (sources, flags, triage, panel.json), 10 offline tests; demo in reports/track2/drug_triage/. API cache at D:\\mva-hackathon\\refs\\drug_triage_cache; rerun with --offline. 2026-09-29: CYP3A4 flag fixed for weak and time-dependent perpetrators (givinostat, dasatinib); demo regenerated, tier counts unchanged.",
       "title": "Scalable drug-triage pipeline (public data only)",
       "outputs": ["pipeline/drug_triage/"],
       "done_when": "Given a set of checkpoint genes, it pulls public data (ChEMBL, Open Targets, openFDA labels) and flags paediatric approval, checkpoint-weakening mechanism, aneugen class, CYP3A4 interaction, nephrotoxicity and myelosuppression, then outputs a ranked table. Demo on BUB1B, TRIP13 and CEP57. This is the Scalability argument."
@@ -179,6 +179,7 @@
   ],
   "notes": [
     "2026-09-27: First routine run. Access still not granted (HTTP 403). Done: R02 Track 2 report v1 (69 PubMed-checked citations; landscape re-run), R03 locus dossier (classic hypomorphic alleles are VUS or conflicting in ClinVar; BUB1 paralog shares no 21-mer with BUB1B coding sequence; PanelApp cataract panel is red), R05 pipeline (20 tests). R04 partial. Nothing staged.",
-    "2026-09-27 (second run, evening): Access still 403. Done: R06 drug-triage pipeline (Open Targets + ChEMBL + openFDA; 133 rows over BUB1B/TRIP13/CEP57; all 28 TTK/AURKB/PLK1 controls and 11/12 HDAC2/3 candidates excluded automatically; 30 tests pass) and R07 pitch script. R04 still waits on the organisers' methods template (U3). Every remaining routine package is now blocked on U1/U2/U3/U5. Nothing staged."
+    "2026-09-27 (second run, evening): Access still 403. Done: R06 drug-triage pipeline (Open Targets + ChEMBL + openFDA; 133 rows over BUB1B/TRIP13/CEP57; all 28 TTK/AURKB/PLK1 controls and 11/12 HDAC2/3 candidates excluded automatically; 30 tests pass) and R07 pitch script. R04 still waits on the organisers' methods template (U3). Every remaining routine package is now blocked on U1/U2/U3/U5. Nothing staged.",
+    "2026-09-29: Access still 403 (25.6 days left). No package was runnable, so did public-data v2 prep on done work. Track 2 report is now v1.1: EU CTIS, ANZCTR and WHO ICTRP searched (no MVA trials; found a German adolescent+adult metformin prevention trial in Li-Fraumeni, CTIS 2025-520714-63-00, added to H3); the section 6 screen is filled from hand-read US labels and 6 new PubMed-checked sources; H2 x H3 OCT2 interaction noted; givinostat thrombocytopenia corrected to the label figure (33% vs 0%); benzimidazole evidence added to section 5; Ensembl NMD isoforms of BUB1B listed in section 8.1 (exon 5 skip most recurrent). R06 CYP3A4 flag bug fixed (52 tests pass). Local pytest needs PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 because a third-party plugin wants the missing zstandard module. Nothing staged."
   ]
 }
