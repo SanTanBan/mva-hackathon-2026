@@ -1,6 +1,6 @@
 # Repurposing hypotheses for BUB1B-related mosaic variegated aneuploidy (MVA1)
 
-**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 2 · Draft v1, public version · literature and database checks run 2026-09-27**
+**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 2 · Draft v1.1, public version · literature and database checks run 2026-09-27, registries and drug labels added 2026-09-29**
 
 > **What this is.** A ranked set of research hypotheses for expert follow-up in patient-derived cells. It is not medical advice and is not addressed to the family. It contains no doses, no schedules and no treatment recommendations. Clinical decisions belong to the child's treating team.
 >
@@ -8,7 +8,7 @@
 >
 > **Privacy.** No patient data were used or sent anywhere. The child is described without sex, name, dates or clinical history; the only location given is "UK (NHS-diagnosed)".
 
-Citations are given as first author, year and PubMed ID (PMID). Every PubMed-indexed source was checked against its PubMed record on 2026-09-27. Database results are cited by accession and query date. The full reference list, with DOIs, is at the end.
+Citations are given as first author, year and PubMed ID (PMID). Every PubMed-indexed source was checked against its PubMed record on 2026-09-27, or on 2026-09-29 for the three added then. Database results are cited by accession and query date. The full reference list, with DOIs, is at the end.
 
 ---
 
@@ -16,11 +16,11 @@ Citations are given as first author, year and PubMed ID (PMID). Every PubMed-ind
 
 - **MVA1 is a BUBR1 dosage disease.** Patients pair a truncating allele with a hypomorphic one, total BUBR1 protein is low, and re-expressing BUBR1 restores checkpoint function in patient cells (Suijkerbuijk 2010, PMID 20516114). The coherent therapeutic goal is to raise or protect BUBR1 protein. "Activating the kinase" is not a goal: BUBR1 is a pseudokinase whose catalysis is dispensable (Suijkerbuijk 2012a, PMID 22698286).
 - **The druggable biology is an acetylation–degradation cycle.** Acetylation at K250 protects BUBR1 from APC/C-mediated destruction, and HDAC2 and HDAC3 remove that mark to start degradation. Mice that cannot acetylate BubR1 phenocopy MVA (Choi 2009, PMID 19407811; Park 2013, PMID 23878276; Park 2017, PMID 28985013). SIRT2 deacetylation at a different lysine, K668, stabilises BubR1, and the NAD+ precursor NMN raised BubR1 levels in mice (North 2014, PMID 24825348).
-- **Nothing exists yet (checked 2026-09-27).** ClinicalTrials.gov and ISRCTN list no studies for MVA, premature chromatid separation or *BUB1B*. PubMed contains no report of disease-modifying drug therapy in MVA. ChEMBL's most potent BUB1B measurement is about 10 µM. Open Targets lists no clinical-stage agent, and its two positive tractability signals point the wrong way (§3.2).
+- **Nothing exists yet (checked 2026-09-27 and 2026-09-29).** ClinicalTrials.gov, ISRCTN, EU CTIS, ANZCTR and the WHO ICTRP portal list no studies for MVA, premature chromatid separation or *BUB1B*. PubMed contains no report of disease-modifying drug therapy in MVA. ChEMBL's most potent BUB1B measurement is about 10 µM. Open Targets lists no clinical-stage agent, and its two positive tractability signals point the wrong way (§3.2).
 - **Ranked hypotheses**, by priority for the first decisive experiment in patient cells:
   - (H1) NAD+ precursors, to stabilise BUBR1
   - (H2) HDAC2/3 inhibition, to protect acetylated BUBR1
-  - (H3) metformin as chemoprevention embedded in tumour surveillance, following the design of the UK MILI trial
+  - (H3) metformin as chemoprevention embedded in tumour surveillance, following the design of the UK MILI trial and a German trial that includes adolescents
   - (H4) genotype-matched oligonucleotides, conditional on the child's alleles
   - (H5) senolytics
 
@@ -97,11 +97,15 @@ Human BUBR1 keeps a kinase-like domain, but its putative catalytic activity is d
 | ClinicalTrials.gov | KIF18A inhibitors (ATX-295, VLS-1488, sovilnesib, AMG 650, MEN2501, GenSci122) | 6 trials, **all in adults with advanced cancer** (for example NCT06799065 and NCT05902988) | Aneuploidy-selective agents exist in the clinic, but only in adult oncology. |
 | ISRCTN | "mosaic variegated aneuploidy"; "premature chromatid separation"; "BUB1B" | **0 results** for each | The UK registry is empty too. |
 | ISRCTN | MILI, ISRCTN16699730 | Recruiting and ongoing. Sponsor: University of Oxford. Funders: NIHR, the Pantziarka TP53 Trust, Cancer Research UK. Participants aged 16 or over. | A live UK precision-prevention trial built on surveillance in an inherited cancer-predisposition syndrome (Dixon-Zegeye 2024, PMID 38308321) |
+| EU CTIS (run 2026-09-29) | "mosaic variegated aneuploidy"; "premature chromatid separation"; "BUB1B" (positive controls "Duchenne" and "Wilms" returned 32 and 8 trials) | **0 results** for each | The EU register is empty too. |
+| EU CTIS | "Li-Fraumeni" | 1 trial: 2025-520714-63-00, the LFS-Metformin-Trial. It is a phase IIIb randomised open-label trial of metformin for cancer prevention in **adolescents and adults** with Li-Fraumeni syndrome. Authorised in Germany in August 2025, with recruitment from January 2026. Sponsor: Medizinische Hochschule Hannover (non-commercial). Funder: German Cancer Aid. Primary end point: cancer-free survival. | A metformin chemoprevention trial that names adolescents in its title; the closest age precedent for H3 that we found |
+| ANZCTR (run 2026-09-29) | the same three MVA terms (positive controls "Li-Fraumeni" and "Wilms" returned 2 and 30 records) | **0 results** for each | The Australian and New Zealand register is empty too. |
+| WHO ICTRP (run 2026-09-29) | "mosaic AND variegated AND aneuploidy"; "premature AND chromatid AND separation"; "BUB1B" | **0 results** for each. The positive control "Li-Fraumeni AND metformin" returned the three trials above (NCT01981525, ISRCTN16699730, CTIS 2025-520714-63-00). | No MVA trial is registered in any registry that feeds the WHO portal. |
 | PubMed | "mosaic variegated aneuploidy"[Title/Abstract] AND (treatment OR therapy OR therapeutic) | 11 records. **None reports disease-modifying therapy.** They cover cancer care, transplantation and three MVA2 case reports of poor growth-hormone response. | The repurposing question is open. |
 | ChEMBL | target CHEMBL4295998 (BUB1B, UniProt O60566) | 24 activity records. Most potent IC50 values are 9.67 µM and 10.36 µM (pChEMBL 5.01 and 4.99), then ceritinib at 13.08 µM. Dasatinib leaves more than 75% of BUB1B activity at 1 µM. Thermal-shift assays (assay CHEMBL6125447) show some ligands destabilising BUB1B at 20 µM and others stabilising it. | No potent BUB1B ligand exists, and binding BUBR1 can destabilise it. |
 | Open Targets | target ENSG00000156970, tractability | No approved or clinical-stage agent in any modality. Small-molecule "High-Quality Ligand" and "Druggable Family" flags are true. All antibody flags are false. Protein-degrader "Literature", "UniProt Ubiquitination" and "Database Ubiquitination" flags are true. | See the two traps below. |
 
-**Not yet searched:** EU CTIS, WHO ICTRP and ANZCTR. These are scheduled for version 2.
+**All five registries have now been searched** (ClinicalTrials.gov, ISRCTN, EU CTIS, ANZCTR and the WHO ICTRP portal). None lists a trial for MVA.
 
 ### 3.2 Two tractability traps in Open Targets
 
@@ -144,14 +148,14 @@ Each item is a hypothesis for expert follow-up, not a proposal to treat.
   - Valproate, an established antiseizure medicine, inhibits HDACs at therapeutically relevant concentrations (Michaelis 2004, PMID 14978230). Seizures were reported in 45.1% of published MVA1 cases (Pavone 2022, PMID 35804254).
 - **Weaknesses.**
   1. The HDAC inhibitor trichostatin A both breaks chromosomes and causes aneuploidy in human lymphoblasts, through missegregation (Olaharski 2006, PMID 16857700). A pan-HDAC inhibitor could therefore worsen the defect it is meant to treat. Isoform selectivity and exposure are the substance of this hypothesis, not refinements.
-  2. Thrombocytopenia was reported in about 20% of givinostat-treated patients in the pivotal trial (Anjum 2025, PMID 40330090). That conflicts directly with the bone-marrow criterion in §6.
+  2. The US label for givinostat reports thrombocytopenia in 33% of treated patients in the pivotal study and in none on placebo, with anaemia and neutropenia also listed (DUVYZAT prescribing information). A published commentary gives about 20% (Anjum 2025, PMID 40330090). Either figure conflicts directly with the bone-marrow criterion in §6.
   3. No approved agent is selective for HDAC2/3.
 - **Decisive experiment.** The same five assays (§7). The micronucleus and PCS readout is the likely point of failure.
 
 ### H3: Metformin as chemoprevention embedded in surveillance
 
 - **Mechanism.** In the key screen for aneuploidy-selective compounds, the energy-stress agent AICAR caused p53-mediated death of mouse cells carrying an extra chromosome (Tang 2011, PMID 21315436). Metformin is the clinically available drug that induces energy stress. Aneuploidy causes protein-folding stress, shown in yeast (Oromendia 2012, PMID 23222101).
-- **A trial design already exists.** MILI randomises adults with Li-Fraumeni syndrome to metformin plus annual MRI surveillance, or to surveillance alone. It is built into NHS standard-of-care surveillance, and its primary end point is cancer-free survival. Its no-placebo design was chosen after consulting the patient community (Dixon-Zegeye 2024, PMID 38308321; ISRCTN16699730, recruiting). An MVA1 version would sit on top of the renal ultrasound surveillance already recommended for MVA (§9).
+- **A trial design already exists.** MILI randomises adults with Li-Fraumeni syndrome to metformin plus annual MRI surveillance, or to surveillance alone. It is built into NHS standard-of-care surveillance, and its primary end point is cancer-free survival. Its no-placebo design was chosen after consulting the patient community (Dixon-Zegeye 2024, PMID 38308321; ISRCTN16699730, recruiting). A German phase IIIb trial now tests metformin for cancer prevention in adolescents as well as adults with Li-Fraumeni syndrome, with the same primary end point (LFS-Metformin-Trial, EU CTIS 2025-520714-63-00; §3.1). An MVA1 version would sit on top of the renal ultrasound surveillance already recommended for MVA (§9).
 - **Weaknesses.**
   1. **The mosaic objection.** AICAR selects against aneuploid cells, not tumour cells. A child with MVA1 has normal tissues that are constitutionally mosaic-aneuploid, so selectivity for aneuploid cells may mean selectivity against the child's own tissue.
   2. The selectivity depended on p53 (Tang 2011), and p53 mutations were frequent in tumours from acetylation-deficient BubR1 mice (Park 2013, PMID 23878276).
@@ -215,13 +219,17 @@ A child with MVA1 may need cancer treatment at short notice. Genomic-instability
 
 | Hypothesis | 1 Checkpoint | 2 CYP3A4 | 3 Kidney | 4 Bone marrow | 5 Genotoxicity | 6 Quick to stop |
 |---|---|---|---|---|---|---|
-| H1 NAD+ precursors | no flag found | not yet assessed | not yet assessed | not yet assessed | no flag found | yes |
-| H2 HDAC2/3 inhibition | flag: class causes aneuploidy at high exposure | not yet assessed | not yet assessed | flag: thrombocytopenia (Anjum 2025) | flag (Olaharski 2006) | yes |
-| H3 Metformin | no flag found | not yet assessed | flag: renal gating (Dixon-Zegeye 2024) | no flag found | no flag found | yes |
-| H4 Oligonucleotide | passes: raises BUBR1 by design | not yet assessed | not yet assessed | not yet assessed | not yet assessed | flag: long-acting by design |
-| H5 Senolytics | passes: dasatinib spares BUB1B (ChEMBL) | not yet assessed | not yet assessed | flag: navitoclax excluded (Mahadevan 2025) | not yet assessed | yes: adult pilots used short courses |
+| H1 NAD+ precursors | no flag found | not assessed: NR and NMN have no US prescription label | note: kidney was among the target organs at high doses in a 90-day rat study (Conze 2016) | note: nicotinamide, a related NAD+ precursor, raised the risk of thrombocytopenia in haemodialysis patients (Ketteler 2023); we found no such report for NR itself | no flag found: NR was negative in the Ames, chromosome-aberration and micronucleus tests (Conze 2016) | yes |
+| H2 HDAC2/3 inhibition | flag: class causes aneuploidy at high exposure | note: givinostat is a weak intestinal CYP3A4 inhibitor; the valproate label names no CYP3A4 effect | no flag found: givinostat is not cleared mainly by the kidney, and valproate clearance falls only slightly in renal failure. See the OCT2 note below. | flag: dose-related thrombocytopenia, with anaemia and neutropenia (givinostat label); dose-related thrombocytopenia (valproate label) | flag: class effect (Olaharski 2006); givinostat was positive in the Ames test and negative for chromosome aberrations (label) | yes |
+| H3 Metformin | no flag found | no flag found: not metabolised by the liver; excreted unchanged in urine (label) | flag: renal gating (Dixon-Zegeye 2024); contraindicated in severe renal impairment (label) | note: can lower vitamin B12, possibly with anaemia, reversibly (label) | no flag found: negative Ames, mouse-lymphoma, human-lymphocyte chromosome-aberration and mouse micronucleus tests (label) | yes |
+| H4 Oligonucleotide (nusinersen label as the class example) | passes: raises BUBR1 by design | passes: nusinersen is not a substrate, inhibitor or inducer of CYP450 enzymes | flag: class warning of renal toxicity, including glomerulonephritis; urine protein testing is required before every administration | flag: thrombocytopenia and coagulation abnormalities | no flag found in the Ames, chromosome-aberration and micronucleus tests. Note: vascular tumours increased in mice at the highest dose in a 2-year study. | flag: long-acting by design |
+| H5 Senolytics | passes: dasatinib spares BUB1B (ChEMBL) | note: dasatinib is a time-dependent CYP3A4 inhibitor; it has been combined with multi-agent chemotherapy in 81 children with Ph+ ALL (label) | note: renal failure is a rare adverse reaction to dasatinib, under 1% (label) | flag: severe thrombocytopenia, neutropenia and anaemia on continuous dasatinib (label); navitoclax excluded (Mahadevan 2025) | flag: dasatinib was clastogenic in hamster cells in vitro but negative in the rat micronucleus test (label). Quercetin is mutagenic in vitro; a review found no genotoxicity in vivo (Harwood 2007). | yes: adult pilots used short courses; dasatinib's half-life is 3 to 5 hours (label) |
 
-"No flag found" means nothing surfaced in the sources we reviewed; it is not proof of safety. The drug-triage pipeline in this repository (work package R06, `pipeline/drug_triage/`) now screens these drugs, and every Open Targets candidate for a gene, against checkpoint, aneugen, CYP3A4, kidney, bone-marrow and paediatric-label criteria from public data. Its output is in `reports/track2/drug_triage/drug_triage_demo.md`. The unassessed cells above will be filled in version 2, after each text-mined flag has been checked by hand.
+"No flag found" means nothing surfaced in the sources we reviewed; it is not proof of safety. "Label" means the current US prescribing information, read in full by hand on 2026-09-29 (openFDA set IDs are listed under References). For H4 we use nusinersen as the class example, because the bespoke precedent, milasen (Kim 2019), has no label. Oligonucleotide safety depends on chemistry and route, so a genotype-matched drug would need its own assessment.
+
+**An interaction between hypotheses.** Givinostat weakly inhibits OCT2, a kidney transporter; its label says the effect was seen in creatinine measurements in clinical trials. The metformin label warns that OCT2/MATE inhibitors can raise metformin exposure. So H2 and H3 should not be tested together without planning for this. A creatinine rise from givinostat could also blur the kidney monitoring that H3 relies on.
+
+**How the screen was run.** The drug-triage pipeline in this repository (work package R06, `pipeline/drug_triage/`) screens these drugs, and every Open Targets candidate for a gene, against checkpoint, aneugen, CYP3A4, kidney, bone-marrow and paediatric-label criteria from public data. Its output is in `reports/track2/drug_triage/drug_triage_demo.md`. The table above started from those text-mined flags, and each one was then checked against the label text. The check found two pipeline errors, which are now fixed and covered by tests. Givinostat had been recorded as a CYP3A4 substrate when its label calls it a weak inhibitor. Dasatinib's time-dependent inhibition had been missed.
 
 ---
 
@@ -304,7 +312,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 ## 11. Limitations
 
 - **Genotype-agnostic.** This version was written before we had dataset access. The child's alleles may change the ranking, H4 especially.
-- **Registries.** Only ClinicalTrials.gov and ISRCTN were searched. EU CTIS, WHO ICTRP and ANZCTR remain.
+- **Registries.** Five registries were searched by keyword (§3.1). A trial registered under a different disease name, for example a generic chromosomal-instability or cancer-predisposition label, could still be missed.
 - **Model systems.** Most mechanistic evidence comes from mice, cancer cell lines or yeast. Direct data from human MVA1 cells are few.
 - **No exposure-margin analysis.** By design this report gives no doses. Comparing active concentrations in cells with achievable exposure in patients is left to expert follow-up.
 - **Possible overlap with community research.** Public sources do not list compounds already screened by MVA community drug-repurposing projects, so duplication cannot be ruled out.
@@ -324,13 +332,14 @@ Work package R06 automates the landscape and screening steps over public data (C
 8. Oromendia 2012 is a yeast study and is now described as one.
 9. The mouse "~10% BubR1" figure is not in the Baker 2004 abstract, so this report says "low levels".
 10. The language is sex-neutral throughout, because none of the public sources we rely on states the child's sex.
+11. We had quoted a givinostat thrombocytopenia rate of about 20% from a commentary (Anjum 2025). The US label reports 33% in the pivotal study, against none on placebo, so the label figure now leads (§4, H2).
 
 ---
 
 ## 13. Governance, privacy and LLM use
 
 - **The data.** The hackathon dataset is a real child's genome, shared under WCG IRB protocol #20252010. This public draft uses no patient data (no variants, genotypes, reads or phenotype text) and nothing that could identify the child.
-- **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. Registry and database results are cited by accession and query date.
+- **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. The three added on 2026-09-29 (Conze 2016, Harwood 2007, Ketteler 2023) were checked the same way. Drug-label statements were read from the current US prescribing information. Registry and database results are cited by accession and query date.
 - **LLM use.** An LLM agent (Claude, Anthropic) helped with literature synthesis and drafting, using public sources only. *The provider, plan or tier, relevant setting and data-handling terms still need to be recorded here; the organisers require this, and the confirmed wording is pending.*
 
 ---
@@ -350,11 +359,13 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Choi E et al. 2012. BRCA2 fine-tunes the spindle assembly checkpoint through reinforcement of BubR1 acetylation. *Dev Cell* 22:295-308. PMID 22340495. https://doi.org/10.1016/j.devcel.2012.01.009
 - Choi SY et al. 2026. Linking kinetochore attachment to checkpoint control: the role of Aurora B in BubR1 acetylation. *Nucleic Acids Res* 54. PMID 41533580. https://doi.org/10.1093/nar/gkaf1517
 - Cohen-Sharir Y et al. 2021. Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition. *Nature* 590:486-491. PMID 33505028. https://doi.org/10.1038/s41586-020-03114-6
+- Conze DB, Crespo-Barreto J, Kruger CL. 2016. Safety assessment of nicotinamide riboside, a form of vitamin B3. *Hum Exp Toxicol* 35:1149-60. PMID 26791540. https://doi.org/10.1177/0960327115626254
 - Dixon-Zegeye M et al. 2024. Cancer Precision-Prevention trial of Metformin in adults with Li Fraumeni syndrome (MILI) undergoing yearly MRI surveillance: a randomised controlled trial protocol. *Trials* 25:103. PMID 38308321. https://doi.org/10.1186/s13063-024-07929-w
 - Eiden C et al. 2009. Posaconazole-increased vincristine neurotoxicity in a child: a case report. *J Pediatr Hematol Oncol* 31:292-5. PMID 19346885. https://doi.org/10.1097/MPH.0b013e31819b9d01
 - Feng B et al. 2022. A novel CEP57 variant associated with mosaic variegated aneuploidy syndrome in a Chinese female presenting with short stature, microcephaly, brachydactyly, and small teeth. *Mol Genet Genomic Med* 10:e1951. PMID 35434947. https://doi.org/10.1002/mgg3.1951
 - Guccini S et al. 2012. Effects of spindle poisons in peripheral human lymphocytes by the in vitro cytokinesis-block micronucleus assay. *Mutagenesis* 27:749-58. PMID 22952150. https://doi.org/10.1093/mutage/ges044
 - Hanks S et al. 2004. Constitutional aneuploidy and cancer predisposition caused by biallelic mutations in BUB1B. *Nat Genet* 36:1159-61. PMID 15475955. https://doi.org/10.1038/ng1449
+- Harwood M et al. 2007. A critical review of the data related to the safety of quercetin and lack of evidence of in vivo toxicity, including lack of genotoxic/carcinogenic properties. *Food Chem Toxicol* 45:2179-205. PMID 17698276. https://doi.org/10.1016/j.fct.2007.05.015
 - Hol JA et al. 2021. Wilms tumour surveillance in at-risk children: Literature review and recommendations from the SIOP-Europe Host Genome Working Group and SIOP Renal Tumour Study Group. *Eur J Cancer* 153:51-63. PMID 34134020. https://doi.org/10.1016/j.ejca.2021.05.014
 - Hübner CT et al. 2022. Mosaic variegated aneuploidy syndrome and Noonan syndrome in the same family. *Mol Syndromol* 13:402-408. PMID 36588761. https://doi.org/10.1159/000523877
 - Izumi H et al. 2009. BubR1 localizes to centrosomes and suppresses centrosome amplification via regulating Plk1 activity in interphase cells. *Oncogene* 28:2806-20. PMID 19503101. https://doi.org/10.1038/onc.2009.141
@@ -362,6 +373,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Kajii T et al. 2001. Cancer-prone syndrome of mosaic variegated aneuploidy and total premature chromatid separation: report of five infants. *Am J Med Genet* 104:57-64. PMID 11746029. https://doi.org/10.1002/ajmg.1580
 - Kalish JM et al. 2017. Surveillance Recommendations for Children with Overgrowth Syndromes and Predisposition to Wilms Tumors and Hepatoblastoma. *Clin Cancer Res* 23:e115-e122. PMID 28674120. https://doi.org/10.1158/1078-0432.CCR-17-0710
 - Kawakami R et al. 2023. RNA sequencing and target long-read sequencing reveal an intronic transposon insertion causing aberrant splicing. *J Hum Genet* 69:91-99. PMID 38102195. https://doi.org/10.1038/s10038-023-01211-8
+- Ketteler M et al. 2023. Modified-release nicotinamide for the treatment of hyperphosphataemia in haemodialysis patients: 52-week efficacy and safety results of the phase 3 randomized controlled NOPHOS trial. *Nephrol Dial Transplant* 38:982-991. PMID 35751625. https://doi.org/10.1093/ndt/gfac206
 - Kim J et al. 2019. Patient-Customized Oligonucleotide Therapy for a Rare Genetic Disease. *N Engl J Med* 381:1644-1652. PMID 31597037. https://doi.org/10.1056/NEJMoa1813279
 - Kurokawa Y et al. 2025. Pooled safety analysis of pimitespib for the treatment of patients with advanced gastrointestinal stromal tumors. *Int J Clin Oncol* 31:118-127. PMID 41264161. https://doi.org/10.1007/s10147-025-02917-9
 - Laberko A et al. 2019. Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome. *Orphanet J Rare Dis* 14:97. PMID 31053147. https://doi.org/10.1186/s13023-019-1073-x
@@ -408,3 +420,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Zhu Y et al. 2015. The Achilles' heel of senescent cells: from transcriptome to senolytic drugs. *Aging Cell* 14:644-58. PMID 25754370. https://doi.org/10.1111/acel.12344
 
 Database and registry sources (queried 2026-09-27): ClinicalTrials.gov (NCT01981525, NCT06799065, NCT05902988, NCT06084416, NCT04293094, NCT07226427, NCT06772415); ISRCTN (ISRCTN16699730; searches for mosaic variegated aneuploidy, premature chromatid separation, BUB1B); ChEMBL target CHEMBL4295998 (assays incl. CHEMBL6125423, CHEMBL6125447, CHEMBL4807760); Open Targets Platform target ENSG00000156970.
+
+Queried 2026-09-29: EU CTIS public search (2025-520714-63-00; searches for mosaic variegated aneuploidy, premature chromatid separation, BUB1B, Li-Fraumeni); ANZCTR and the WHO ICTRP Search Portal (the same MVA searches, plus Li-Fraumeni controls).
+
+US prescribing information (openFDA drug label API, read 2026-09-29; set IDs resolve on DailyMed): givinostat, DUVYZAT (1a28a3db-7880-4ac2-a2f2-2b4e362aafb6); valproic acid (1edd220d-d151-4177-9a29-9fee36489fb7); metformin hydrochloride extended-release (05999192-ebc6-4198-bd1e-f46abbfb4f8a); dasatinib (58ce42c6-10bd-4bb4-bf89-eae8ed82c339); nusinersen, SPINRAZA (dd70cd5f-b0fc-4ba4-a5ea-89a34778bd94).
