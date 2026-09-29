@@ -8,7 +8,7 @@
 >
 > **Privacy.** No patient data were used or sent anywhere. The child is described without sex, name, dates or clinical history; the only location given is "UK (NHS-diagnosed)".
 
-Citations are given as first author, year and PubMed ID (PMID). Every PubMed-indexed source was checked against its PubMed record on 2026-09-27, or on 2026-09-29 for the three added then. Database results are cited by accession and query date. The full reference list, with DOIs, is at the end.
+Citations are given as first author, year and PubMed ID (PMID). Every PubMed-indexed source was checked against its PubMed record on 2026-09-27, or on 2026-09-29 for the six added then. Database results are cited by accession and query date. The full reference list, with DOIs, is at the end.
 
 ---
 
@@ -202,7 +202,16 @@ These classes are excluded because they would further weaken a checkpoint that i
 | **Pan-HDAC inhibitors at high exposure** | Trichostatin A causes aneuploidy in human lymphoblasts through missegregation. H2 survives only if an isoform-selective agent passes the aneuploidy veto at exposures that raise BUBR1. | Olaharski 2006, PMID 16857700 |
 | **Growth hormone** | A 2022 consensus statement says GH is generally contraindicated in cancer-predisposition syndromes, and considered only cautiously in select patients (Boguszewski 2022, PMID 35319491). Tumour growth on GH has been reported in Noonan syndrome (McWilliams 2016, PMID 26377682). Three MVA2 (*CEP57*) case reports describe poor response to GH (Feng 2022, PMID 35434947; Hübner 2022, PMID 36588761; Viudes 2026, PMID 41700350). Growth failure in MVA1 starts before birth and is plausibly intrinsic to the cells (Hanks 2004, PMID 15475955; Baker 2004, PMID 15208629). | as cited |
 
-**Relative caution (a class inference, not yet a finding).** Drugs that bind tubulin and poison the spindle cause aneuploidy in human lymphocytes (Guccini 2012, PMID 22952150), and MVA fibroblasts fail to arrest in colcemid (Matsuura 2000, PMID 10877982). How such drugs behave in BUBR1-insufficient cells is an untested research question. We have not yet found a specific genotoxicity citation for the benzimidazole anthelmintics; this is scheduled for version 2.
+**Relative caution (a class inference, not yet a finding).** Drugs that bind tubulin and poison the spindle cause aneuploidy in human lymphocytes (Guccini 2012, PMID 22952150), and MVA fibroblasts fail to arrest in colcemid (Matsuura 2000, PMID 10877982). How such drugs behave in BUBR1-insufficient cells is an untested research question.
+
+**Benzimidazole anthelmintics** (for example mebendazole, a popular oncology repurposing candidate) now have specific evidence:
+
+- Albendazole and its active metabolite caused chromosome non-disjunction in cultured human lymphocytes, at lower concentrations than those that caused micronuclei (Ramírez 2006, PMID 17055335).
+- The mebendazole US label states that it is aneugenic in mammalian cells in vitro, and that its in vivo mouse micronucleus result suggested aneugenicity.
+- In a small before-and-after study of 14 children treated with albendazole, lymphocyte micronucleus and sister-chromatid-exchange frequencies rose (Oztas 2007, PMID 17331781). The albendazole US label, by contrast, reports a negative in vivo mouse micronucleus test.
+- Non-disjunction caused by spindle inhibitors, mebendazole among them, appears to have a concentration threshold (Elhajouji 1997, PMID 9175637), so exposure matters. Whether that threshold is lower in BUBR1-insufficient cells is untested.
+
+This class is therefore not a candidate here, and the R06 pipeline excludes it automatically. Whether an anthelmintic is needed to treat an infection is a clinical decision outside this report's scope.
 
 ---
 
@@ -339,7 +348,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 ## 13. Governance, privacy and LLM use
 
 - **The data.** The hackathon dataset is a real child's genome, shared under WCG IRB protocol #20252010. This public draft uses no patient data (no variants, genotypes, reads or phenotype text) and nothing that could identify the child.
-- **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. The three added on 2026-09-29 (Conze 2016, Harwood 2007, Ketteler 2023) were checked the same way. Drug-label statements were read from the current US prescribing information. Registry and database results are cited by accession and query date.
+- **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. The six added on 2026-09-29 (Conze 2016, Elhajouji 1997, Harwood 2007, Ketteler 2023, Oztas 2007, Ramírez 2006) were checked the same way. Drug-label statements were read from the current US prescribing information. Registry and database results are cited by accession and query date.
 - **LLM use.** An LLM agent (Claude, Anthropic) helped with literature synthesis and drafting, using public sources only. *The provider, plan or tier, relevant setting and data-handling terms still need to be recorded here; the organisers require this, and the confirmed wording is pending.*
 
 ---
@@ -362,6 +371,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Conze DB, Crespo-Barreto J, Kruger CL. 2016. Safety assessment of nicotinamide riboside, a form of vitamin B3. *Hum Exp Toxicol* 35:1149-60. PMID 26791540. https://doi.org/10.1177/0960327115626254
 - Dixon-Zegeye M et al. 2024. Cancer Precision-Prevention trial of Metformin in adults with Li Fraumeni syndrome (MILI) undergoing yearly MRI surveillance: a randomised controlled trial protocol. *Trials* 25:103. PMID 38308321. https://doi.org/10.1186/s13063-024-07929-w
 - Eiden C et al. 2009. Posaconazole-increased vincristine neurotoxicity in a child: a case report. *J Pediatr Hematol Oncol* 31:292-5. PMID 19346885. https://doi.org/10.1097/MPH.0b013e31819b9d01
+- Elhajouji A, Tibaldi F, Kirsch-Volders M. 1997. Indication for thresholds of chromosome non-disjunction versus chromosome lagging induced by spindle inhibitors in vitro in human lymphocytes. *Mutagenesis* 12:133-40. PMID 9175637. https://doi.org/10.1093/mutage/12.3.133
 - Feng B et al. 2022. A novel CEP57 variant associated with mosaic variegated aneuploidy syndrome in a Chinese female presenting with short stature, microcephaly, brachydactyly, and small teeth. *Mol Genet Genomic Med* 10:e1951. PMID 35434947. https://doi.org/10.1002/mgg3.1951
 - Guccini S et al. 2012. Effects of spindle poisons in peripheral human lymphocytes by the in vitro cytokinesis-block micronucleus assay. *Mutagenesis* 27:749-58. PMID 22952150. https://doi.org/10.1093/mutage/ges044
 - Hanks S et al. 2004. Constitutional aneuploidy and cancer predisposition caused by biallelic mutations in BUB1B. *Nat Genet* 36:1159-61. PMID 15475955. https://doi.org/10.1038/ng1449
@@ -395,12 +405,14 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Ochiai K et al. 2019. Long-term remission of bilateral Wilms tumors that developed from premature separation of chromatids/mosaic variegated aneuploidy syndrome due to bilateral nephrectomy and peritoneal dialysis. *Pediatr Blood Cancer* 66:e27804. PMID 31081598. https://doi.org/10.1002/pbc.27804
 - Olaharski AJ et al. 2006. The histone deacetylase inhibitor trichostatin a has genotoxic effects in human lymphoblasts in vitro. *Toxicol Sci* 93:341-7. PMID 16857700. https://doi.org/10.1093/toxsci/kfl068
 - Oromendia AB et al. 2012. Aneuploidy causes proteotoxic stress in yeast. *Genes Dev* 26:2696-708. PMID 23222101. https://doi.org/10.1101/gad.207407.112
+- Oztas S et al. 2007. Genotoxic effect of albendazole in pediatric patients with hepatic hydatid disease. *Int J Infect Dis* 11:446-9. PMID 17331781. https://doi.org/10.1016/j.ijid.2007.01.002
 - Panvino F et al. 2026. Pharmacological Treatment of Cerebellar Ataxia in Pediatric Ataxia-Telangiectasia: A Systematic Review. *Eur J Neurol* 33:e70683. PMID 42387837. https://doi.org/10.1111/ene.70683
 - Park I et al. 2013. Loss of BubR1 acetylation causes defects in spindle assembly checkpoint signaling and promotes tumor formation. *J Cell Biol* 202:295-309. PMID 23878276. https://doi.org/10.1083/jcb.201210099
 - Park I et al. 2017. HDAC2/3 binding and deacetylation of BubR1 initiates spindle assembly checkpoint silencing. *FEBS J* 284:4035-4050. PMID 28985013. https://doi.org/10.1111/febs.14286
 - Pavone P et al. 2022. Pathogenic correlation between mosaic variegated aneuploidy 1 (MVA1) and a novel BUB1B variant: a reappraisal of a severe syndrome. *Neurol Sci* 43:6529-6538. PMID 35804254. https://doi.org/10.1007/s10072-022-06247-w
 - Phillips AF et al. 2025. Targeting chromosomally unstable tumors with a selective KIF18A inhibitor. *Nat Commun* 16:307. PMID 39747049. https://doi.org/10.1038/s41467-024-55300-z
 - Qiu D et al. 2018. Sirt2-BubR1 acetylation pathway mediates the effects of advanced maternal age on oocyte quality. *Aging Cell* 17. PMID 29067790. https://doi.org/10.1111/acel.12698
+- Ramírez T, Eastmond DA, Herrera LA. 2006. Non-disjunction events induced by albendazole in human cells. *Mutat Res* 626:191-5. PMID 17055335. https://doi.org/10.1016/j.mrgentox.2006.09.004
 - Rio Frio T et al. 2010. Homozygous BUB1B mutation and susceptibility to gastrointestinal neoplasia. *N Engl J Med* 363:2628-37. PMID 21190457. https://doi.org/10.1056/NEJMoa1006565
 - Sato Y, Hayashi MT. 2024. Micronucleus is not a potent inducer of the cGAS/STING pathway. *Life Sci Alliance* 7:e202302424. PMID 38307626. https://doi.org/10.26508/lsa.202302424
 - Sieben CJ et al. 2020. BubR1 allelic effects drive phenotypic heterogeneity in mosaic-variegated aneuploidy progeria syndrome. *J Clin Invest* 130:171-188. PMID 31738183. https://doi.org/10.1172/JCI126863
@@ -423,4 +435,4 @@ Database and registry sources (queried 2026-09-27): ClinicalTrials.gov (NCT01981
 
 Queried 2026-09-29: EU CTIS public search (2025-520714-63-00; searches for mosaic variegated aneuploidy, premature chromatid separation, BUB1B, Li-Fraumeni); ANZCTR and the WHO ICTRP Search Portal (the same MVA searches, plus Li-Fraumeni controls).
 
-US prescribing information (openFDA drug label API, read 2026-09-29; set IDs resolve on DailyMed): givinostat, DUVYZAT (1a28a3db-7880-4ac2-a2f2-2b4e362aafb6); valproic acid (1edd220d-d151-4177-9a29-9fee36489fb7); metformin hydrochloride extended-release (05999192-ebc6-4198-bd1e-f46abbfb4f8a); dasatinib (58ce42c6-10bd-4bb4-bf89-eae8ed82c339); nusinersen, SPINRAZA (dd70cd5f-b0fc-4ba4-a5ea-89a34778bd94).
+US prescribing information (openFDA drug label API, read 2026-09-29; set IDs resolve on DailyMed): givinostat, DUVYZAT (1a28a3db-7880-4ac2-a2f2-2b4e362aafb6); valproic acid (1edd220d-d151-4177-9a29-9fee36489fb7); metformin hydrochloride extended-release (05999192-ebc6-4198-bd1e-f46abbfb4f8a); dasatinib (58ce42c6-10bd-4bb4-bf89-eae8ed82c339); nusinersen, SPINRAZA (dd70cd5f-b0fc-4ba4-a5ea-89a34778bd94); mebendazole (a720c424-517a-461b-8e13-6c37caf8aa3f); albendazole (8de337eb-92e1-15b5-e053-2a95a90ac4f1).
