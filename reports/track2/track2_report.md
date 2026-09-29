@@ -1,6 +1,6 @@
 # Repurposing hypotheses for BUB1B-related mosaic variegated aneuploidy (MVA1)
 
-**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 2 · Draft v1.1, public version · literature and database checks run 2026-09-27, registries and drug labels added 2026-09-29**
+**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 2 · Draft v1.2, public version · literature and database checks run 2026-09-27, registries and drug labels added 2026-09-29, allele-classification rules fixed in advance 2026-09-29**
 
 > **What this is.** A ranked set of research hypotheses for expert follow-up in patient-derived cells. It is not medical advice and is not addressed to the family. It contains no doses, no schedules and no treatment recommendations. Clinical decisions belong to the child's treating team.
 >
@@ -43,7 +43,10 @@ Citations are given as first author, year and PubMed ID (PMID). Every PubMed-ind
   - a 3.0 kb intronic transposon insertion that genome sequencing missed and RNA-seq plus targeted long-read sequencing found (Kawakami 2023, PMID 38102195).
 - **Dose drives phenotype in both directions in mice.** Mice with low BubR1 levels develop progressive aneuploidy and premature-ageing (progeroid) features (Baker 2004, PMID 15208629). Sustained high BubR1 expression reduces tumour formation and extends healthy lifespan (Baker 2013a, PMID 23242215). An allelic series modelling human MVA (*BubR1^H/L1002P*) reproduces cancer predisposition and progeroid features, and shows that allelic effects beyond protein level drive variation between patients (Sieben 2020, PMID 31738183).
 
-**Implication.** Raising total BUBR1, or slowing its destruction, is the most direct disease-modifying goal. Re-expressing BUBR1 rescues checkpoint function in patient cells, so the defect is reversible in principle (Suijkerbuijk 2010).
+**Implication.** Raising total BUBR1, or slowing its destruction, is the most direct disease-modifying goal. Re-expressing BUBR1 rescues checkpoint function in patient cells, so the defect is reversible in principle (Suijkerbuijk 2010). The same study adds two quantitative points:
+
+- The unstable kinase-domain mutants I909T and L1012P fully restored the checkpoint once overexpressed to wild-type levels. For these alleles, the level is the problem, not the protein.
+- In HeLa cells, cutting BUBR1 to about 6% of normal caused missegregation in most cells, while about 13% had virtually no effect. This suggests a threshold, so a modest increase could matter.
 
 ### 2.2 A pseudokinase: "activate the kinase" is not a goal
 
@@ -184,7 +187,7 @@ Details are in §8.1. This ranks fourth only because eligibility depends on alle
 ### Considered and not ranked
 
 - **Rapamycin analogues.** mTORC1 hyperactivity gives a rationale (Sieben 2020), but the class is immunosuppressive and a poor fit for a child with growth failure. Deferred until there is patient-cell evidence of mTORC1 activation in MVA1.
-- **HSP90 inhibitors.** 17-AAG was one of the compounds selective for aneuploid cells (Tang 2011). Our research notes said no HSP90 inhibitor is approved; that is wrong. Pimitespib is approved in Japan for advanced gastrointestinal stromal tumours (Muraoka 2025, PMID 40167031). It is an oncology drug with frequent gastrointestinal and eye-related adverse reactions (Kurokawa 2025, PMID 41264161), so it is excluded.
+- **HSP90 inhibitors.** 17-AAG was one of the compounds selective for aneuploid cells (Tang 2011). Our research notes said no HSP90 inhibitor is approved; that is wrong. Pimitespib is approved in Japan for advanced gastrointestinal stromal tumours (Muraoka 2025, PMID 40167031). It is an oncology drug with frequent gastrointestinal and eye-related adverse reactions (Kurokawa 2025, PMID 41264161), so it is excluded. There is also a mechanistic reason. Unstable kinase-domain BUBR1 mutants need HSP90 to fold, and HSP90 inhibition sharply lowered their levels in cells (Suijkerbuijk 2010, PMID 20516114). An HSP90 inhibitor could therefore lower BUBR1 further in a child carrying such an allele.
 - **Hydroxychloroquine.** Chloroquine was the third compound selective for aneuploid cells (Tang 2011), but there are no in vivo chemoprevention data. Excluded in this version.
 - **Direct APC/C or proteasome inhibition.** Mechanistically this is on target, since APC/C destroys BubR1 (Choi 2009), but there is no clinical path for long-term use in children. Excluded.
 
@@ -263,7 +266,7 @@ The assays run in patient-derived lymphoblastoid cells or fibroblasts, the syste
 ### 8.1 The oligonucleotide lane
 
 - **Why it fits MVA1.** The disease is defined by dosage, and second alleles are often splice-altering or non-coding (Rio Frio 2010, PMID 21190457; Ochiai 2013, PMID 24344301; Kawakami 2023, PMID 38102195). One published MVA1 genotype pairs a frameshift with an intronic splice-region variant, c.1288+5G>A (Laberko 2019, PMID 31053147). That is exactly the kind of variant splice-correcting oligonucleotides are designed for.
-- **Base rate.** One paediatric hospital applied the N=1 Collaborative's VAEAOT eligibility guidelines to all diagnostic variants found in 532 patients. Of those patients, 26 (4.9%), carrying 25 distinct variants, were eligible or likely eligible for an antisense oligonucleotide (ASO). After disease and delivery factors were considered, 11 diagnoses remained candidates (Cheerie 2025, PMID 41090344).
+- **Base rate.** One paediatric hospital applied the N=1 Collaborative's VARIANT guidelines (variant assessments toward eligibility for antisense oligonucleotide treatment; Cheerie 2025a, PMID 40139194) to all diagnostic variants found in 532 patients. Of those patients, 26 (4.9%), carrying 25 distinct variants, were eligible or likely eligible for an antisense oligonucleotide (ASO). After disease and delivery factors were considered, 11 diagnoses remained candidates (Cheerie 2025b, PMID 41090344).
 - **Two sub-types.**
   - *Splice correction* for alleles that create cryptic splice sites. The precedent is milasen, where tests in the patient's own cells supported starting an N-of-1 study within one year of first contact (Kim 2019, PMID 31597037).
   - *Expression up-regulation*: blocking naturally occurring non-productive splicing can raise output from normal or hypomorphic alleles (Lim 2020, PMID 32647108). This is the relevant case in MVA1, where one allele is null and the other is intact but produces too little.
@@ -273,7 +276,10 @@ The assays run in patient-derived lymphoblastoid cells or fibroblasts, the syste
   - The published splice-region variant c.1288+5G>A lies at the exon 9 donor site. It would be expected to promote the same exon 9 skip, but that is an inference, not a measurement.
 
   These are candidate targets for up-regulation, not validated ones. An annotation shows that an event exists, not how often it happens in the child's cells. The decisive measurement is RNA sequencing of patient-derived cells with and without NMD inhibition, to show how much *BUB1B* output each event removes (the approach of Lim 2020). An ASO that suppresses one of these events would raise output from both alleles; for MVA1, that means more protein from the hypomorphic allele. Raising BubR1 above normal levels was protective, not harmful, in mice (Baker 2013a, PMID 23242215).
-- **Version 2 deliverable (package D08).** Classify each of the child's alleles by mechanism, as functional-class or abundance-class (Suijkerbuijk 2010), and by VAEAOT category. Then re-rank H4.
+- **Version 2 deliverable (package D08), with its rules fixed in advance.** Each of the child's alleles will be classified by mechanism, as functional-class or abundance-class (Suijkerbuijk 2010), and given an N1C VARIANT tier for each antisense approach. The splice-switching and exon-skipping criteria come from Zardetto 2024 (PMID 40225926). We wrote the classification rules and the resulting changes to the ranking on 2026-09-29, before seeing any patient data (`reports/track2/d08_worksheet.md`). They are coded and tested in `pipeline/allele_mechanism.py`. Applied to published alleles, the rules give three results:
+  - **Classic exon skipping is not a realistic route for *BUB1B*.** Only four internal exons are in-frame. The best of them, exon 17, carries the destabilising MVA substitution R727C, which argues against skipping it; one cheap stability test would settle it.
+  - **The realistic routes are splice correction and up-regulation.** Splice correction applies to a second allele that creates a cryptic splice site at least 15 nt from the canonical one. Up-regulation applies to an unstable substitution, which regains function when its level rises.
+  - **A stable functional-class second allele would demote goal A.** H3 would then move to first place.
 - **Weaknesses.** This is bespoke drug development, not repurposing. Oligonucleotides are long-acting by design, a poor fit for criterion 6. MVA1 affects many dividing tissues, and delivery beyond a few organs is unsolved.
 
 ### 8.2 KIF18A: an aneuploidy-selective target outside the checkpoint
@@ -340,7 +346,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 1. The *CEP57* discovery paper is Snape et al. 2011 (PMID 21552266), not "Snijders Blok".
 2. We removed an unsourced figure of "about a one-in-three risk of embryonal cancer before age 5" and an unsourced surveillance interval. They are replaced by Nakano 2024 and the case-series figures in §9.
 3. PMID 29067790 is by Qiu et al., not "Zhang".
-4. The antisense-eligibility base rate is 4.9% of 532 **patients**, not of variants (Cheerie 2025).
+4. The antisense-eligibility base rate is 4.9% of 532 **patients**, not of variants (Cheerie 2025b).
 5. According to the ISRCTN record, MILI's funders are NIHR, the Pantziarka TP53 Trust and Cancer Research UK.
 6. Kajii 2001's figure of 7 in 10 infants with Wilms tumour pools five new infants with five previously reported ones.
 7. An HSP90 inhibitor is approved (pimitespib, in Japan). Our notes said otherwise.
@@ -348,13 +354,14 @@ Work package R06 automates the landscape and screening steps over public data (C
 9. The mouse "~10% BubR1" figure is not in the Baker 2004 abstract, so this report says "low levels".
 10. The language is sex-neutral throughout, because none of the public sources we rely on states the child's sex.
 11. We had quoted a givinostat thrombocytopenia rate of about 20% from a commentary (Anjum 2025). The US label reports 33% in the pivotal study, against none on placebo, so the label figure now leads (§4, H2).
+12. Our notes called the antisense-eligibility framework "VAEAOT". Its published name is the N1C VARIANT guidelines (Cheerie 2025a, PMID 40139194).
 
 ---
 
 ## 13. Governance, privacy and LLM use
 
 - **The data.** The hackathon dataset is a real child's genome, shared under WCG IRB protocol #20252010. This public draft uses no patient data (no variants, genotypes, reads or phenotype text) and nothing that could identify the child.
-- **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. The six added on 2026-09-29 (Conze 2016, Elhajouji 1997, Harwood 2007, Ketteler 2023, Oztas 2007, Ramírez 2006) were checked the same way. Drug-label statements were read from the current US prescribing information. Registry and database results are cited by accession and query date.
+- **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. The six added on 2026-09-29 (Conze 2016, Elhajouji 1997, Harwood 2007, Ketteler 2023, Oztas 2007, Ramírez 2006) were checked the same way. So were the two added that evening (Cheerie 2025a, Zardetto 2024), and the newly used findings of Suijkerbuijk 2010, which were checked against its open-access full text. Drug-label statements were read from the current US prescribing information. Registry and database results are cited by accession and query date.
 - **LLM use.** An LLM agent (Claude, Anthropic) helped with literature synthesis and drafting, using public sources only. *The provider, plan or tier, relevant setting and data-handling terms still need to be recorded here; the organisers require this, and the confirmed wording is pending.*
 
 ---
@@ -369,7 +376,8 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Baker DJ et al. 2013a. Increased expression of BubR1 protects against aneuploidy and cancer and extends healthy lifespan. *Nat Cell Biol* 15:96-102. PMID 23242215. https://doi.org/10.1038/ncb2643
 - Baker DJ et al. 2013b. p21 both attenuates and drives senescence and aging in BubR1 progeroid mice. *Cell Rep* 3:1164-74. PMID 23602569. https://doi.org/10.1016/j.celrep.2013.03.028
 - Boguszewski MCS et al. 2022. Safety of growth hormone replacement in survivors of cancer and intracranial and pituitary tumours: a consensus statement. *Eur J Endocrinol* 186:P35-P52. PMID 35319491. https://doi.org/10.1530/EJE-21-1186
-- Cheerie D et al. 2025. Screening rare genetic diagnoses for amenability to bespoke antisense oligonucleotide therapy development: A retrospective cohort study. *Genet Med* 28:101597. PMID 41090344. https://doi.org/10.1016/j.gim.2025.101597
+- Cheerie D et al. 2025a. Consensus guidelines for assessing eligibility of pathogenic DNA variants for antisense oligonucleotide treatments. *Am J Hum Genet* 112:975-983. PMID 40139194. https://doi.org/10.1016/j.ajhg.2025.02.017
+- Cheerie D et al. 2025b. Screening rare genetic diagnoses for amenability to bespoke antisense oligonucleotide therapy development: A retrospective cohort study. *Genet Med* 28:101597. PMID 41090344. https://doi.org/10.1016/j.gim.2025.101597
 - Choi E et al. 2009. BubR1 acetylation at prometaphase is required for modulating APC/C activity and timing of mitosis. *EMBO J* 28:2077-89. PMID 19407811. https://doi.org/10.1038/emboj.2009.123
 - Choi E et al. 2012. BRCA2 fine-tunes the spindle assembly checkpoint through reinforcement of BubR1 acetylation. *Dev Cell* 22:295-308. PMID 22340495. https://doi.org/10.1016/j.devcel.2012.01.009
 - Choi SY et al. 2026. Linking kinetochore attachment to checkpoint control: the role of Aurora B in BubR1 acetylation. *Nucleic Acids Res* 54. PMID 41533580. https://doi.org/10.1093/nar/gkaf1517
@@ -435,10 +443,11 @@ Work package R06 automates the landscape and screening steps over public data (C
 - Woodward HL et al. 2018. Introduction of a Methyl Group Curbs Metabolism of Pyrido[3,4- d]pyrimidine Monopolar Spindle 1 (MPS1) Inhibitors and Enables the Discovery of the Phase 1 Clinical Candidate N-(2-Ethoxy-4-(4-methyl-4 H-1,2,4-triazol-3-yl)phenyl)-6-methyl- N-neopentylpyrido[3,4- d]pyrimidine-2,8-diamine (BOS172722). *J Med Chem* 61:8226-8240. PMID 30199249. https://doi.org/10.1021/acs.jmedchem.8b00690
 - Wu LE et al. 2023. SIRT2 transgenic over-expression does not impact lifespan in mice. *Aging Cell* 22:e14027. PMID 38009412. https://doi.org/10.1111/acel.14027
 - Yost S et al. 2017. Biallelic TRIP13 mutations predispose to Wilms tumor and chromosome missegregation. *Nat Genet* 49:1148-1151. PMID 28553959. https://doi.org/10.1038/ng.3883
+- Zardetto B et al. 2024. Practical recommendations for the selection of patients for individualized splice-switching ASO-based treatments. *Hum Mutat* 2024:9920230. PMID 40225926. https://doi.org/10.1155/2024/9920230
 - Zhu Y et al. 2015. The Achilles' heel of senescent cells: from transcriptome to senolytic drugs. *Aging Cell* 14:644-58. PMID 25754370. https://doi.org/10.1111/acel.12344
 
 Database and registry sources (queried 2026-09-27): ClinicalTrials.gov (NCT01981525, NCT06799065, NCT05902988, NCT06084416, NCT04293094, NCT07226427, NCT06772415); ISRCTN (ISRCTN16699730; searches for mosaic variegated aneuploidy, premature chromatid separation, BUB1B); ChEMBL target CHEMBL4295998 (assays incl. CHEMBL6125423, CHEMBL6125447, CHEMBL4807760); Open Targets Platform target ENSG00000156970.
 
-Queried 2026-09-29: EU CTIS public search (2025-520714-63-00; searches for mosaic variegated aneuploidy, premature chromatid separation, BUB1B, Li-Fraumeni); ANZCTR and the WHO ICTRP Search Portal (the same MVA searches, plus Li-Fraumeni controls); Ensembl REST API, gene ENSG00000156970 with all transcript models (GRCh38; MANE Select ENST00000287598.11; NMD transcripts include ENST00000558715, ENST00000559733 and ENST00001082076–ENST00001082085).
+Queried 2026-09-29: EU CTIS public search (2025-520714-63-00; searches for mosaic variegated aneuploidy, premature chromatid separation, BUB1B, Li-Fraumeni); ANZCTR and the WHO ICTRP Search Portal (the same MVA searches, plus Li-Fraumeni controls); Ensembl REST API, gene ENSG00000156970 with all transcript models (GRCh38; MANE Select ENST00000287598.11; NMD transcripts include ENST00000558715, ENST00000559733 and ENST00001082076–ENST00001082085). Also on 2026-09-29: NCBI RefSeq NM_001211.6, for the exon structure and sequence used by the D08 worksheet; and a PubMed search, "BUB1B AND (antisense OR oligonucleotide)", that returned 16 records with no oligonucleotide directed at *BUB1B*.
 
 US prescribing information (openFDA drug label API, read 2026-09-29; set IDs resolve on DailyMed): givinostat, DUVYZAT (1a28a3db-7880-4ac2-a2f2-2b4e362aafb6); valproic acid (1edd220d-d151-4177-9a29-9fee36489fb7); metformin hydrochloride extended-release (05999192-ebc6-4198-bd1e-f46abbfb4f8a); dasatinib (58ce42c6-10bd-4bb4-bf89-eae8ed82c339); nusinersen, SPINRAZA (dd70cd5f-b0fc-4ba4-a5ea-89a34778bd94); mebendazole (a720c424-517a-461b-8e13-6c37caf8aa3f); albendazole (8de337eb-92e1-15b5-e053-2a95a90ac4f1).
