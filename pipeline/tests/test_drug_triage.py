@@ -77,6 +77,21 @@ class FlagTest(unittest.TestCase):
         self.assertEqual(F.cyp3a4(denies)["status"], "no flag found")
         other_subject = label(_generic="SIROLIMUS", drug_interactions="Strong inhibitors of CYP3A4 increase sirolimus concentrations.")
         self.assertEqual(F.cyp3a4(other_subject)["status"], "no flag found")
+        other_enzyme = label(drug_interactions="DRUGX is a strong inhibitor of P-gp.")
+        self.assertEqual(F.cyp3a4(other_enzyme)["status"], "no flag found")
+
+    def test_cyp3a4_weak_perpetrator_is_a_note_not_a_victim(self):
+        # Wording from the givinostat and dasatinib US labels (checked by hand on 2026-09-29).
+        weak = label(drug_interactions="7.1 Effect of DRUGX on Other Drugs CYP3A4 Sensitive Substrates DrugX is a weak "
+                                       "intestinal CYP3A4 inhibitor [see Clinical Pharmacology (12.3)] .",
+                     clinical_pharmacology="drugx has a weak inhibition of the intestinal CYP3A4 enzyme based on the "
+                                           "exposure of a CYP3A4 substrate, midazolam.")
+        tdi = label(clinical_pharmacology="DrugX is a time-dependent inhibitor of CYP3A4.")
+        for lab in (weak, tdi):
+            r = F.cyp3a4(lab)
+            self.assertEqual(r["status"], "note")
+            self.assertIn("perpetrator", r["evidence"])
+            self.assertNotIn("victim", r["evidence"])
 
     def test_kidney_and_marrow(self):
         renal = label(contraindications="Severe renal impairment (eGFR below 30 mL/min/1.73 m2).")

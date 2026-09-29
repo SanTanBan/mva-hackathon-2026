@@ -22,20 +22,20 @@ LOWERING_ACTIONS = {"INHIBITOR", "ANTAGONIST", "NEGATIVE ALLOSTERIC MODULATOR", 
 SPINDLE_GENES = {"AURKA", "KIF11", "KIF18A", "CENPE"}
 HDAC_GENES = {f"HDAC{i}" for i in range(1, 12)}
 
-# Split after "." or ";" only when the preceding character is lower-case, a digit, ")" or "]", so that
+# Split after "." or ";" only when the preceding character is lower-case, a digit, "%", ")" or "]", so that
 # abbreviations such as "S. typhimurium" do not cut a negated sentence in two.
-_SENT = re.compile(r"(?:(?<=[a-z0-9)\]][.;])|(?<=[a-z0-9)\]] [.;]))\s+(?=[A-Z(0-9])")
+_SENT = re.compile(r"(?:(?<=[a-z0-9%)\]][.;])|(?<=[a-z0-9%)\]] [.;]))\s+(?=[A-Z(0-9])")
 
 
 def _sentences(text):
     return [s.strip() for s in _SENT.split(text or "") if s.strip()]
 
 
-def _hit(text, pattern, exclude=None, limit=200):
-    """First sentence matching `pattern` (and not `exclude`), trimmed to a window around the match."""
+def _hit(text, pattern, exclude=None, limit=200, require=None):
+    """First sentence matching `pattern` and `require` (and not `exclude`), trimmed to a window around the match."""
     for s in _sentences(text):
         m = re.search(pattern, s, re.I)
-        if m and not (exclude and re.search(exclude, s, re.I)):
+        if m and not (exclude and re.search(exclude, s, re.I)) and not (require and not re.search(require, s, re.I)):
             if len(s) <= limit:
                 return s
             a = max(0, m.start() - limit // 2)
@@ -119,9 +119,18 @@ def aneugen(drug, label):
 
 
 # The drug must be the grammatical subject: "strong CYP3A4 inhibitors increase <drug> exposure" makes it a
-# victim, which is handled as a note below.
-_PERP = r"(is|was|acts as) an? (strong|moderate) (CYP3A4? )?(inhibitor|inducer)|(inhibits|induces) CYP3A"
+# victim, which is handled as a note below. Up to two words may sit between the strength and the role
+# ("a weak intestinal CYP3A4 inhibitor"), so the sentence must also name CYP3A.
+def _perp(strength):
+    return (rf"(is|was|acts as) an? {strength} (\S+ ){{0,2}}(inhibitor|inducer)"
+            rf"|(has|had|showed|shows|produced) an? {strength} (\S+ ){{0,2}}(inhibition|induction)")
+
+
+_PERP = _perp(r"(strong|moderate)") + r"|(inhibits|induces) CYP3A"
+# Weak and time-dependent perpetrators get a note, not a flag: the report's criterion is a major interaction.
+_WEAK_PERP = _perp(r"(weak|mild|time-dependent|mechanism-based)")
 _VICTIM = r"substrate of CYP3A|CYP3A4? substrate|metaboli[sz]ed\w* (primarily |mainly |predominantly )?by CYP3A"
+_DENY = r"\bnot (an? )?(inhibit|induc)|\bdid not\b|no (clinically )?(significant|relevant)"
 
 
 def cyp3a4(label):
@@ -129,9 +138,12 @@ def cyp3a4(label):
         return _unusable(label)
     txt = " ".join(label.get(k, "") for k in ("drug_interactions", "clinical_pharmacology", "pharmacokinetics", "warnings_and_cautions"))
     name = re.escape(label.get("_generic", "").split()[0]) if label.get("_generic") else r"\w+"
-    s = _hit(txt, rf"\b{name}\b ({_PERP})", exclude=r"\bnot (an? )?(inhibit|induc)|\bdid not\b|no (clinically )?(significant|relevant)")
+    s = _hit(txt, rf"\b{name}\b ({_PERP})", exclude=_DENY, require="CYP3A")
     if s:
         return _res("flag", f"perpetrator: {s}", "openFDA 7/12")
+    s = _hit(txt, rf"\b{name}\b ({_WEAK_PERP})", exclude=_DENY, require="CYP3A")
+    if s:
+        return _res("note", f"weak or time-dependent perpetrator: {s}", "openFDA 7/12")
     s = _hit(txt, _VICTIM)
     if s:
         return _res("note", f"CYP3A substrate (victim, not perpetrator): {s}", "openFDA 7/12")
