@@ -1,6 +1,6 @@
 # Track 2 pitch: script and slide outline (3 minutes)
 
-**For:** the 3-minute video (package U6, record by 2026-10-21). **Pace:** about 140 words a minute. The spoken text below is about 360 words, roughly 2:35 when read aloud, which leaves about 25 seconds for slide transitions and pauses. Timings are cumulative.
+**For:** the 3-minute video (package U6, record by 2026-10-21). **Pace:** about 140 words a minute. The spoken text below is about 370 words, roughly 2:40 when read aloud, which leaves about 20 seconds for slide transitions and pauses. Timings are cumulative.
 
 **Rules for the video.** Hypotheses only: no doses, no schedules, no advice to the family. Say "the child", never a name, sex, age, date or place beyond "UK". Show no genotypes or variant coordinates. The on-screen footer on every slide reads: *Research hypotheses for expert follow-up. Not medical advice.*
 
@@ -13,7 +13,7 @@
 **On screen:** one sentence, large: *"Any drug that shortens mitosis is out — whatever else it does."* Underneath, smaller: *the five-assay decision rule, §7.*
 
 **Say:**
-> Every drug in this pitch has to survive one rule first. If it shortens mitosis in the patient's own cells, it is out, however good its other results look. That rule comes straight from the biology of this disease, and it is why several obvious drug classes are excluded before we start.
+> Every drug in this pitch has to survive one rule first. If it shortens mitosis in the patient's own cells, it is out, however good its other results look. It comes straight from the biology of this disease, and it rules out several obvious drug classes before we start.
 
 ## Slide 2 · 0:25–0:55 · A dosage disease
 
@@ -24,10 +24,10 @@
 
 ## Slide 3 · 0:55–1:20 · Nothing exists, and the databases point the wrong way
 
-**On screen:** three zeros: *0 trials (ClinicalTrials.gov, ISRCTN) · 0 disease-modifying reports (PubMed) · best BUB1B ligand ≈ 10 µM (ChEMBL)*. Two warning icons: *"Druggable family" = kinase heuristic · "Degrader-tractable" = the harmful direction.*
+**On screen:** three zeros: *0 trials in 5 registries (ClinicalTrials.gov, ISRCTN, EU CTIS, ANZCTR, WHO ICTRP) · 0 disease-modifying reports (PubMed) · best BUB1B ligand ≈ 10 µM (ChEMBL)*. Two warning icons: *"Druggable family" = kinase heuristic · "Degrader-tractable" = the harmful direction.*
 
 **Say:**
-> We checked the registries, PubMed, ChEMBL and Open Targets. There has never been a trial for MVA. The only positive tractability signals are traps: one comes from the kinase family this protein no longer behaves like, and the other says it can be degraded, which is the opposite of what a dosage disease needs.
+> We checked five trial registries, PubMed, ChEMBL and Open Targets. None lists a trial for MVA. The only positive tractability signals are traps: one comes from the kinase family this protein no longer behaves like, and the other says it can be degraded, which is the opposite of what a dosage disease needs.
 
 ## Slide 4 · 1:20–2:00 · Five hypotheses, each with its weakness
 
@@ -37,12 +37,12 @@
 |---|---|---|
 | H1 | NAD+ precursors via SIRT2 | SIRT2 also removes the protective mark |
 | H2 | HDAC2/3 inhibition | the class can cause aneuploidy and low platelets |
-| H3 | Metformin inside surveillance (MILI design) | may select against the child's own mosaic tissue |
+| H3 | Metformin inside surveillance (MILI design; a German trial includes adolescents) | may select against the child's own mosaic tissue |
 | H4 | Genotype-matched oligonucleotide | depends on the child's alleles |
 | H5 | Senolytics | senescence may be a brake on tumours |
 
 **Say:**
-> We rank five hypotheses by how cheaply the first experiment could disprove them. NAD+ precursors and HDAC2/3 inhibition both aim to protect BUBR1 itself. Metformin could sit inside the kidney surveillance already recommended in MVA, following the UK MILI trial design. A genotype-matched oligonucleotide depends on the child's own alleles. Senolytics come last. Every row carries its main weakness, because a hypothesis without one isn't ready for an expert. [v2: once the alleles are classified, say here whether H4 moves up.]
+> We rank five hypotheses by how cheaply the first experiment could disprove them. NAD+ precursors and HDAC2/3 inhibition both aim to protect BUBR1 itself. Metformin could sit inside the kidney surveillance already recommended in MVA, following the UK MILI design; a German trial now includes adolescents. A genotype-matched oligonucleotide depends on the child's own alleles, judged by rules we fixed in advance. Senolytics come last. Every row carries its main weakness, because a hypothesis without one isn't ready for an expert. [v2: once the alleles are classified, say here whether H4 moves up, applying the rules fixed in advance in `d08_worksheet.md`.]
 
 ## Slide 5 · 2:00–2:35 · Two filters, and a pipeline that applies them
 
