@@ -60,7 +60,7 @@
 
 ## Slide 7 · 2:55–3:00 · Close
 
-**On screen:** *Veto first. Hypotheses, not prescriptions.* Repository link.
+**On screen:** *Veto first. Hypotheses, not prescriptions.* Repository link. A closing card (on screen only, not spoken) carries the organisers' required acknowledgement, and the same text goes in the video description: *"This work was made possible through the Hackathon, organized by Sage Bionetworks in partnership with the MVA Society, Hugging Face, and BEACON (The Benchmarking, Evaluation, and Assessment Consortium for Science), with prize sponsorship from AWS and Anthropic. We are deeply grateful to the child and their family who generously contributed their data and their story to advance research into this rare disease. We acknowledge their trust in making this Hackathon possible."*
 
 **Say:**
 > Veto first, then hypotheses for the experts. Thank you.
@@ -73,4 +73,5 @@
 - [ ] No dose, schedule or "should take" wording anywhere, spoken or on screen.
 - [ ] Slide 4 matches the latest Track 2 report version.
 - [ ] Numbers on slide 5 match `reports/track2/drug_triage/drug_triage_demo.md` from the latest run.
+- [ ] The organisers' acknowledgement is on the closing card and in the video description.
 - [ ] Uploading to YouTube or Vimeo, and the visibility setting, need Santanu's live yes.

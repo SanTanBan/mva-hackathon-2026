@@ -366,6 +366,14 @@ Work package R06 automates the landscape and screening steps over public data (C
 
 ---
 
+## 14. Acknowledgement
+
+*"This work was made possible through the Hackathon, organized by Sage Bionetworks in partnership with the MVA Society, Hugging Face, and BEACON (The Benchmarking, Evaluation, and Assessment Consortium for Science), with prize sponsorship from AWS and Anthropic. We are deeply grateful to the child and their family who generously contributed their data and their story to advance research into this rare disease. We acknowledge their trust in making this Hackathon possible."*
+
+The organisers require this acknowledgement in any public communication arising from the Hackathon.
+
+---
+
 ## References
 
 - Anjum AF et al. 2025. Unleashing the potential of givinostat: a novel therapy for Duchenne muscular dystrophy. *Curr Ther Res Clin Exp* 102:100787. PMID 40330090. https://doi.org/10.1016/j.curtheres.2025.100787

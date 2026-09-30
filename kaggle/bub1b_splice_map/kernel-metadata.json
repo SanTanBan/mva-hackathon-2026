@@ -1,0 +1,14 @@
+{
+  "id": "santanubanerjee9/bub1b-splice-map",
+  "title": "bub1b-splice-map",
+  "code_file": "bub1b_splice_map.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4"
+}

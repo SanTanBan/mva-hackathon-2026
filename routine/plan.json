@@ -86,7 +86,7 @@
       "done_when": "Covers the MANE Select transcript and exon/domain map; known P/LP variants cited by ClinVar ID and HGVS (no raw coordinates); the upstream regulatory interval and the deep-intronic/mobile-element precedents; the BUB1 paralog mapping caveat; Genomics England PanelApp panels; gnomAD constraint; the other MVA genes to exclude. Public data only."
     },
     {
-      "id": "R04", "owner": "routine", "status": "in_progress", "needs": [], "progress": "2026-09-27: renderer (public/full split, Markdown + PDF via headless Edge, 10 tests) and a provisional skeleton with the LLM-usage section are committed. Left: align the skeleton with the organisers' methods template once U3 downloads it.",
+      "id": "R04", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-30", "progress": "2026-09-27: renderer (public/full split, Markdown + PDF via headless Edge, 10 tests) and a provisional skeleton. 2026-09-30: the organisers' form (methods_description_form.xlsx, one sheet per track, in D:\\mva-hackathon\\refs\\templates) was fetched from their Space. reports/track1/methods_report.md now answers its 13 Track 1 questions as Part A, and reports/track2/methods_description.md answers the 11 Track 2 questions. The required acknowledgement is added to both reports and the pitch.",
       "title": "Report scaffolds with public and submitted variants",
       "outputs": ["reports/track1/methods_report.md", "tools/render_reports.py"],
       "done_when": "The Track 1 methods report skeleton follows the organizers' methods template sections, including the LLM-usage question. A renderer produces a redacted public version into reports/ and a full version into D:\\mva-hackathon\\submissions, as Markdown and PDF."
