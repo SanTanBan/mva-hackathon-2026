@@ -362,7 +362,7 @@ Work package R06 automates the landscape and screening steps over public data (C
 
 - **The data.** The hackathon dataset is a real child's genome, shared under WCG IRB protocol #20252010. This public draft uses no patient data (no variants, genotypes, reads or phenotype text) and nothing that could identify the child.
 - **The sources.** All sources are public. Each PubMed-indexed citation was checked on 2026-09-27 against its PubMed record: title, authors and journal, with the specific claim checked against the abstract or open-access full text. The six added on 2026-09-29 (Conze 2016, Elhajouji 1997, Harwood 2007, Ketteler 2023, Oztas 2007, Ramírez 2006) were checked the same way. So were the two added that evening (Cheerie 2025a, Zardetto 2024), and the newly used findings of Suijkerbuijk 2010, which were checked against its open-access full text. Drug-label statements were read from the current US prescribing information. Registry and database results are cited by accession and query date.
-- **LLM use.** An LLM agent (Claude, Anthropic) helped with literature synthesis and drafting, using public sources only. *The provider, plan or tier, relevant setting and data-handling terms still need to be recorded here; the organisers require this, and the confirmed wording is pending.*
+- **LLM use.** An LLM agent helped with literature synthesis, code and drafting. **Provider and tier:** Anthropic Claude Max (consumer plan), used through Claude Code. **Setting:** model-training opt-out enabled. **Practice:** no feedback or ratings were given in sessions involving the data. These are the conditions Sage set for consumer plans (HF thread #2, 29 September 2026). This public draft used public sources only.
 
 ---
 

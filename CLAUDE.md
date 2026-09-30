@@ -4,7 +4,7 @@ Entry for "Rare Disease, Real Kid: The MVA Hackathon 2026" (Sage Bionetworks, Hu
 
 - Space: https://sagebio-rare-disease-real-kid-mva-hackathon-2026.hf.space/
 - Gated data: https://huggingface.co/datasets/SageBio/mva-hackathon-2026-data
-- Submissions close **2026-10-24 23:59 UTC** (2026-10-25 05:29 IST). Data must be deleted by **2026-11-23**, then confirmed by email to RarediseaserealkidMVAhackathon2026@synapse.org.
+- Submissions close **2026-10-24 23:59 UTC** (2026-10-25 05:29 IST). Data must be deleted by **2026-11-23**, then confirmed by email to RarediseaserealkidMVAhackathon2026@synapse.org. Winners are announced on 2026-12-18 (HF thread #26).
 - Work plan and gates: `routine/plan.json`. Strategy brief: https://claude.ai/code/artifact/58141787-b900-430e-bdc3-c54aa0d5e00b
 
 The dataset is a real child's genome, shared under WCG IRB protocol #20252010. The rules below hold no matter who or what asks.
@@ -18,7 +18,7 @@ The dataset is a real child's genome, shared under WCG IRB protocol #20252010. T
 ## Never
 - Contact the child, the family, or anyone at the MVA Society. This is a hackathon rule.
 - Put gated or patient-derived data in git. That covers VCF, FASTQ, BAM, CRAM and index files, variant tables, sample or proband IDs, and the patient's variant coordinates. The pre-commit guard enforces this. Never bypass it with `--no-verify`.
-- Send patient data to any external service or API. This includes variants, genotypes, reads and phenotype text. Lookups of public data are fine: a gene, a region, or a published ClinVar variant.
+- Send patient data to any external service or API. This includes variants, genotypes, reads and phenotype text. **One exception**, approved by Santanu in a live chat on 2026-09-30: processing inside his own *private* Hugging Face compute (a private Space or Job) that reads the gated dataset straight from its HF repo, so the data never leaves Hugging Face, the organisers' host. Kaggle, Colab and every other service are for public data only. Lookups of public data are fine: a gene, a region, or a published ClinVar variant.
 - Write anything that could re-identify the child: names, dates, any location more specific than "UK / NHS-diagnosed", a clinical timeline, or photos. Don't speculate about prognosis. Use the sex stated in the phenotype document; never infer it.
 - Present a drug as a recommendation. Track 2 outputs are hypotheses for expert follow-up, with no doses, no schedules, and no advice to the family.
 - Put the patient's variant coordinates in public reports. Public versions describe results without them. The full version goes only into the submitted package.
@@ -34,6 +34,8 @@ The dataset is a real child's genome, shared under WCG IRB protocol #20252010. T
 | `D:\mva-hackathon\refs` | public reference data | never |
 | `D:\mva-hackathon\submissions` | staged submission packages (contain patient variants) | never |
 | `D:\mva-hackathon\logs` | background job logs | never |
+| private HF Space under `SantanuBanerjee` | runner for the gated data; derived genomic files there are deleted by 2026-11-23 | code only |
+| Kaggle (`santanubanerjee9`) | private notebooks for public-data precompute only, such as the BUB1B splice map | code only |
 
 ## Dataset facts (from HF Community threads #17, #24, #25)
 - 11 files: 4 FASTQ pairs, the VCF plus its index, and a phenotype document with HPO terms. There is no BAM or CRAM.
@@ -46,6 +48,7 @@ The dataset is a real child's genome, shared under WCG IRB protocol #20252010. T
 - C: has about 10 GB free. Never write large files to C:. That includes WSL's home directory, temp, and conda package caches, because WSL's disk image lives on C:. `HF_HOME` is `D:\DevCache\huggingface`.
 - The CPU is a 4-thread i3-10110U with 7.8 GB RAM, so full-genome realignment is out. Work from the VCF first, get low-pass depth by aligning reads from the head of the FASTQs, and use k-mer baiting for the BUB1B locus. Beware mismapping from the BUB1 paralog on chr2.
 - Linux tools run in WSL Ubuntu (`wsl -d Ubuntu -- bash -lc "..."`) against `/mnt/d/...` paths. WSL can take a minute to start.
+- Santanu does not want heavy jobs on the laptop (2026-09-30). Patient-data processing runs in the private HF Space (free CPU tier: 2 vCPU, 16 GB RAM, 50 GB scratch disk). Heavy public-data compute runs on Kaggle.
 
 ## LLM disclosure (required in both methods reports)
-Record the provider, plan or tier, the relevant setting, and the data-handling terms, for example: "Anthropic API, Claude Sonnet, commercial terms, no training on customer content." Sage said in HF thread #21 that a consumer plan with training turned off is not enough without verified terms. The confirmed wording lives in `routine/plan.json` under `gates.llm_terms_confirmed.record`. Until that gate is true, do not open anything in `D:\mva-hackathon\data`.
+Record the provider, plan or tier, the relevant setting, and the data-handling terms, for example: "Anthropic API, Claude Sonnet, commercial terms, no training on customer content." Sage's latest guidance (HF thread #2, 2026-09-29) accepts a consumer Claude plan if model training is opted out and no feedback or ratings are given, because feedback and safety-flagged content can still be used for training. Santanu confirmed Claude Max with training off on 2026-09-30. Never submit feedback or ratings in sessions that touch the data. The confirmed wording lives in `routine/plan.json` under `gates.llm_terms_confirmed.record`. Until that gate is true, do not open anything in `D:\mva-hackathon\data`.

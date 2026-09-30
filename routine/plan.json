@@ -10,7 +10,7 @@
     "target_final_submission_local": "2026-10-23 20:00 IST",
     "pitch_video_recorded_by": "2026-10-21",
     "data_deletion_due_utc": "2026-11-23T23:59:00Z",
-    "winners_announced": "2026-11-25"
+    "winners_announced": "2026-12-18"
   },
   "gates": {
     "data_access_granted": {
@@ -19,17 +19,27 @@
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
-      "value": false,
-      "record": "",
+      "value": true,
+      "confirmed": "2026-09-30",
+      "record": "Anthropic Claude Max (consumer plan), used through Claude Code; model-training opt-out enabled ('Help improve Claude' off); no feedback or ratings given in sessions involving the data. This meets Sage's conditions for consumer plans (HF thread #2, 2026-09-29). Confirmed by Santanu in a live chat on 2026-09-30.",
       "how": "The user names their Claude plan and verifies its data-handling terms in a live chat (HF thread #21: a consumer plan with training off is not enough on its own; commercial/API terms are recommended). The confirmed wording goes in 'record' and into both methods reports."
     },
     "setup_downloads_done": {
       "value": false,
-      "how": "Live session: the user approves a list of downloads (file, source, size): the organizers' submission and methods templates, a micromamba + bioconda toolchain in WSL, the GRCh38 reference and prebuilt index, the ClinVar VCF, and optionally Exomiser and its data."
+      "how": "2026-09-30: Santanu chose cloud processing (live chat). The toolchain (bcftools, samtools, htslib, minimap2) and the GRCh38 reference are installed inside the private HF Space image, not on the laptop. True once the Space builds and its self-test passes. If the Space route fails, the fallback he approved is the ~1.5 GB core set, kept under D:\\mva-hackathon\\refs and deleted after the competition."
+    },
+    "hf_space_route": {
+      "value": true,
+      "decided": "2026-09-30",
+      "how": "Santanu chose (live chat) to process the gated data inside his private Hugging Face compute, reading the dataset repo directly, so the laptop stays idle. CLAUDE.md was amended the same day. Kaggle stays public-data only."
+    },
+    "hf_space_token_set": {
+      "value": false,
+      "how": "Santanu creates a fine-grained, read-only HF token for SageBio/mva-hackathon-2026-data and pastes it himself as the secret HF_TOKEN in the private Space. Claude never handles the token."
     },
     "dataset_downloaded": {
       "value": false,
-      "how": "Live session, after access and LLM terms: the user approves the 11-file (~85 GB) download to D:\\mva-hackathon\\data."
+      "how": "Superseded on 2026-09-30 by the HF Space route: the data is read in place from the HF repo, not downloaded to the laptop. It is kept only as the fallback: the 11-file (~85 GB) download to D:\\mva-hackathon\\data, which would need a live yes."
     },
     "github_repo_created": {
       "value": false,
@@ -52,7 +62,7 @@
       "done_when": "check_access.py reports dataset_access = granted. Critical path: nothing counts without it, and registration IS this request."
     },
     {
-      "id": "U2", "owner": "you", "status": "todo",
+      "id": "U2", "owner": "you", "status": "done", "completed": "2026-09-30",
       "title": "Confirm Claude plan and its data-handling terms",
       "done_when": "gates.llm_terms_confirmed is true with a recorded one-line disclosure."
     },
@@ -102,9 +112,22 @@
       "done_when": "Timed to 3:00 or less and opens with the veto rule, not a biology lecture."
     },
     {
-      "id": "U3", "owner": "live", "status": "todo",
+      "id": "R08", "owner": "routine", "status": "todo", "needs": [],
+      "title": "Private HF Space runner for the gated data",
+      "outputs": ["space/"],
+      "done_when": "A private Space under SantanuBanerjee builds with bcftools, samtools, htslib, minimap2 and the GRCh38 analysis-set reference. A self-test on synthetic data passes. It checks dataset access with the HF_TOKEN secret and runs pipeline steps on demand. It reads the gated repo in place and returns only small result tables. Derived genomic files stay on ephemeral disk or in a private repo that is deleted by 2026-11-23."
+    },
+    {
+      "id": "R09", "owner": "routine", "status": "in_progress", "needs": [],
+      "title": "Public BUB1B splice map on Kaggle (Pangolin, every possible SNV)",
+      "outputs": ["kaggle/bub1b_splice_map/", "reports/track2/d08_worksheet.md"],
+      "done_when": "A private Kaggle notebook scores every possible SNV across the BUB1B gene with Pangolin (GPL-3.0). Positive controls behave as expected: canonical splice variants lose, and c.2386-11A>G gains. Results (a few MB) are in D:\\mva-hackathon\\refs\\bub1b. The worksheet gains a summary of where antisense-correctable cryptic sites could arise. No patient data is involved."
+    },
+    {
+      "id": "U3", "owner": "live", "status": "done", "completed": "2026-09-30",
       "title": "Approve setup downloads (toolchain, reference, ClinVar, templates)",
-      "done_when": "gates.setup_downloads_done is true."
+      "progress": "2026-09-30: Santanu approved cloud processing instead of laptop downloads. The toolchain and reference go into the private HF Space image (R08); the organisers' templates are read from the web. The ~1.5 GB core set on D: is approved only as a fallback.",
+      "done_when": "A route for the setup downloads is approved; gates.setup_downloads_done then tracks the build."
     },
     {
       "id": "U4", "owner": "live", "status": "todo",
@@ -112,12 +135,12 @@
       "done_when": "gates.github_repo_created is true."
     },
     {
-      "id": "U5", "owner": "live", "status": "todo", "needs": ["U1", "U2"],
-      "title": "Approve the dataset download (~85 GB, 11 files)",
-      "done_when": "gates.dataset_downloaded is true."
+      "id": "U5", "owner": "you", "status": "todo", "needs": ["U1", "R08"],
+      "title": "Add a read-only HF token as the secret HF_TOKEN in the private Space",
+      "done_when": "gates.hf_space_token_set is true. The earlier ~85 GB laptop download is superseded by the HF Space route (2026-09-30)."
     },
     {
-      "id": "D01", "owner": "routine", "status": "todo", "needs": ["dataset_downloaded", "llm_terms_confirmed"],
+      "id": "D01", "owner": "routine", "status": "todo", "needs": ["data_access_granted", "llm_terms_confirmed", "R08", "hf_space_token_set"],
       "title": "Data intake and integrity",
       "done_when": "File inventory and checksums are recorded; VCF header, sample and build are checked; HPO terms are extracted to D:\\mva-hackathon\\work; sample and proband IDs are appended to D:\\mva-hackathon\\private-terms.txt."
     },

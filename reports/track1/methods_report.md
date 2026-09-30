@@ -28,7 +28,7 @@
 
 - Dataset: whole-genome FASTQ (four pairs), one VCF with its index, and a phenotype document with HPO terms, shared under WCG IRB protocol #20252010 through gated access on Hugging Face.
 - Reference build: GRCh38 (no-alt analysis set with decoys); contigs have no `chr` prefix. Variants were called with Sentieon, then filtered with GATK VariantFiltration.
-- Handling: gated and derived data stay under `D:\mva-hackathon\`, never in git, and are deleted by 2026-11-23. No patient data was sent to any external service.
+- Handling: the gated data are processed in place on Hugging Face, the organisers' host, inside a private Space that reads the dataset repository directly. Only small result tables come to `D:\mva-hackathon\`. Nothing gated or derived enters git, and all of it is deleted by 2026-11-23. No patient data went to any other service.
 
 ## 4. Methods
 
@@ -91,7 +91,7 @@ Public summary: *what was found, described without coordinates or identifiers.*
 
 ## 9. LLM usage (required)
 
-*The organisers require the provider, plan or tier, relevant setting and data-handling terms. The confirmed wording is pending: it will be copied from `routine/plan.json` → `gates.llm_terms_confirmed.record` once that gate is set. No patient data was used with an LLM before that gate was confirmed.*
+An LLM agent helped with literature synthesis, code and drafting. **Provider and tier:** Anthropic Claude Max (consumer plan), used through Claude Code. **Setting:** model-training opt-out enabled. **Practice:** no feedback or ratings were given in sessions involving the data. These are the conditions Sage set for consumer plans (HF thread #2, 29 September 2026). The wording was confirmed on 2026-09-30 and matches `routine/plan.json` → `gates.llm_terms_confirmed.record`. No patient data was used with an LLM before that date.
 
 ## 10. Privacy and data deletion
 
