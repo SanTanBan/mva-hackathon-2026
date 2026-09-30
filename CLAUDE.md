@@ -34,7 +34,7 @@ The dataset is a real child's genome, shared under WCG IRB protocol #20252010. T
 | `D:\mva-hackathon\refs` | public reference data | never |
 | `D:\mva-hackathon\submissions` | staged submission packages (contain patient variants) | never |
 | `D:\mva-hackathon\logs` | background job logs | never |
-| private HF Space under `SantanuBanerjee` | runner for the gated data; derived genomic files there are deleted by 2026-11-23 | code only |
+| private HF Space under `SantanuBanerjee` | not used: HF needs PRO to host Docker/Gradio Spaces. Code is kept in `space/` in case he subscribes | code only |
 | Kaggle (`santanubanerjee9`) | private notebooks for public-data precompute only, such as the BUB1B splice map | code only |
 
 ## Dataset facts (from HF Community threads #17, #24, #25)
@@ -48,7 +48,10 @@ The dataset is a real child's genome, shared under WCG IRB protocol #20252010. T
 - C: has about 10 GB free. Never write large files to C:. That includes WSL's home directory, temp, and conda package caches, because WSL's disk image lives on C:. `HF_HOME` is `D:\DevCache\huggingface`.
 - The CPU is a 4-thread i3-10110U with 7.8 GB RAM, so full-genome realignment is out. Work from the VCF first, get low-pass depth by aligning reads from the head of the FASTQs, and use k-mer baiting for the BUB1B locus. Beware mismapping from the BUB1 paralog on chr2.
 - Linux tools run in WSL Ubuntu (`wsl -d Ubuntu -- bash -lc "..."`) against `/mnt/d/...` paths. WSL can take a minute to start.
-- Santanu does not want heavy jobs on the laptop (2026-09-30). Patient-data processing runs in the private HF Space (free CPU tier: 2 vCPU, 16 GB RAM, 50 GB scratch disk). Heavy public-data compute runs on Kaggle.
+- Santanu does not want heavy jobs on the laptop (2026-09-30). Free HF Spaces need PRO to run server code, so he chose the **laptop, VCF-first** route:
+  - Download only the VCF, its index and the phenotype document to `D:\mva-hackathon\data`. Everything possible is done from the VCF.
+  - FASTQ steps (low-pass depth, transposon search) run overnight at low priority (`nice`/`ionice`), one file pair at a time. Each pair is deleted after use.
+  - Heavy public-data compute runs on Kaggle.
 
 ## LLM disclosure (required in both methods reports)
 Record the provider, plan or tier, the relevant setting, and the data-handling terms, for example: "Anthropic API, Claude Sonnet, commercial terms, no training on customer content." Sage's latest guidance (HF thread #2, 2026-09-29) accepts a consumer Claude plan if model training is opted out and no feedback or ratings are given, because feedback and safety-flagged content can still be used for training. Santanu confirmed Claude Max with training off on 2026-09-30. Never submit feedback or ratings in sessions that touch the data. The confirmed wording lives in `routine/plan.json` under `gates.llm_terms_confirmed.record`. Until that gate is true, do not open anything in `D:\mva-hackathon\data`.

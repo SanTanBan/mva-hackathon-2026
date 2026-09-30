@@ -26,20 +26,20 @@
     },
     "setup_downloads_done": {
       "value": false,
-      "how": "2026-09-30: Santanu chose cloud processing (live chat). The toolchain (bcftools, samtools, htslib, minimap2) and the GRCh38 reference are installed inside the private HF Space image, not on the laptop. True once the Space builds and its self-test passes. If the Space route fails, the fallback he approved is the ~1.5 GB core set, kept under D:\\mva-hackathon\\refs and deleted after the competition."
+      "how": "Approved in a live chat on 2026-09-30 (laptop, VCF-first route): the ~1.5 GB core set, all under D:\\mva-hackathon, deleted after the competition. It covers a micromamba env with bcftools, samtools, htslib and minimap2 in D:\\mva-hackathon\\tools; the GRCh38 no-alt analysis set with hs38d1 (contigs renamed without chr), the Ensembl GRCh38 GFF3 and the ClinVar GRCh38 VCF in refs; and the organisers' templates (fetched 2026-09-30). True once installed and checked (package R08)."
     },
     "hf_space_route": {
-      "value": true,
+      "value": false,
       "decided": "2026-09-30",
-      "how": "Santanu chose (live chat) to process the gated data inside his private Hugging Face compute, reading the dataset repo directly, so the laptop stays idle. CLAUDE.md was amended the same day. Kaggle stays public-data only."
+      "how": "Chosen, then dropped the same day: Hugging Face returned 402, because hosting Docker/Gradio Spaces on free cpu-basic needs a PRO subscription. Santanu then chose the laptop, VCF-first route (live chat). The CLAUDE.md exception for private HF compute and the code in space/ stay in case he subscribes. Kaggle stays public-data only."
     },
     "hf_space_token_set": {
       "value": false,
-      "how": "Santanu creates a fine-grained, read-only HF token for SageBio/mva-hackathon-2026-data and pastes it himself as the secret HF_TOKEN in the private Space. Claude never handles the token."
+      "how": "Only needed if the HF Space route is revived: Santanu would create a fine-grained, read-only HF token and paste it himself as the secret HF_TOKEN. Claude never handles the token."
     },
     "dataset_downloaded": {
       "value": false,
-      "how": "Superseded on 2026-09-30 by the HF Space route: the data is read in place from the HF repo, not downloaded to the laptop. It is kept only as the fallback: the 11-file (~85 GB) download to D:\\mva-hackathon\\data, which would need a live yes."
+      "how": "Approved in a live chat on 2026-09-30 (laptop, VCF-first route). Once access is granted, download the VCF, its index and the phenotype document to D:\\mva-hackathon\\data and verify checksums against the HF metadata. FASTQ pairs are fetched one pair at a time for overnight low-priority jobs and deleted after use. True once the VCF, index and phenotype document are in place (package D00)."
     },
     "github_repo_created": {
       "value": false,
@@ -112,10 +112,11 @@
       "done_when": "Timed to 3:00 or less and opens with the veto rule, not a biology lecture."
     },
     {
-      "id": "R08", "owner": "routine", "status": "todo", "needs": [],
-      "title": "Private HF Space runner for the gated data",
-      "outputs": ["space/"],
-      "done_when": "A private Space under SantanuBanerjee builds with bcftools, samtools, htslib, minimap2 and the GRCh38 analysis-set reference. A self-test on synthetic data passes. It checks dataset access with the HF_TOKEN secret and runs pipeline steps on demand. It reads the gated repo in place and returns only small result tables. Derived genomic files stay on ephemeral disk or in a private repo that is deleted by 2026-11-23."
+      "id": "R08", "owner": "routine", "status": "in_progress", "needs": [],
+      "title": "Local toolchain and reference setup (core set, VCF-first route)",
+      "outputs": ["tools/setup_core.sh"],
+      "progress": "2026-09-30: the private HF Space runner (space/) was written, but HF refused to host it without PRO (402). Repurposed to the laptop route that Santanu chose.",
+      "done_when": "A micromamba env under D:\\mva-hackathon\\tools has bcftools, samtools, htslib and minimap2, with versions recorded. The GRCh38 no-alt analysis set with hs38d1 is renamed without chr and faidx-indexed. The Ensembl GFF3 and the ClinVar GRCh38 VCF with its index are in place. Nothing is written to C: or to WSL's home. gates.setup_downloads_done is true."
     },
     {
       "id": "R09", "owner": "routine", "status": "in_progress", "needs": [],
@@ -126,7 +127,7 @@
     {
       "id": "U3", "owner": "live", "status": "done", "completed": "2026-09-30",
       "title": "Approve setup downloads (toolchain, reference, ClinVar, templates)",
-      "progress": "2026-09-30: Santanu approved cloud processing instead of laptop downloads. The toolchain and reference go into the private HF Space image (R08); the organisers' templates are read from the web. The ~1.5 GB core set on D: is approved only as a fallback.",
+      "progress": "2026-09-30: approved in a live chat, the ~1.5 GB core set to D:\\mva-hackathon (laptop, VCF-first route; free HF Spaces need PRO). Installed by package R08; the templates were fetched the same day.",
       "done_when": "A route for the setup downloads is approved; gates.setup_downloads_done then tracks the build."
     },
     {
@@ -135,12 +136,17 @@
       "done_when": "gates.github_repo_created is true."
     },
     {
-      "id": "U5", "owner": "you", "status": "todo", "needs": ["U1", "R08"],
-      "title": "Add a read-only HF token as the secret HF_TOKEN in the private Space",
-      "done_when": "gates.hf_space_token_set is true. The earlier ~85 GB laptop download is superseded by the HF Space route (2026-09-30)."
+      "id": "U5", "owner": "live", "status": "done", "completed": "2026-09-30",
+      "title": "Approve the dataset download (VCF-first)",
+      "done_when": "Approved in a live chat on 2026-09-30: the VCF, its index and the phenotype document, plus FASTQ pairs one at a time for overnight low-priority jobs, each deleted after use. The download itself is package D00, once access is granted."
     },
     {
-      "id": "D01", "owner": "routine", "status": "todo", "needs": ["data_access_granted", "llm_terms_confirmed", "R08", "hf_space_token_set"],
+      "id": "D00", "owner": "routine", "status": "todo", "needs": ["data_access_granted", "llm_terms_confirmed", "R08"],
+      "title": "Download the VCF-first files",
+      "done_when": "The VCF, its index and the phenotype document are in D:\\mva-hackathon\\data. Their sizes and SHA-256 checksums match the HF metadata, and gates.dataset_downloaded is true."
+    },
+    {
+      "id": "D01", "owner": "routine", "status": "todo", "needs": ["D00", "data_access_granted", "llm_terms_confirmed"],
       "title": "Data intake and integrity",
       "done_when": "File inventory and checksums are recorded; VCF header, sample and build are checked; HPO terms are extracted to D:\\mva-hackathon\\work; sample and proband IDs are appended to D:\\mva-hackathon\\private-terms.txt."
     },
