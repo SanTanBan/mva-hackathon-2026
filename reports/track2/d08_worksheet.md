@@ -83,6 +83,37 @@ A synonymous exonic variant with an RNA-confirmed cryptic site at least 15 nt fr
 
 **The dataset has no RNA** (dossier §4). Any splice-type allele will therefore stay "unable to assess" until RNA from patient cells is available. This makes RNA sequencing the first experiment for such an allele.
 
+#### What the BUB1B splice map shows (added 2026-10-01)
+
+We scored all 180,165 possible single-nucleotide changes across the *BUB1B* MANE Select transcript with Pangolin (Zeng & Li 2022, PMID 35449021; GPL-3.0). The run used public sequence only, on Kaggle (`kaggle/bub1b_splice_map/`, Pangolin commit 5cf94b8).
+
+**Checks.**
+- Our batched scorer matched Pangolin's own scoring function to within 5×10⁻⁵ (2×10⁻⁴ in half precision).
+- All seven published positive controls behaved as expected:
+  - The canonical splice variants c.1402-1G>T, c.2386-2A>G and c.581+1G>T each lose about 0.85.
+  - c.1401G>T, on the last base of exon 10, loses 0.84 at the donor. This supports the dossier's inference that this ClinVar "missense" acts through splicing.
+  - c.2386-11A>G gains 0.76 at a new acceptor 10 nt upstream while the canonical acceptor loses 0.71, as Rio Frio 2010 reported.
+
+Each variant's largest gain and loss within ±50 nt, after masking MANE Select splice sites:
+
+| Where the change is | Possible changes | Strong cryptic gain (≥ 0.5) | Strong loss (≤ −0.5) |
+|---|---|---|---|
+| Exonic | 11,007 | 51 | 68 |
+| Canonical site (±1–2) | 264 | 86 | 256 |
+| Intronic, 3–4 nt from the exon | 264 | 12 | 55 |
+| Intronic, 5–14 nt | 1,320 | 30 | 102 |
+| Branch-point window (acceptor −18 to −40) | 1,518 | 1 | 7 |
+| Intronic, 15–100 nt | 9,516 | 11 | 7 |
+| Deep intronic (more than 100 nt) | 156,276 | 64 | 0 |
+| **Total** | **180,165** | **255** | **495** |
+
+**What it means for the splice-correction lane:**
+- **The target class is rare.** Only 75 of the 169,158 possible intronic changes (0.04%) create a strong cryptic site at least 15 nt from a canonical site and outside the branch-point window. 64 of these are deep intronic, at 58 positions across 13 introns; introns 4 and 8 have the most, with 10 each.
+- **The two published cryptic-acceptor alleles fall outside it.** c.2386-11A>G and c.1402-5A>G both create strong new acceptors, but only 10 and 4 nt upstream of the canonical acceptor. That is inside the zone where splice correction is "unlikely eligible". For the *BUB1B* second alleles published so far, splice correction is therefore unlikely to apply. Up-regulation remains the more plausible antisense route.
+- **At the looser threshold of 0.2,** 398 intronic changes at least 15 nt from a canonical site show some gain.
+
+The map covers single-nucleotide changes only. Indels and transposon insertions need their own Pangolin run, and a prediction is not RNA evidence. D04 looks up the child's single-nucleotide variants locally with `python -m pipeline.splice_map`, so they never leave this machine.
+
 ### 3b. Exon skipping: removing the exon that carries a truncating variant
 
 An exon can be skipped only if it is in-frame and is neither the first nor the last coding exon. It must also not encode an essential region. Exon 1 and exon 23 are excluded. Of the 21 internal exons, only four are in-frame, and none of the four is a good candidate:
@@ -163,3 +194,4 @@ Classic exon skipping is not a realistic route for this gene.
 - Rio Frio T et al. 2010. PMID 21190457 (full entry in the Track 2 report).
 - Suijkerbuijk SJE et al. 2010. Molecular causes for BUBR1 dysfunction in the human cancer predisposition syndrome mosaic variegated aneuploidy. *Cancer Res* 70:4891–4900. PMID 20516114. https://doi.org/10.1158/0008-5472.CAN-09-4319
 - Zardetto B et al. 2024. Practical recommendations for the selection of patients for individualized splice-switching ASO-based treatments. *Hum Mutat* 2024:9920230. PMID 40225926. https://doi.org/10.1155/2024/9920230
+- Zeng T, Li YI. 2022. Predicting RNA splicing from DNA sequence using Pangolin. *Genome Biol* 23:103. PMID 35449021. https://doi.org/10.1186/s13059-022-02664-4

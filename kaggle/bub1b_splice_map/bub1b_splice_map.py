@@ -105,6 +105,7 @@ def hgvs_c(p):
 
 
 # ---------------------------------------------------------------- Pangolin
+os.chdir(WORK)  # clone outside /kaggle/working so Pangolin itself is not saved as notebook output
 if not Path("Pangolin").exists():
     subprocess.run(["git", "clone", "--depth", "1", "https://github.com/tkzeng/Pangolin.git"], check=True)
 commit = subprocess.run(["git", "-C", "Pangolin", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()

@@ -121,8 +121,9 @@
       "done_when": "A micromamba env under D:\\mva-hackathon\\tools has bcftools, samtools, htslib and minimap2, with versions recorded. The GRCh38 no-alt analysis set with hs38d1 is renamed without chr and faidx-indexed. The Ensembl GFF3 and the ClinVar GRCh38 VCF with its index are in place. Nothing is written to C: or to WSL's home. gates.setup_downloads_done is true."
     },
     {
-      "id": "R09", "owner": "routine", "status": "in_progress", "needs": [],
+      "id": "R09", "owner": "routine", "status": "done", "needs": [], "completed": "2026-10-01",
       "title": "Public BUB1B splice map on Kaggle (Pangolin, every possible SNV)",
+      "progress": "Ran on the private Kaggle notebook santanubanerjee9/bub1b-splice-map, pushed by an idle-slot waiter at 00:30 IST: 180,165 SNVs in 62 min on 2x T4. Checks: matched Pangolin's compute_score to 5e-5 (fp32) and 2e-4 (fp16); all 7 published controls as expected. Output in D:\\mva-hackathon\\refs\\bub1b\\kaggle_out; local lookup with pipeline/splice_map.py. Finding: 75 intronic SNVs (0.04%) would create a strong cryptic site at 15 nt or more from canonical sites; the published cryptic-acceptor alleles sit 4-10 nt away, so up-regulation is the more plausible antisense route for BUB1B.",
       "outputs": ["kaggle/bub1b_splice_map/", "reports/track2/d08_worksheet.md"],
       "done_when": "A private Kaggle notebook scores every possible SNV across the BUB1B gene with Pangolin (GPL-3.0). Positive controls behave as expected: canonical splice variants lose, and c.2386-11A>G gains. Results (a few MB) are in D:\\mva-hackathon\\refs\\bub1b. The worksheet gains a summary of where antisense-correctable cryptic sites could arise. No patient data is involved."
     },
