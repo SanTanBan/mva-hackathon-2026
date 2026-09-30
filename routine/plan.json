@@ -25,7 +25,9 @@
       "how": "The user names their Claude plan and verifies its data-handling terms in a live chat (HF thread #21: a consumer plan with training off is not enough on its own; commercial/API terms are recommended). The confirmed wording goes in 'record' and into both methods reports."
     },
     "setup_downloads_done": {
-      "value": false,
+      "value": true,
+      "checked": "2026-09-30",
+      "record": "Installed 2026-09-30 (tools/setup_core.sh; log D:\\mva-hackathon\\logs\\r08_setup_core.log). bcftools, samtools and htslib 1.24 and minimap2 2.31-r1302, in a micromamba env under D:\\mva-hackathon\\tools (780 MB after cleaning the package cache). GRCh38 no-alt analysis set with hs38d1, 2,580 contigs renamed without chr (1..22, X, Y, M), faidx-indexed (3.0 GB). ClinVar GRCh38 VCF, fileDate 2026-09-28 (190 MB). Ensembl GRCh38 GFF3 release 116 (104 MB). Organisers' templates. About 1.3 GB downloaded; about 4.1 GB on disk.",
       "how": "Approved in a live chat on 2026-09-30 (laptop, VCF-first route): the ~1.5 GB core set, all under D:\\mva-hackathon, deleted after the competition. It covers a micromamba env with bcftools, samtools, htslib and minimap2 in D:\\mva-hackathon\\tools; the GRCh38 no-alt analysis set with hs38d1 (contigs renamed without chr), the Ensembl GRCh38 GFF3 and the ClinVar GRCh38 VCF in refs; and the organisers' templates (fetched 2026-09-30). True once installed and checked (package R08)."
     },
     "hf_space_route": {
@@ -112,10 +114,10 @@
       "done_when": "Timed to 3:00 or less and opens with the veto rule, not a biology lecture."
     },
     {
-      "id": "R08", "owner": "routine", "status": "in_progress", "needs": [],
+      "id": "R08", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-30",
       "title": "Local toolchain and reference setup (core set, VCF-first route)",
       "outputs": ["tools/setup_core.sh"],
-      "progress": "2026-09-30: the private HF Space runner (space/) was written, but HF refused to host it without PRO (402). Repurposed to the laptop route that Santanu chose.",
+      "progress": "2026-09-30: the private HF Space runner (space/) was written, but HF refused to host it without PRO (402), so this package was repurposed to the laptop route Santanu chose. tools/setup_core.sh ran in WSL at low priority in 3 h 19 min; the conda env build on the D: mount is the slow part. Versions and sizes are in gates.setup_downloads_done.record.",
       "done_when": "A micromamba env under D:\\mva-hackathon\\tools has bcftools, samtools, htslib and minimap2, with versions recorded. The GRCh38 no-alt analysis set with hs38d1 is renamed without chr and faidx-indexed. The Ensembl GFF3 and the ClinVar GRCh38 VCF with its index are in place. Nothing is written to C: or to WSL's home. gates.setup_downloads_done is true."
     },
     {
