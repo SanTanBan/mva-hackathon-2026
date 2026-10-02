@@ -44,12 +44,15 @@
       "how": "Approved in a live chat on 2026-09-30 (laptop, VCF-first route). Once access is granted, download the VCF, its index and the phenotype document to D:\\mva-hackathon\\data and verify checksums against the HF metadata. FASTQ pairs are fetched one pair at a time for overnight low-priority jobs and deleted after use. True once the VCF, index and phenotype document are in place (package D00)."
     },
     "github_repo_created": {
-      "value": false,
-      "remote": "",
+      "value": true,
+      "remote": "https://github.com/SanTanBan/mva-hackathon-2026",
+      "created": "2026-10-02",
+      "record": "Created PRIVATE with Santanu's live yes on 2026-10-02. Before the first push, the full history was scanned: no data-type files and none of the protected terms in any revision. It must be made public after the hackathon, again with a live yes.",
       "how": "Live session: the user approves a PRIVATE repo under SanTanBan. It must be made public after the hackathon, again with a live yes."
     },
     "nightly_push_enabled": {
-      "value": false,
+      "value": true,
+      "enabled": "2026-10-02",
       "how": "Only if the user explicitly opts in: push code-only commits to the private repo at the end of each run."
     }
   },
@@ -134,7 +137,7 @@
       "done_when": "A route for the setup downloads is approved; gates.setup_downloads_done then tracks the build."
     },
     {
-      "id": "U4", "owner": "live", "status": "todo",
+      "id": "U4", "owner": "live", "status": "done", "completed": "2026-10-02",
       "title": "Approve a private GitHub repo (and optionally nightly pushes)",
       "done_when": "gates.github_repo_created is true."
     },
