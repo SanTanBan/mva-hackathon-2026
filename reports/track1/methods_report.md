@@ -66,7 +66,7 @@ Pairs. The pipeline outputs compound heterozygous pairs in the `chrom_1…alt_1`
 
 ### A12. Run time and cost
 *Measured after the run.* Planned environment: free tiers only.
-- **Gated data:** a private Hugging Face Space on the free CPU tier (2 vCPU, 16 GB RAM).
+- **Gated data:** one laptop (Intel i3-10110U, 4 threads, 7.8 GB RAM), working from the VCF; FASTQ steps run overnight at low priority, one pair at a time.
 - **Public splice map:** one Kaggle GPU session.
 - **Expected cost:** $0.
 
@@ -84,21 +84,22 @@ Pairs. The pipeline outputs compound heterozygous pairs in the `chrom_1…alt_1`
 ### B1. Data, access and governance
 - **Dataset:** whole-genome FASTQ (four pairs), one VCF with its index, and a phenotype document with HPO terms. It is shared under WCG IRB protocol #20252010 through gated access on Hugging Face.
 - **Reference build:** GRCh38 (no-alt analysis set with decoys); contigs have no `chr` prefix. Variants were called with Sentieon, then filtered with GATK VariantFiltration.
-- **Where the data is processed:** in place on Hugging Face, the organisers' host, inside a private Space that reads the dataset repository directly. Only small result tables come to `D:\mva-hackathon\`. Nothing gated or derived enters git.
+- **Where the data is processed:** locally, on one laptop. The VCF, its index and the phenotype document are downloaded from the gated repository; FASTQ pairs are fetched one at a time and deleted after use. Gated and derived files stay under `D:\mva-hackathon\`, and nothing gated or derived enters git (a pre-commit guard enforces this).
 - **Deletion:** all of it is deleted by 2026-11-23. No patient data went to any other service.
 
 ### B2. Compute environment and VCF quality control
 - **Compute:**
-  - Patient data is processed in a private Hugging Face Space (free CPU tier). Tool versions are recorded by its self-test.
-  - Public-data precomputation runs on Kaggle; no patient data goes there.
-  - The laptop is used only for writing and rendering reports.
-  - Full-genome realignment was out of reach on free CPU, so the analysis works from the VCF plus targeted read-level checks.
+  - Patient data is processed locally on one laptop (4 threads, 7.8 GB RAM), with bcftools, samtools and htslib 1.24 and minimap2 2.31 under WSL Ubuntu. No patient data leaves the machine.
+  - Public-data precomputation (the *BUB1B* splice map) runs on Kaggle; no patient data goes there.
+  - Full-genome realignment does not fit this machine, so the analysis works from the VCF, plus targeted read-level checks on FASTQ pairs processed one at a time.
 - **VCF quality control:** header, sample and build checks; left-alignment and multi-allelic splitting; quality filters; and the `chr` prefix added on output.
 
 ### B3. Annotation and inheritance-aware filtering
-- Rare-variant filters using population frequency.
-- Recessive models: homozygous, and compound heterozygous pairs.
-- Consequence calls pinned to MANE Select transcripts; readthrough-transcript consequences are dropped (locus dossier §1).
+- **Consequences** come from `bcftools csq` given only the 19,299 MANE Select transcripts of Ensembl release 116 (`pipeline/mane_gff.py`), so readthrough transcripts cannot give a gene a spurious consequence (locus dossier §1). Indels are left-aligned and multi-allelic records split first (`bcftools norm`). Variants with no coding or splice consequence are placed by gene interval as intronic, upstream or downstream (within 5 kb), so the *BUB1B* upstream interval is not lost (`tools/annotate_vcf.sh`, `pipeline/annotate_table.py`).
+- **ClinVar** classification and review status are attached by position and alleles (release of 2026-09-28).
+- **Rare-variant filter:** population frequency at most 1%. A missing frequency counts as rare, so the filter can only over-include.
+- **Recessive models:** homozygous, and compound heterozygous pairs, with read-backed phase from the PGT/PID tags; pairs without shared phase are scored as phase unknown (`pipeline/comphet.py`). In *BUB1B* every rare variant is kept whatever its predicted impact, because MVA second alleles are often non-coding.
+- The whole path was tested end to end on a synthetic VCF built from public ClinVar *BUB1B* alleles (`tools/test_annotate_e2e.py`).
 
 ### B4. Phenotype-driven prioritisation
 - HPO-based ranking.
@@ -148,7 +149,7 @@ Public summary: *what was found, described without coordinates or identifiers.*
 *Repository URL, commit hash, environment file, and the exact commands, in order. Public data sources and their versions.*
 
 ### B14. Privacy and data deletion
-No names, dates, locations more specific than "UK (NHS-diagnosed)", or clinical timeline appear. The public version withholds all patient-level variants. The data must be deleted from every environment by 2026-11-23: the private Space, any private repository, and the laptop. Deletion is then confirmed by email.
+No names, dates, locations more specific than "UK (NHS-diagnosed)", or clinical timeline appear. The public version withholds all patient-level variants. The data must be deleted from every environment by 2026-11-23: the laptop, including the Hugging Face download cache. Deletion is then confirmed by email.
 
 ---
 
