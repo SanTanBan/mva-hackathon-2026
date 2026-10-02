@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-10-01T01:55+05:30",
+  "last_run": "2026-10-02T13:30+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -15,7 +15,7 @@
   "gates": {
     "data_access_granted": {
       "value": false,
-      "checked": "2026-09-29",
+      "checked": "2026-10-02",
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
@@ -57,158 +57,324 @@
     }
   },
   "submissions": {
-    "track1": { "used": 0, "max": 6, "staged": [], "policy": "Stage once early to bank the score, then only when the report materially improves." },
-    "track2": { "used": 0, "max": 3, "staged": [], "policy": "Only the LATEST is judged. Stage the final version only, by 2026-10-23." }
+    "track1": {
+      "used": 0,
+      "max": 6,
+      "staged": [],
+      "policy": "Stage once early to bank the score, then only when the report materially improves."
+    },
+    "track2": {
+      "used": 0,
+      "max": 3,
+      "staged": [],
+      "policy": "Only the LATEST is judged. Stage the final version only, by 2026-10-23."
+    }
   },
   "packages": [
     {
-      "id": "U1", "owner": "you", "status": "todo",
+      "id": "U1",
+      "owner": "you",
+      "status": "todo",
       "title": "Request dataset access on Hugging Face",
       "done_when": "check_access.py reports dataset_access = granted. Critical path: nothing counts without it, and registration IS this request."
     },
     {
-      "id": "U2", "owner": "you", "status": "done", "completed": "2026-09-30",
+      "id": "U2",
+      "owner": "you",
+      "status": "done",
+      "completed": "2026-09-30",
       "title": "Confirm Claude plan and its data-handling terms",
       "done_when": "gates.llm_terms_confirmed is true with a recorded one-line disclosure."
     },
     {
-      "id": "R01", "owner": "routine", "status": "done",
+      "id": "R01",
+      "owner": "routine",
+      "status": "done",
       "title": "Track 1 CSV validator",
-      "outputs": ["tools/validate_track1_csv.py"],
+      "outputs": [
+        "tools/validate_track1_csv.py"
+      ],
       "done_when": "Enforces the published field spec, including the chr prefix; tested on synthetic rows."
     },
     {
-      "id": "R02", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
+      "id": "R02",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-09-27",
       "title": "Track 2 scientific core: report draft v1",
-      "inputs": ["research/memo-drug-repurposing.md", "research/memo-mva-biology.md", "research/memo-gaps.md", "research/memo-phenotype-mgmt.md", "research/memo-open-targets-bub1b.md"],
-      "outputs": ["reports/track2/track2_report.md"],
+      "inputs": [
+        "research/memo-drug-repurposing.md",
+        "research/memo-mva-biology.md",
+        "research/memo-gaps.md",
+        "research/memo-phenotype-mgmt.md",
+        "research/memo-open-targets-bub1b.md"
+      ],
+      "outputs": [
+        "reports/track2/track2_report.md"
+      ],
       "done_when": "Covers the mechanism of BUBR1 insufficiency (dosage, pseudokinase, acetylation/degradation); the landscape check (ClinicalTrials.gov, ISRCTN incl. MILI, ChEMBL, Open Targets including the two tractability traps); ranked candidates, each with evidence and its honest problem; the do-not-use list (MPS1/TTK, Aurora B, PLK1, pan-HDAC at high dose, growth hormone); the six-point chemo-compatibility screen; the five-assay decision rule with the mitotic-duration veto; KIF18A and the oligonucleotide lane; limitations. Each claim is cited by PMID or DOI and spot-checked in PubMed. Fix the known memo errors: CEP57 is Snape et al. 2011, and there is no unsourced penetrance figure."
     },
     {
-      "id": "R03", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
+      "id": "R03",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-09-27",
       "title": "BUB1B locus dossier from public data",
-      "outputs": ["reports/track1/locus_dossier.md"],
+      "outputs": [
+        "reports/track1/locus_dossier.md"
+      ],
       "done_when": "Covers the MANE Select transcript and exon/domain map; known P/LP variants cited by ClinVar ID and HGVS (no raw coordinates); the upstream regulatory interval and the deep-intronic/mobile-element precedents; the BUB1 paralog mapping caveat; Genomics England PanelApp panels; gnomAD constraint; the other MVA genes to exclude. Public data only."
     },
     {
-      "id": "R04", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-30", "progress": "2026-09-27: renderer (public/full split, Markdown + PDF via headless Edge, 10 tests) and a provisional skeleton. 2026-09-30: the organisers' form (methods_description_form.xlsx, one sheet per track, in D:\\mva-hackathon\\refs\\templates) was fetched from their Space. reports/track1/methods_report.md now answers its 13 Track 1 questions as Part A, and reports/track2/methods_description.md answers the 11 Track 2 questions. The required acknowledgement is added to both reports and the pitch.",
+      "id": "R04",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-09-30",
+      "progress": "2026-09-27: renderer (public/full split, Markdown + PDF via headless Edge, 10 tests) and a provisional skeleton. 2026-09-30: the organisers' form (methods_description_form.xlsx, one sheet per track, in D:\\mva-hackathon\\refs\\templates) was fetched from their Space. reports/track1/methods_report.md now answers its 13 Track 1 questions as Part A, and reports/track2/methods_description.md answers the 11 Track 2 questions. The required acknowledgement is added to both reports and the pitch.",
       "title": "Report scaffolds with public and submitted variants",
-      "outputs": ["reports/track1/methods_report.md", "tools/render_reports.py"],
+      "outputs": [
+        "reports/track1/methods_report.md",
+        "tools/render_reports.py"
+      ],
       "done_when": "The Track 1 methods report skeleton follows the organizers' methods template sections, including the LLM-usage question. A renderer produces a redacted public version into reports/ and a full version into D:\\mva-hackathon\\submissions, as Markdown and PDF."
     },
     {
-      "id": "R05", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27", "progress": "All seven components have scripts and synthetic tests (20 pass). End-to-end runs need the U3 toolchain and reference (minimap2, bcftools, GRCh38).",
+      "id": "R05",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-09-27",
+      "progress": "All seven components have scripts and synthetic tests (20 pass). End-to-end runs need the U3 toolchain and reference (minimap2, bcftools, GRCh38).",
       "title": "Analysis code, tested on synthetic data",
-      "outputs": ["pipeline/"],
+      "outputs": [
+        "pipeline/"
+      ],
       "done_when": "Scripts, each with a tiny synthetic test: VCF QC and normalisation (no-chr contigs, add chr on output); rare-recessive filter and compound-het pairing; per-chromosome B-allele-fraction mosaicism from VCF AD; low-pass depth from head-of-FASTQ alignment; BUB1B locus k-mer baiting; ACMG SF v3.3 screen; ACMG points calculator. Designed for 4 threads and 7.8 GB RAM with nothing large on C:."
     },
     {
-      "id": "R06", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-27",
+      "id": "R06",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-09-27",
       "progress": "pipeline/drug_triage (sources, flags, triage, panel.json), 10 offline tests; demo in reports/track2/drug_triage/. API cache at D:\\mva-hackathon\\refs\\drug_triage_cache; rerun with --offline. 2026-09-29: CYP3A4 flag fixed for weak and time-dependent perpetrators (givinostat, dasatinib); demo regenerated, tier counts unchanged.",
       "title": "Scalable drug-triage pipeline (public data only)",
-      "outputs": ["pipeline/drug_triage/"],
+      "outputs": [
+        "pipeline/drug_triage/"
+      ],
       "done_when": "Given a set of checkpoint genes, it pulls public data (ChEMBL, Open Targets, openFDA labels) and flags paediatric approval, checkpoint-weakening mechanism, aneugen class, CYP3A4 interaction, nephrotoxicity and myelosuppression, then outputs a ranked table. Demo on BUB1B, TRIP13 and CEP57. This is the Scalability argument."
     },
     {
-      "id": "R07", "owner": "routine", "status": "done", "needs": ["R02"], "completed": "2026-09-27",
+      "id": "R07",
+      "owner": "routine",
+      "status": "done",
+      "needs": [
+        "R02"
+      ],
+      "completed": "2026-09-27",
       "progress": "About 370 spoken words (2:40 at 140 wpm), 7 slides, opens with the veto rule. 2026-09-29: five registries, the German adolescent metformin trial and a rules-fixed-in-advance line added. Refresh slide 4 after D08.",
       "title": "Pitch script and slide outline (3 minutes)",
-      "outputs": ["reports/track2/pitch_script.md"],
+      "outputs": [
+        "reports/track2/pitch_script.md"
+      ],
       "done_when": "Timed to 3:00 or less and opens with the veto rule, not a biology lecture."
     },
     {
-      "id": "R08", "owner": "routine", "status": "done", "needs": [], "completed": "2026-09-30",
+      "id": "R08",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-09-30",
       "title": "Local toolchain and reference setup (core set, VCF-first route)",
-      "outputs": ["tools/setup_core.sh"],
+      "outputs": [
+        "tools/setup_core.sh"
+      ],
       "progress": "2026-09-30: the private HF Space runner (space/) was written, but HF refused to host it without PRO (402), so this package was repurposed to the laptop route Santanu chose. tools/setup_core.sh ran in WSL at low priority in 3 h 19 min; the conda env build on the D: mount is the slow part. Versions and sizes are in gates.setup_downloads_done.record.",
       "done_when": "A micromamba env under D:\\mva-hackathon\\tools has bcftools, samtools, htslib and minimap2, with versions recorded. The GRCh38 no-alt analysis set with hs38d1 is renamed without chr and faidx-indexed. The Ensembl GFF3 and the ClinVar GRCh38 VCF with its index are in place. Nothing is written to C: or to WSL's home. gates.setup_downloads_done is true."
     },
     {
-      "id": "R09", "owner": "routine", "status": "done", "needs": [], "completed": "2026-10-01",
+      "id": "R09",
+      "owner": "routine",
+      "status": "done",
+      "needs": [],
+      "completed": "2026-10-01",
       "title": "Public BUB1B splice map on Kaggle (Pangolin, every possible SNV)",
       "progress": "Ran on the private Kaggle notebook santanubanerjee9/bub1b-splice-map, pushed by an idle-slot waiter at 00:30 IST: 180,165 SNVs in 62 min on 2x T4. Checks: matched Pangolin's compute_score to 5e-5 (fp32) and 2e-4 (fp16); all 7 published controls as expected. Output in D:\\mva-hackathon\\refs\\bub1b\\kaggle_out; local lookup with pipeline/splice_map.py. Finding: 75 intronic SNVs (0.04%) would create a strong cryptic site at 15 nt or more from canonical sites; the published cryptic-acceptor alleles sit 4-10 nt away, so up-regulation is the more plausible antisense route for BUB1B.",
-      "outputs": ["kaggle/bub1b_splice_map/", "reports/track2/d08_worksheet.md"],
+      "outputs": [
+        "kaggle/bub1b_splice_map/",
+        "reports/track2/d08_worksheet.md"
+      ],
       "done_when": "A private Kaggle notebook scores every possible SNV across the BUB1B gene with Pangolin (GPL-3.0). Positive controls behave as expected: canonical splice variants lose, and c.2386-11A>G gains. Results (a few MB) are in D:\\mva-hackathon\\refs\\bub1b. The worksheet gains a summary of where antisense-correctable cryptic sites could arise. No patient data is involved."
     },
     {
-      "id": "U3", "owner": "live", "status": "done", "completed": "2026-09-30",
+      "id": "U3",
+      "owner": "live",
+      "status": "done",
+      "completed": "2026-09-30",
       "title": "Approve setup downloads (toolchain, reference, ClinVar, templates)",
       "progress": "2026-09-30: approved in a live chat, the ~1.5 GB core set to D:\\mva-hackathon (laptop, VCF-first route; free HF Spaces need PRO). Installed by package R08; the templates were fetched the same day.",
       "done_when": "A route for the setup downloads is approved; gates.setup_downloads_done then tracks the build."
     },
     {
-      "id": "U4", "owner": "live", "status": "done", "completed": "2026-10-02",
+      "id": "U4",
+      "owner": "live",
+      "status": "done",
+      "completed": "2026-10-02",
       "title": "Approve a private GitHub repo (and optionally nightly pushes)",
       "done_when": "gates.github_repo_created is true."
     },
     {
-      "id": "U5", "owner": "live", "status": "done", "completed": "2026-09-30",
+      "id": "U5",
+      "owner": "live",
+      "status": "done",
+      "completed": "2026-09-30",
       "title": "Approve the dataset download (VCF-first)",
       "done_when": "Approved in a live chat on 2026-09-30: the VCF, its index and the phenotype document, plus FASTQ pairs one at a time for overnight low-priority jobs, each deleted after use. The download itself is package D00, once access is granted."
     },
     {
-      "id": "D00", "owner": "routine", "status": "todo", "needs": ["data_access_granted", "llm_terms_confirmed", "R08"],
+      "id": "D00",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "data_access_granted",
+        "llm_terms_confirmed",
+        "R08"
+      ],
       "title": "Download the VCF-first files",
       "done_when": "The VCF, its index and the phenotype document are in D:\\mva-hackathon\\data. Their sizes and SHA-256 checksums match the HF metadata, and gates.dataset_downloaded is true."
     },
     {
-      "id": "D01", "owner": "routine", "status": "todo", "needs": ["D00", "data_access_granted", "llm_terms_confirmed"],
+      "id": "D01",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D00",
+        "data_access_granted",
+        "llm_terms_confirmed"
+      ],
       "title": "Data intake and integrity",
       "done_when": "File inventory and checksums are recorded; VCF header, sample and build are checked; HPO terms are extracted to D:\\mva-hackathon\\work; sample and proband IDs are appended to D:\\mva-hackathon\\private-terms.txt."
     },
     {
-      "id": "D02", "owner": "routine", "status": "todo", "needs": ["D01", "R01", "R05", "setup_downloads_done"],
+      "id": "D02",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D01",
+        "R01",
+        "R05",
+        "setup_downloads_done"
+      ],
       "title": "Track 1 fast path, then stage the first submission",
-      "done_when": "A validated CSV and report are staged in D:\\mva-hackathon\\submissions\\track1\\<date> with SUBMIT.md; the brief asks the user to approve submission 1 to bank the score."
+      "done_when": "A validated CSV and report are staged in D:\\mva-hackathon\\submissions\\track1\\<date> with SUBMIT.md; the brief asks the user to approve submission 1 to bank the score.",
+      "progress": "2026-10-02 (before data access): the fast path is built and tested end to end on a synthetic VCF with the real toolchain. tools/annotate_vcf.sh (bcftools norm, csq on the 19,299 MANE Select transcripts from pipeline/mane_gff.py, ClinVar annotate), pipeline/annotate_table.py (BCSQ to the comphet table; intron/upstream/downstream placement), pipeline/track1_rank.py (pre-registered EPCR rule, in methods B9), tools/run_d02.py (one command). tools/test_annotate_e2e.py passes 12/12. Gaps: no gnomAD frequencies (ClinVar AF_EXAC/AF_TGP/AF_ESP only; missing counts as rare), and no panel-gene file yet."
     },
     {
-      "id": "D03", "owner": "routine", "status": "todo", "needs": ["D01", "R05"],
+      "id": "D03",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D01",
+        "R05"
+      ],
       "title": "Mosaic aneuploidy from VCF allele balance and low-pass depth",
       "done_when": "Per-chromosome B-allele-fraction and GC-corrected depth ratios, with stated detection limits and the variegated-mosaicism caveat."
     },
     {
-      "id": "D04", "owner": "routine", "status": "todo", "needs": ["D01", "R03", "R05"],
+      "id": "D04",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D01",
+        "R03",
+        "R05"
+      ],
       "title": "BUB1B deep dive: both alleles, phase, SV/MEI, upstream, splice",
       "done_when": "Both alleles are accounted for or the gap is explained; phase is resolved or scored as unknown (PM3 0.5); the upstream interval and mobile-element insertions are checked; splice impact is assessed locally."
     },
     {
-      "id": "D05", "owner": "routine", "status": "todo", "needs": ["D01", "R05"],
+      "id": "D05",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D01",
+        "R05"
+      ],
       "title": "Differentials, SF v3.3 screen, ACMG points",
       "done_when": "The other MVA genes are shown negative and covered; the secondary-findings screen is reported as counts publicly; ACMG arithmetic is shown per allele."
     },
     {
-      "id": "D06", "owner": "routine", "status": "todo", "needs": ["D01", "setup_downloads_done"],
+      "id": "D06",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D01",
+        "setup_downloads_done"
+      ],
       "title": "Exomiser and LIRICAL triangulation (optional, RAM permitting)",
       "done_when": "BUB1B rank under each tool, or a documented reason it could not run on this machine."
     },
     {
-      "id": "D07", "owner": "routine", "status": "todo", "needs": ["D02", "D03", "D04", "D05"],
+      "id": "D07",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D02",
+        "D03",
+        "D04",
+        "D05"
+      ],
       "title": "Track 1 final report (public and submitted versions)",
       "done_when": "The report is rendered in both versions; the brief says whether it justifies a second Track 1 submission."
     },
     {
-      "id": "D08", "owner": "routine", "status": "todo", "needs": ["R02", "D04"],
+      "id": "D08",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "R02",
+        "D04"
+      ],
       "title": "Track 2 report v2 with the actual alleles",
       "progress": "2026-09-29: rules pre-registered before data access: reports/track2/d08_worksheet.md and pipeline/allele_mechanism.py (18 tests). Applying them needs the D04 allele table (hgvs_c, consequence, hgvs_p, ptc_c, rna).",
       "done_when": "Each allele is classified by mechanism (functional class vs abundance class); oligonucleotide eligibility is assessed with the N1C VARIANT guidelines (the framework our notes called VAEAOT); candidate ranking is revisited."
     },
     {
-      "id": "U6", "owner": "you", "status": "todo", "needs": ["R07"],
+      "id": "U6",
+      "owner": "you",
+      "status": "todo",
+      "needs": [
+        "R07"
+      ],
       "title": "Record the 3-minute pitch video and upload it to YouTube or Vimeo",
       "done_when": "The video URL is recorded in plan.json notes, by 2026-10-21."
     },
     {
-      "id": "D09", "owner": "routine", "status": "todo", "needs": ["D07", "D08", "R07"],
+      "id": "D09",
+      "owner": "routine",
+      "status": "todo",
+      "needs": [
+        "D07",
+        "D08",
+        "R07"
+      ],
       "title": "Final QA and staging",
       "done_when": "Citations are checked, the privacy scan is clean, the LLM disclosure is present, and repo compliance is verified. Final Track 1 and Track 2 packages are staged by 2026-10-22."
     },
     {
-      "id": "U7", "owner": "live", "status": "todo",
+      "id": "U7",
+      "owner": "live",
+      "status": "todo",
       "title": "Approve each submission",
       "done_when": "submissions.track1.used and submissions.track2.used are updated after each approved submission."
     },
     {
-      "id": "U8", "owner": "live", "status": "todo",
+      "id": "U8",
+      "owner": "live",
+      "status": "todo",
       "title": "After close: make the repo public, delete the data, send the confirmation email",
       "done_when": "The repo is public; D:\\mva-hackathon and the dataset under D:\\DevCache\\huggingface are deleted by 2026-11-23; the confirmation email is sent with a live yes."
     }
@@ -218,6 +384,7 @@
     "2026-09-27 (second run, evening): Access still 403. Done: R06 drug-triage pipeline (Open Targets + ChEMBL + openFDA; 133 rows over BUB1B/TRIP13/CEP57; all 28 TTK/AURKB/PLK1 controls and 11/12 HDAC2/3 candidates excluded automatically; 30 tests pass) and R07 pitch script. R04 still waits on the organisers' methods template (U3). Every remaining routine package is now blocked on U1/U2/U3/U5. Nothing staged.",
     "2026-09-29: Access still 403 (25.6 days left). No package was runnable, so did public-data v2 prep on done work. Track 2 report is now v1.1: EU CTIS, ANZCTR and WHO ICTRP searched (no MVA trials; found a German adolescent+adult metformin prevention trial in Li-Fraumeni, CTIS 2025-520714-63-00, added to H3); the section 6 screen is filled from hand-read US labels and 6 new PubMed-checked sources; H2 x H3 OCT2 interaction noted; givinostat thrombocytopenia corrected to the label figure (33% vs 0%); benzimidazole evidence added to section 5; Ensembl NMD isoforms of BUB1B listed in section 8.1 (exon 5 skip most recurrent). R06 CYP3A4 flag bug fixed (52 tests pass). Local pytest needs PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 because a third-party plugin wants the missing zstandard module. Nothing staged.",
     "2026-09-29 (second run, evening): Access still 403 (25.4 days left). No package runnable. D08 prep: allele-mechanism and antisense rules pre-registered before data access (worksheet + pipeline/allele_mechanism.py, 18 tests; 70 pass in total). Finding: no BUB1B exon is likely eligible for skipping; exon 17 is the best in-frame candidate but carries the destabilising MVA substitution R727C, so realistic antisense routes are splice correction and up-regulation. Track 2 report v1.2: VAEAOT is the N1C VARIANT guidelines (Cheerie 2025a, PMID 40139194); Suijkerbuijk 2010 threshold (6% vs 13% BUBR1) and HSP90-dependence of kinase-domain mutants added. Pitch refreshed (~370 words). Ensembl REST returned 500/503, so NCBI RefSeq NM_001211.6 was used (saved to D:\\mva-hackathon\\refs\\bub1b). Nothing staged.",
-    "2026-09-30 (live session, to 01:55 IST on 1 Oct): U2 confirmed (Claude Max, training off, no feedback; Sage HF thread #2). Free HF Spaces need PRO (402), so the route is laptop VCF-first; the core set and the VCF-first downloads were approved live. R04 done (organisers' form: Track 1 methods Part A; Track 2 methods description), R08 done (toolchain and references on D:), R09 done (Pangolin map of 180,165 BUB1B SNVs on Kaggle; only 75 intronic SNVs could give an antisense-correctable cryptic site; the published cryptic alleles are 4-10 nt from the acceptor, so up-regulation is the likelier antisense route). D00/D01 scripts ready. Access still 403 (24.2 days left). The 18:13 scheduled run stalled at its first PowerShell call. Nothing staged."
+    "2026-09-30 (live session, to 01:55 IST on 1 Oct): U2 confirmed (Claude Max, training off, no feedback; Sage HF thread #2). Free HF Spaces need PRO (402), so the route is laptop VCF-first; the core set and the VCF-first downloads were approved live. R04 done (organisers' form: Track 1 methods Part A; Track 2 methods description), R08 done (toolchain and references on D:), R09 done (Pangolin map of 180,165 BUB1B SNVs on Kaggle; only 75 intronic SNVs could give an antisense-correctable cryptic site; the published cryptic alleles are 4-10 nt from the acceptor, so up-regulation is the likelier antisense route). D00/D01 scripts ready. Access still 403 (24.2 days left). The 18:13 scheduled run stalled at its first PowerShell call. Nothing staged.",
+    "2026-10-02 (scheduled run, 12:06-13:30 IST): Access still 403 (22.7 days left). No package runnable. D02 prep: built and tested the missing annotation step (bcftools csq on MANE Select + ClinVar), the pre-registered Track 1 ranking and CSV writer, and a one-command D02 runner; the synthetic end-to-end test passes 12/12 and the CSV validates cleanly. Methods report: compute/governance now describe the laptop route (they still described the dropped HF Space), B3 and B9 describe the real annotation and EPCR rule. comphet: split 1/2 alleles are trans. 92 tests pass. Nothing staged."
   ]
 }
