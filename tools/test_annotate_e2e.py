@@ -8,7 +8,8 @@ tools/annotate_vcf.sh in WSL, then pipeline/annotate_table.py and pipeline/comph
   - MANE Select consequences: stop_gained, frameshift, splice_region, deep intron, synonymous,
     upstream;
   - ClinVar CLNSIG is attached to the known pathogenic alleles;
-  - comphet pairs the two read-backed heterozygous alleles as 'trans'.
+  - comphet pairs the two read-backed heterozygous alleles as 'trans';
+  - pipeline/track1_rank.py ranks that pair first and writes a CSV that passes the validator.
 Everything is written under D:\\DevCache\\tmp\\claude\\mva and deleted afterwards.
 It is skipped (exit 0) when WSL or the toolchain is missing.
 
@@ -22,7 +23,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from pipeline import annotate_table, comphet  # noqa: E402
+from pipeline import annotate_table, comphet, track1_rank  # noqa: E402
+from tools.validate_track1_csv import validate  # noqa: E402
 from pipeline.common import open_text  # noqa: E402
 
 TMP = Path(r"D:\DevCache\tmp\claude\mva\e2e")
@@ -114,6 +116,14 @@ def main():
         cands = comphet.candidates([{**r, "gene": r["gene"]} for r in table])
         pair = [c for c in cands if c["variant_1"] == "chr15:40165186:C>T" and c["variant_2"] == "chr15:40170578:AGG>A"]
         checks["comphet trans"] = bool(pair) and pair[0]["phase"] == "trans"
+        ranked = track1_rank.score_candidates(table)
+        csv_path = TMP / "SantanuBanerjee_track1_synthetic.csv"
+        track1_rank.write_csv(csv_path, "SYNTHETIC-1", ranked)
+        print(csv_path.read_text(encoding="utf-8"))
+        errors, warnings = validate(csv_path, hf_user="SantanuBanerjee")
+        print("validator:", errors or "no errors", warnings or "")
+        checks["csv valid"] = not errors
+        checks["trans pathogenic pair ranks first"] = (ranked[0][1]["pos"], ranked[0][2]["pos"]) == ("40165186", "40170578")
         for name, ok in checks.items():
             print(("PASS " if ok else "FAIL ") + name)
         return 0 if all(checks.values()) else 1

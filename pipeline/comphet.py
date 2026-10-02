@@ -11,8 +11,8 @@ reasons about inheritance.
   is kept, because MVA1 second alleles are often non-coding.
 - Reports homozygous candidates, and every pair of heterozygous variants in the same gene.
 - Phase: two heterozygous variants with the same read-backed phase set (PID) are 'cis' when
-  their phased genotypes (PGT) match and 'trans' when they differ. Otherwise phase is
-  'unknown'. With no parental data, 'unknown' must be scored as such (PM3 at reduced strength).
+  their phased genotypes (PGT) match and 'trans' when they differ. Two ALT alleles at one
+  position (a split GT 1/2 record) are 'trans'. Otherwise phase is 'unknown'. With no parental data, 'unknown' must be scored as such (PM3 at reduced strength).
 
 Run: python -m pipeline.comphet ANNOTATED.tsv OUT.tsv   (output outside the repo)
 """
@@ -53,6 +53,8 @@ def keep(v, max_af, impacts, keep_all_in):
 
 
 def phase(a, b):
+    if a["chrom"] == b["chrom"] and a["pos"] == b["pos"]:
+        return "trans"  # two ALT alleles of one split multi-allelic site (GT 1/2) cannot share a haplotype
     pa, pb = a.get("pgt") or "", b.get("pgt") or ""
     if a.get("pid") and a.get("pid") == b.get("pid") and "|" in pa and "|" in pb:
         return "cis" if pa == pb else "trans"

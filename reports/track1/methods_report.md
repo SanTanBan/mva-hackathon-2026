@@ -129,7 +129,13 @@ We seek both alleles by mechanism, not by ClinVar status, because the classic hy
 Points-based classification shown per allele, with the evidence codes and their strengths (`pipeline/acmg_points.py`).
 
 ### B9. Submission file
-How candidate pairs and their scores (`epcr`) were chosen. The file is validated with `tools/validate_track1_csv.py`, which checks the organisers' current field specification: at most 10 rows, `epcr` in (0, 1], `finding_type` either `primary` or `secondary`, and the `chr` prefix.
+Candidates and their scores (`epcr`) come from `pipeline/track1_rank.py`, whose rule was fixed on 2026-10-02, before any access to the data:
+
+- **Score = gene prior × allele evidence × phase factor.** Gene prior: *BUB1B* 1.0, *CEP57* and *TRIP13* 0.6, genes on the PanelApp panels for the child's HPO terms 0.1, any other gene 0.01. Allele evidence: ClinVar pathogenic or likely pathogenic 1.0; otherwise by predicted impact (high 0.8, moderate 0.3, low 0.15, modifier 0.05); ClinVar benign 0.01. Phase: trans 1.0, unknown 0.5, cis 0.05.
+- **A single *BUB1B* allele whose partner was not found** also gets a row, at 0.3 of its allele score, because MVA second alleles are often non-coding or structural and can be missed by short-read calling.
+- **EPCR** is the score divided by the sum of all scores plus 0.25. The 0.25 is held back for a cause the pipeline cannot see, so no row claims certainty.
+
+The file is validated with `tools/validate_track1_csv.py`, which checks the organisers' current field specification: at most 10 rows, `epcr` in (0, 1], `finding_type` either `primary` or `secondary`, and the `chr` prefix.
 
 ### B10. Results
 
