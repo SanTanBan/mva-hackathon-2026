@@ -131,8 +131,8 @@ def rows(vcf_lines, genes, flank=5000):
         if line.startswith("#"):
             continue
         c = line.rstrip("\n").split("\t")
-        if len(c) < 10 or "," in c[4]:
-            continue
+        if len(c) < 10 or "," in c[4] or c[4] in ("*", ".") or c[4].startswith("<"):
+            continue  # unsplit, spanning-deletion and symbolic alleles cannot be submitted
         info = info_dict(c[7])
         sample = dict(zip(c[8].split(":"), c[9].split(":")))
         base = {

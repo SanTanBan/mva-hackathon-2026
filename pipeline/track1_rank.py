@@ -4,9 +4,10 @@
 Written on 2026-10-02, before any access to the child's genome, so the scoring rule is fixed
 before the variants are seen. Input is the annotated table from pipeline/annotate_table.py.
 Candidates come from pipeline/comphet.py (homozygous and compound-het genotypes, phase from
-reads). In the genes of --single-allele-genes (default BUB1B), a heterozygous allele whose
-partner was not found also becomes a single-variant row: MVA second alleles are often
-non-coding or structural and can be missed by short-read calling.
+reads). In BUB1B (the single_allele_genes argument), every rare heterozygous allele with
+allele evidence of at least 0.3 also gets a single-variant row, alongside any pair it is part
+of: the hypothesis that its partner was missed. MVA second alleles are often non-coding or
+structural and can be missed by short-read calling.
 
 Score of a candidate = gene prior x allele evidence x phase factor.
   gene prior     MVA genes: BUB1B 1.0, CEP57 0.6, TRIP13 0.6 (BUB1B is by far the most
@@ -15,15 +16,21 @@ Score of a candidate = gene prior x allele evidence x phase factor.
   allele         ClinVar pathogenic or likely pathogenic 1.0; otherwise by impact:
                  HIGH 0.8, MODERATE 0.3, LOW 0.15, MODIFIER 0.05. ClinVar benign or likely
                  benign 0.01 whatever the impact. Conflicting or VUS entries fall back to impact.
+                 A call that fails a VCF filter scores half.
   genotype       a compound het is the product of its two allele scores; a homozygote is
                  the allele score once (one allele, seen twice); a single allele whose partner
-                 was not seen is the allele score x 0.3.
+                 was not seen is the allele score x 0.1. That places it below a seen
+                 moderate-impact partner of unknown phase (x 0.15) and above a seen low-impact
+                 one (x 0.075).
   phase factor   trans 1.0, unknown 0.5, cis 0.05; 1.0 for homozygous and single rows.
-EPCR = score / (sum of all scores + 0.25). The 0.25 is the probability mass kept back for a
-cause this pipeline cannot see, so no row can claim certainty. Rows are sorted by score; ties
-go to the row with the stronger best allele, then by position. EPCR is cut to 10 rows and
-rounded to 3 decimals with a floor of 0.001, and a tied value is lowered by 0.001 so that the
-file's order is explicit.
+Rows are sorted by score; ties go to the row with the stronger best allele, then by position.
+A genotype listed under two overlapping genes is written once, with its higher score. The top
+10 are written, with EPCR = score / (sum of the written rows' scores + 0.25). Normalising over
+the written rows, not over every candidate, stops thousands of weak candidates (for example
+intronic variants whose frequency is unknown without gnomAD) from diluting the strong ones.
+The 0.25 is the probability that the cause is in none of the written rows, so no row can claim
+certainty: the most any row can get is 0.8. EPCR is rounded to 3 decimals with a floor of
+0.001, and a tied value is lowered by 0.001 so that the file's order is explicit.
 
 Output is patient-derived and goes outside the repository; validate it with
 tools/validate_track1_csv.py before staging.
@@ -42,7 +49,9 @@ GENE_PRIOR = {"BUB1B": 1.0, "CEP57": 0.6, "TRIP13": 0.6}
 PANEL_PRIOR, OTHER_PRIOR = 0.1, 0.01
 IMPACT_SCORE = {"HIGH": 0.8, "MODERATE": 0.3, "LOW": 0.15, "MODIFIER": 0.05}
 PHASE = {"trans": 1.0, "unknown": 0.5, "cis": 0.05, "n/a": 1.0}
-UNSEEN_PARTNER = 0.3
+UNSEEN_PARTNER = 0.1
+SINGLE_MIN = 0.3
+FILTER_FAIL = 0.5
 RESERVE = 0.25
 MAX_ROWS = 10
 
@@ -61,10 +70,12 @@ def clinvar_class(clnsig):
 def allele_score(v):
     c = clinvar_class(v.get("clnsig"))
     if c == "plp":
-        return 1.0
-    if c == "blb":
-        return 0.01
-    return IMPACT_SCORE.get(v.get("impact"), 0.05)
+        s = 1.0
+    elif c == "blb":
+        s = 0.01
+    else:
+        s = IMPACT_SCORE.get(v.get("impact"), 0.05)
+    return s if v.get("filter", "PASS") in ("PASS", ".", "") else s * FILTER_FAIL
 
 
 def gene_prior(gene, panel):
@@ -83,36 +94,40 @@ def describe(v):
 def score_candidates(rows, panel=(), max_af=0.01, single_allele_genes=("BUB1B",)):
     panel = set(panel)
     keep_all = tuple(set(GENE_PRIOR) | set(single_allele_genes))
-    by_label = {comphet.label(v): v for v in rows}
-    cands = comphet.candidates(rows, max_af=max_af, keep_all_in=keep_all)
-    scored, paired = [], set()
-    for c in cands:
-        a = by_label[c["variant_1"]]
+    # A variant near two genes has one row per gene, so rows are looked up by gene and variant.
+    by_key = {(v["gene"], comphet.label(v)): v for v in rows}
+    scored = []
+    for c in comphet.candidates(rows, max_af=max_af, keep_all_in=keep_all):
+        a = by_key[(c["gene"], c["variant_1"])]
         prior = gene_prior(c["gene"], panel)
         if c["model"] == "homozygous":
-            s = prior * allele_score(a)
-            note = f"{c['gene']} homozygous: {describe(a)}"
-            scored.append((s, a, None, note))
+            scored.append((prior * allele_score(a), a, None, f"{c['gene']} homozygous: {describe(a)}"))
         else:
-            b = by_label[c["variant_2"]]
+            b = by_key[(c["gene"], c["variant_2"])]
             s = prior * allele_score(a) * allele_score(b) * PHASE[c["phase"]]
-            paired.update([c["variant_1"], c["variant_2"]])
-            note = f"{c['gene']} compound het, phase {c['phase']}: {describe(a)}; {describe(b)}"
-            scored.append((s, a, b, note))
+            scored.append((s, a, b, f"{c['gene']} compound het, phase {c['phase']}: {describe(a)}; {describe(b)}"))
     for v in rows:
-        if (v["gene"] in single_allele_genes and v["gt"] in comphet.HET and comphet.label(v) not in paired
+        if (v["gene"] in single_allele_genes and v["gt"] in comphet.HET and allele_score(v) >= SINGLE_MIN
                 and comphet.keep(v, max_af, {"HIGH", "MODERATE"}, set(keep_all))):
             s = gene_prior(v["gene"], panel) * allele_score(v) * UNSEEN_PARTNER
             scored.append((s, v, None, f"{v['gene']} one allele, second allele not seen in the VCF: {describe(v)}"))
-    total = sum(s for s, *_ in scored) + RESERVE
 
     def order(x):
         s, a, b, _ = x
         best = max(allele_score(a), allele_score(b) if b is not None else 0.0)
         return (-s, -best, a["chrom"], int(a["pos"]), int(b["pos"]) if b is not None else 0)
 
+    top, seen = [], set()
+    for x in sorted(scored, key=order):
+        key = tuple(sorted(comphet.label(v) for v in x[1:3] if v is not None))
+        if key not in seen:
+            seen.add(key)
+            top.append(x)
+        if len(top) == MAX_ROWS:
+            break
+    total = sum(s for s, *_ in top) + RESERVE
     out, last = [], None
-    for s, a, b, note in sorted(scored, key=order)[:MAX_ROWS]:
+    for s, a, b, note in top:
         epcr = max(0.001, round(s / total, 3))
         if last is not None and epcr >= last:
             epcr = max(0.001, round(last - 0.001, 3))

@@ -131,9 +131,14 @@ Points-based classification shown per allele, with the evidence codes and their 
 ### B9. Submission file
 Candidates and their scores (`epcr`) come from `pipeline/track1_rank.py`, whose rule was fixed on 2026-10-02, before any access to the data:
 
-- **Score = gene prior × allele evidence × phase factor.** Gene prior: *BUB1B* 1.0, *CEP57* and *TRIP13* 0.6, genes on the PanelApp panels for the child's HPO terms 0.1, any other gene 0.01. Allele evidence: ClinVar pathogenic or likely pathogenic 1.0; otherwise by predicted impact (high 0.8, moderate 0.3, low 0.15, modifier 0.05); ClinVar benign 0.01. Phase: trans 1.0, unknown 0.5, cis 0.05.
-- **A single *BUB1B* allele whose partner was not found** also gets a row, at 0.3 of its allele score, because MVA second alleles are often non-coding or structural and can be missed by short-read calling.
-- **EPCR** is the score divided by the sum of all scores plus 0.25. The 0.25 is held back for a cause the pipeline cannot see, so no row claims certainty.
+- **Score = gene prior × allele evidence × phase factor.**
+  - Gene prior: *BUB1B* 1.0; *CEP57* and *TRIP13* 0.6; genes on the PanelApp panels that match the child's phenotype (matched locally) 0.1; any other gene 0.01.
+  - Allele evidence: ClinVar pathogenic or likely pathogenic 1.0. Otherwise it depends on predicted impact: high 0.8, moderate 0.3, low 0.15, modifier 0.05. ClinVar benign scores 0.01. A call that fails a VCF filter scores half.
+  - Phase: trans 1.0, unknown 0.5, cis 0.05.
+- **A single *BUB1B* allele with allele evidence of at least 0.3** also gets its own row, alongside any pair it belongs to. This row is the hypothesis that its partner was missed, because MVA second alleles are often non-coding or structural and short-read calling can miss them. It scores 0.1 of the allele evidence, which ranks it below a seen moderate-impact partner of unknown phase and above a seen low-impact one.
+- **EPCR.** The top 10 genotypes are written, each once. EPCR is the score divided by the sum of the written rows' scores plus 0.25.
+  - Normalising over the written rows stops thousands of weak candidates from diluting the strong ones. Intronic variants with no known frequency are the main example.
+  - The 0.25 is the probability that the cause is in none of the rows, so no row claims more than 0.8.
 
 The file is validated with `tools/validate_track1_csv.py`, which checks the organisers' current field specification: at most 10 rows, `epcr` in (0, 1], `finding_type` either `primary` or `secondary`, and the `chr` prefix.
 
