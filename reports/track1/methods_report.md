@@ -104,6 +104,7 @@ Pairs. The pipeline outputs compound heterozygous pairs in the `chrom_1…alt_1`
 ### B4. Phenotype-driven prioritisation
 - HPO-based ranking.
 - An independent clinical route through Genomics England PanelApp panels, where *BUB1B* is a green, biallelic gene on several phenotype panels (locus dossier §6).
+- **The panel gene list was fixed on 2026-10-04, before any access to the data** (`tools/build_panel_genes.py`). It is the union of green genes on the ten PanelApp panels on which *BUB1B* is green and biallelic (locus dossier §6): childhood solid tumours (two panels), familial rhabdomyosarcoma, severe microcephaly, hydrocephalus, fetal anomalies, DDG2P, intellectual disability, and embryonal tumour and sarcoma of possible germline origin. The panels were chosen by MVA's phenotype classes, not from the child's HPO terms. Genes whose mode of inheritance on those panels is monoallelic only are left out, because the ranker scores recessive genotypes. Symbols are mapped to the Ensembl 116 MANE Select names through HGNC IDs. The list has 1,987 genes. About 1,750 of them come only from the three broad developmental panels (DDG2P, intellectual disability, fetal anomalies), so the 0.1 prior is a weak, broad boost, not a diagnosis.
 
 ### B5. *BUB1B* locus deep-dive
 We seek both alleles by mechanism, not by ClinVar status, because the classic hypomorphic alleles are VUS or conflicting in ClinVar (locus dossier §3.1). The search covers:
@@ -132,7 +133,7 @@ Points-based classification shown per allele, with the evidence codes and their 
 Candidates and their scores (`epcr`) come from `pipeline/track1_rank.py`, whose rule was fixed on 2026-10-02, before any access to the data:
 
 - **Score = gene prior × allele evidence × phase factor.**
-  - Gene prior: *BUB1B* 1.0; *CEP57* and *TRIP13* 0.6; genes on the PanelApp panels that match the child's phenotype (matched locally) 0.1; any other gene 0.01.
+  - Gene prior: *BUB1B* 1.0; *CEP57* and *TRIP13* 0.6; genes on the pre-registered PanelApp gene list (Part B §B4) 0.1; any other gene 0.01.
   - Allele evidence: ClinVar pathogenic or likely pathogenic 1.0. Otherwise it depends on predicted impact: high 0.8, moderate 0.3, low 0.15, modifier 0.05. ClinVar benign scores 0.01. A call that fails a VCF filter scores half.
   - Phase: trans 1.0, unknown 0.5, cis 0.05.
 - **A single *BUB1B* allele with allele evidence of at least 0.3** also gets its own row, alongside any pair it belongs to. This row is the hypothesis that its partner was missed, because MVA second alleles are often non-coding or structural and short-read calling can miss them. It scores 0.1 of the allele evidence, which ranks it below a seen moderate-impact partner of unknown phase and above a seen low-impact one.

@@ -28,6 +28,7 @@ from tools.validate_track1_csv import validate  # noqa: E402
 WORK = Path(r"D:\mva-hackathon\work")
 OUT = WORK / "d02"
 GFF = Path(r"D:\mva-hackathon\refs\ensembl\GRCh38.116.mane_select.gff3.gz")
+PANEL_GENES = Path(r"D:\mva-hackathon\refs\panelapp\panel_genes_mva.txt")  # tools/build_panel_genes.py
 HF_USER = "SantanuBanerjee"
 
 
@@ -48,7 +49,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--proband-id", required=True)
     ap.add_argument("--vcf")
-    ap.add_argument("--panel-genes")
+    ap.add_argument("--panel-genes", default=str(PANEL_GENES) if PANEL_GENES.exists() else None,
+                    help="one gene symbol per line (default: the pre-registered PanelApp file, if built)")
     ap.add_argument("--skip-annotate", action="store_true", help="reuse an existing annotated VCF")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -67,6 +69,9 @@ def main():
     panel = []
     if args.panel_genes:
         panel = [ln.strip() for ln in open(args.panel_genes, encoding="utf-8") if ln.strip() and not ln.startswith("#")]
+        print(f"panel genes: {len(panel)} from {args.panel_genes}")
+    else:
+        print("panel genes: none (run tools/build_panel_genes.py first)")
     ranked = track1_rank.score_candidates(comphet.load(table), panel)
     csv_path = OUT / f"{HF_USER}_track1.csv"
     track1_rank.write_csv(csv_path, args.proband_id, ranked)
