@@ -4,6 +4,7 @@ research/
 data/
 work/
 submissions/
+refs/
 *.vcf
 *.vcf.gz
 *.bcf
