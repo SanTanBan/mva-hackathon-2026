@@ -29,6 +29,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import date
 from pathlib import Path
 
@@ -38,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from guard_commit import PRIVATE_TERMS_FILE, VARIANT_ROW, VCF_LINE  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
+RENDER_SCRATCH = Path(os.environ.get("MVA_RENDER_SCRATCH", r"D:\mva-hackathon\work\render-scratch"))
 SUBMISSIONS = Path(os.environ.get("MVA_SUBMISSIONS_DIR", r"D:\mva-hackathon\submissions"))
 TERMS_FILE = Path(os.environ.get("MVA_PRIVATE_TERMS", str(PRIVATE_TERMS_FILE)))
 WITHHELD = "*[Withheld from the public version: patient-level detail. It appears in the submitted report.]*"
@@ -93,6 +95,18 @@ def find_edge():
     return next((p for p in EDGE_PATHS if Path(p).is_file()), None)
 
 
+def stop_profile_processes(profile):
+    """Stop the headless Edge processes started with this throwaway profile, and only those.
+    Edge's launcher hands off to child processes, so killing the launcher's PID is not enough."""
+    needle = str(profile).replace("'", "''")
+    ps = ("Get-CimInstance Win32_Process -Filter \"Name='msedge.exe'\" | "
+          f"Where-Object {{ $_.CommandLine -like '*{needle}*' }} | "
+          "ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }")
+    subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps],
+                   capture_output=True, timeout=60, check=False)
+    time.sleep(1)
+
+
 def write_pdf(md_text, pdf_path, title):
     """Markdown -> HTML -> PDF with headless Edge. Returns False if Edge is unavailable."""
     edge = find_edge()
@@ -101,14 +115,30 @@ def write_pdf(md_text, pdf_path, title):
     body = markdown.markdown(md_text, extensions=["tables", "fenced_code", "sane_lists"])
     page = (f"<!doctype html><html><head><meta charset='utf-8'><title>{html.escape(title)}</title>"
             f"<style>{CSS}</style></head><body>{body}</body></html>")
-    # Scratch files sit next to the output, so a full version's content never lands on C:.
-    work = Path(tempfile.mkdtemp(prefix=".render-", dir=pdf_path.parent))
+    # Scratch files go under D:\mva-hackathon\work, never on C: or inside the repository: the
+    # full version's page holds patient data, and a lingering Edge can lock the folder.
+    RENDER_SCRATCH.mkdir(parents=True, exist_ok=True)
+    work = Path(tempfile.mkdtemp(prefix="render-", dir=RENDER_SCRATCH))
     try:
         src = work / "page.html"
         src.write_text(page, encoding="utf-8")
-        subprocess.run([edge, "--headless", "--disable-gpu", "--no-first-run", "--no-pdf-header-footer",
-                        f"--user-data-dir={work / 'profile'}", f"--print-to-pdf={pdf_path}", src.as_uri()],
-                       capture_output=True, timeout=180, check=False)
+        if pdf_path.exists():
+            pdf_path.unlink()
+        proc = subprocess.Popen([edge, "--headless", "--disable-gpu", "--no-first-run", "--no-pdf-header-footer",
+                                 f"--user-data-dir={work / 'profile'}", f"--print-to-pdf={pdf_path}", src.as_uri()],
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # Edge can write the PDF and then never exit (seen 2026-10-04 in the scheduled-run
+        # sandbox, where the processes also could not be stopped), so stop
+        # waiting once the file is complete and its size has settled.
+        deadline, last = time.monotonic() + 180, -1
+        while proc.poll() is None and time.monotonic() < deadline:
+            time.sleep(2)
+            size = pdf_path.stat().st_size if pdf_path.is_file() else -1
+            if size > 0 and size == last and pdf_path.read_bytes().rstrip().endswith(b"%%EOF"):
+                break
+            last = size
+        if proc.poll() is None:
+            stop_profile_processes(work / "profile")
     finally:
         shutil.rmtree(work, ignore_errors=True)
     return pdf_path.is_file() and pdf_path.read_bytes()[:5] == b"%PDF-"
