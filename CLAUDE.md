@@ -32,13 +32,13 @@ The dataset is a real child's genome, shared under WCG IRB protocol #20252010. T
 | `D:\mva-hackathon\data` | gated dataset | never |
 | `D:\mva-hackathon\work` | derived data (deleted along with the dataset) | never |
 | `D:\mva-hackathon\refs` | public reference data | never |
-| `refs/gnomad/` (in this folder, git-ignored) | gnomAD v4.1 joint frequency slices: 10 MVA genes (gene + 60 kb upstream) and 84 ACMG SF v3.3 genes (exons ±20 bp). Approved 2026-10-04 and fetched by `tools/fetch_gnomad_slices.py`; `manifest.json` records what was fetched | never |
+| `refs/gnomad/` (in this folder, git-ignored) | gnomAD v4.1 joint frequencies from the public gnomAD browser API: every variant across the 10 MVA genes (gene + 60 kb upstream + 5 kb downstream), and gnomAD's exonic set for the 84 ACMG SF v3.3 genes. Approved 2026-10-04 and fetched by `tools/fetch_gnomad_slices.py`, which runs at idle priority, caches responses in `api/` and resumes where it stopped; `manifest.json` records what was fetched. Package R10 wires it into the annotation | never |
 | `D:\mva-hackathon\submissions` | staged submission packages (contain patient variants) | never |
 | `D:\mva-hackathon\logs` | background job logs | never |
 | private HF Space under `SantanuBanerjee` | not used: HF needs PRO to host Docker/Gradio Spaces. Code is kept in `space/` in case he subscribes | code only |
 | Kaggle (`santanubanerjee9`) | private notebooks for public-data precompute only, such as the BUB1B splice map. Kernels are named `mva-*`. GPU/TPU: never ask, use at most 50% of the remaining `kaggle quota`, and never touch other projects' kernels | code only |
 
-Never write anything to C:, and that includes WSL's own filesystem (its disk image is on C:). Scratch files go in `D:\DevCache\tmp\claude\Child-with-rare-Disease\`. Timing: the routine's slot is 18:13–20:30 IST, and heavy laptop jobs run in 01:00–05:15 IST, so they don't overlap the other daily routines.
+Never write anything to C:, and that includes WSL's own filesystem (its disk image is on C:). Scratch files go in `D:\DevCache\tmp\claude\Child-with-rare-Disease\`. Timing: the routine's slot is 18:13–20:30 IST. Heavy laptop jobs run in a quiet overnight gap picked from `list_scheduled_tasks`; it was 04:00–05:30 IST in early October, because CASMI also runs at 01:53. Clock times aren't enough: when the app reopens, every missed routine fires at once, even inside this slot. So measure CPU and RAM first, do light work only when the laptop is busy (CPU above 85% or under 1.5 GB RAM free), and run long fetches at idle priority.
 
 ## Dataset facts (from HF Community threads #17, #24, #25)
 - 11 files: 4 FASTQ pairs, the VCF plus its index, and a phenotype document with HPO terms. There is no BAM or CRAM.
