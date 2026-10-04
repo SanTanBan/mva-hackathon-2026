@@ -12,8 +12,12 @@ used. One row is written per (variant, gene):
     'intron_variant' inside a gene, 'upstream_gene_variant' or 'downstream_gene_variant'
     within --flank bases of it (strand-aware), all MODIFIER. The BUB1B upstream interval
     matters (locus dossier §4), so these rows are kept for comphet's keep-all genes.
-  - pop_af is the highest of ClinVar's AF_EXAC, AF_TGP and AF_ESP, or empty. Empty means
-    unknown, and comphet treats unknown as rare. A local gnomAD subset would replace this.
+  - pop_af is the rarity measure comphet filters on, and pop_af_source says where it came from.
+    Inside the gnomAD v4.1 slices (INFO/GNOMAD_COVERED, from refs/gnomad/gnomad_v4.1_covered.bed)
+    it is gnomAD's fafmax_faf95_max_joint, or AF_joint when no FAF is given, and a covered
+    variant that gnomAD does not list counts as 0 (source gnomad_v4.1). Elsewhere it is the
+    highest of ClinVar's AF_EXAC, AF_TGP and AF_ESP (source clinvar), or empty (source none).
+    Empty means unknown, and comphet treats unknown as rare.
   - Chromosomes are written with the 'chr' prefix, as the Track 1 CSV requires.
 
 Output is patient-derived when the input is, so it must be written outside the repository.
@@ -29,8 +33,8 @@ from pipeline.common import add_chr, assert_outside_repo, open_text
 from pipeline.comphet import COLUMNS, IMPACT_RANK
 from pipeline.mane_gff import attrs
 
-EXTRA = ("transcript", "aa_change", "dna_change", "clnsig", "clnrevstat", "clinvar_alleleid",
-         "filter", "dp", "gq", "ad")
+EXTRA = ("pop_af_source", "af_joint", "nhomalt_joint", "transcript", "aa_change", "dna_change",
+         "clnsig", "clnrevstat", "clinvar_alleleid", "filter", "dp", "gq", "ad")
 
 # bcftools csq consequence terms, mapped to VEP-style impact classes.
 IMPACT = {
@@ -116,14 +120,27 @@ def info_dict(col):
     return out
 
 
+def number(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def pop_af(info):
+    """Return (pop_af, pop_af_source): gnomAD inside the slices, ClinVar outside, else unknown."""
+    faf, af = number(info.get("fafmax_faf95_max_joint")), number(info.get("AF_joint"))
+    if faf is not None or af is not None:
+        return f"{faf if faf is not None else af:g}", "gnomad_v4.1"
+    if "GNOMAD_COVERED" in info:
+        return "0", "gnomad_v4.1"  # inside a fetched slice but absent from gnomAD
     vals = []
     for key in ("AF_EXAC", "AF_TGP", "AF_ESP"):
         try:
             vals.append(float(info[key]))
         except (KeyError, ValueError):
             pass
-    return f"{max(vals):g}" if vals else ""
+    return (f"{max(vals):g}", "clinvar") if vals else ("", "none")
 
 
 def rows(vcf_lines, genes, flank=5000):
@@ -135,8 +152,11 @@ def rows(vcf_lines, genes, flank=5000):
             continue  # unsplit, spanning-deletion and symbolic alleles cannot be submitted
         info = info_dict(c[7])
         sample = dict(zip(c[8].split(":"), c[9].split(":")))
+        af, af_source = pop_af(info)
         base = {
-            "chrom": add_chr(c[0]), "pos": c[1], "ref": c[3], "alt": c[4], "pop_af": pop_af(info),
+            "chrom": add_chr(c[0]), "pos": c[1], "ref": c[3], "alt": c[4], "pop_af": af,
+            "pop_af_source": af_source, "af_joint": info.get("AF_joint", ""),
+            "nhomalt_joint": info.get("nhomalt_joint", ""),
             "gt": sample.get("GT", ""), "pgt": sample.get("PGT", "") if sample.get("PGT") != "." else "",
             "pid": sample.get("PID", "") if sample.get("PID") != "." else "",
             "clnsig": info.get("CLNSIG", ""), "clnrevstat": info.get("CLNREVSTAT", ""),

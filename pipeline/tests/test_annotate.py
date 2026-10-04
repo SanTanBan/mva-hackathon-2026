@@ -7,7 +7,7 @@ Run: python -m unittest discover -s pipeline/tests -t .
 """
 import unittest
 
-from pipeline import annotate_table, mane_gff
+from pipeline import annotate_table, comphet, mane_gff
 
 
 def tsv(*fields):
@@ -106,6 +106,37 @@ class RowsTest(unittest.TestCase):
         self.assertEqual((first["pgt"], first["pid"]), ("0|1", "1150_C_T"))
         self.assertEqual(out[1]["consequence"], "intron_variant")
         self.assertEqual((out[2]["consequence"], out[2]["gene"], out[2]["pop_af"]), ("intergenic_variant", "", ""))
+        self.assertEqual((first["pop_af_source"], out[2]["pop_af_source"]), ("clinvar", "none"))
+
+
+class GnomadFrequencyTest(unittest.TestCase):
+    """R10: gnomAD inside the fetched slices, ClinVar outside them."""
+
+    def table(self, *infos):
+        idx = annotate_table.GeneIndex(kept_gff())
+        bcsq = "BCSQ=missense|GENEA|T1|protein_coding|+|40R>40C|1150C>T"
+        lines = [tsv(7, 1150, ".", "C", "T", 50, "PASS", f"{bcsq};{i}" if i else bcsq, "GT", "0/1")
+                 for i in infos]
+        return list(annotate_table.rows(lines, idx, flank=1000))
+
+    def test_gnomad_common_variant_is_dropped(self):
+        row = self.table("GNOMAD_COVERED;AF_joint=0.04;nhomalt_joint=120;fafmax_faf95_max_joint=0.05;AF_EXAC=0.0001")[0]
+        self.assertEqual((row["pop_af"], row["pop_af_source"], row["nhomalt_joint"]), ("0.05", "gnomad_v4.1", "120"))
+        self.assertFalse(comphet.keep(row, 0.01, {"HIGH", "MODERATE"}, set()))
+
+    def test_absent_covered_variant_is_rare(self):
+        row = self.table("GNOMAD_COVERED")[0]
+        self.assertEqual((row["pop_af"], row["pop_af_source"]), ("0", "gnomad_v4.1"))
+        self.assertTrue(comphet.keep(row, 0.01, {"HIGH", "MODERATE"}, set()))
+
+    def test_uncovered_variant_falls_back_to_clinvar(self):
+        row = self.table("AF_EXAC=0.02;AF_TGP=0.03")[0]
+        self.assertEqual((row["pop_af"], row["pop_af_source"]), ("0.03", "clinvar"))
+        self.assertFalse(comphet.keep(row, 0.01, {"HIGH", "MODERATE"}, set()))
+
+    def test_af_joint_used_when_no_faf(self):
+        row = self.table("GNOMAD_COVERED;AF_joint=0.002")[0]
+        self.assertEqual((row["pop_af"], row["pop_af_source"]), ("0.002", "gnomad_v4.1"))
 
 
 if __name__ == "__main__":

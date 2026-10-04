@@ -22,8 +22,10 @@ rerun (everything is cached by then) finishes the job.
 
 Output (git-ignored): refs/gnomad/gnomad_v4.1_joint_slices.vcf.gz (+ .tbi), sites only, with
 INFO AC_joint, AN_joint, AF_joint, nhomalt_joint, fafmax_faf95_max_joint. Raw API responses
-are cached in refs/gnomad/api/, so a rerun fetches only what is missing.
-Run: python tools/fetch_gnomad_slices.py [--plan-only]
+are cached in refs/gnomad/api/, so a rerun fetches only what is missing. Also
+refs/gnomad/gnomad_v4.1_covered.bed: the intervals the successful queries cover (no-chr
+contigs), which tools/annotate_vcf.sh turns into INFO/GNOMAD_COVERED.
+Run: python tools/fetch_gnomad_slices.py [--plan-only | --bed-only]
 """
 import argparse
 import ctypes
@@ -220,6 +222,58 @@ def merge(jobs, cache, plain):
     return n
 
 
+def mane_exons():
+    """MANE Select exons by gene name: {name: [(chrom, start, end), ...]}, 1-based inclusive."""
+    gene_name, tx_gene, exons = {}, {}, {}
+    with gzip.open(MANE_GFF, "rt") as fh:
+        for line in fh:
+            f = line.split("\t")
+            if len(f) < 9:
+                continue
+            a = dict(kv.split("=", 1) for kv in f[8].strip().split(";") if "=" in kv)
+            if f[2] == "gene" and "ID" in a:
+                gene_name[a["ID"]] = a.get("Name", "")
+            elif f[2] == "mRNA" and "Parent" in a:
+                tx_gene[a["ID"]] = a["Parent"]
+            elif f[2] == "exon" and "Parent" in a:
+                exons.setdefault(a["Parent"], []).append((f[0], int(f[3]), int(f[4])))
+    out = {}
+    for tx, ex in exons.items():
+        out.setdefault(gene_name.get(tx_gene.get(tx), ""), []).extend(ex)
+    return out
+
+
+def covered_bed(jobs, cache, path, pad=20):
+    """Write the intervals the fetched slices cover, as a sorted BED with no-chr contigs.
+
+    A variant inside one of these intervals that gnomAD does not list is treated as AF 0 by
+    pipeline/annotate_table.py, so only intervals whose query succeeded are written. Region
+    chunks are covered in full. A gene query returns gnomAD's exonic set with a small flank, so
+    for SF genes only the MANE Select exons +/- `pad` bases are claimed (conservative).
+    """
+    exons = None
+    iv = []
+    for job in jobs:
+        if not (cache / f"{job['key']}.json").exists():
+            continue
+        if job["kind"] == "region":
+            iv.append((job["chrom"], job["start"] - 1, job["stop"], job["gene"]))
+        else:
+            exons = exons if exons is not None else mane_exons()
+            iv += [(c, max(0, s - 1 - pad), e + pad, job["gene"]) for c, s, e in exons.get(job["gene"], [])]
+    order = {c: i for i, c in enumerate(CHROMS)}
+    iv.sort(key=lambda r: (order.get(r[0], 99), r[1], r[2]))
+    merged = []
+    for c, s, e, g in iv:
+        if merged and merged[-1][0] == c and s <= merged[-1][2]:
+            merged[-1][2] = max(merged[-1][2], e)
+        else:
+            merged.append([c, s, e, g])
+    with open(path, "w", encoding="ascii", newline="\n") as out:
+        out.writelines(f"{c}\t{s}\t{e}\t{g}\n" for c, s, e, g in merged)
+    return len(merged)
+
+
 def wsl_path(p):
     p = str(p)
     return "/mnt/" + p[0].lower() + p[2:].replace("\\", "/")
@@ -228,9 +282,13 @@ def wsl_path(p):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--plan-only", action="store_true", help="print the query plan; fetch nothing")
+    ap.add_argument("--bed-only", action="store_true", help="write the covered-intervals BED from the cache; fetch nothing")
     args = ap.parse_args()
     lower_priority()
     jobs, missing = plan()
+    if args.bed_only:
+        print(f"{covered_bed(jobs, OUT / 'api', OUT / 'gnomad_v4.1_covered.bed')} covered intervals", flush=True)
+        return 0
     print(f"{len(jobs)} queries ({sum(j['kind'] == 'region' for j in jobs)} region chunks for MVA genes, "
           f"{sum(j['kind'] == 'gene' for j in jobs)} SF gene queries); missing from MANE: {missing or 'none'}",
           flush=True)
@@ -262,6 +320,8 @@ def main():
     plain = OUT / "gnomad_v4.1_joint_slices.vcf"
     n_rec = merge(jobs, cache, plain)
     print(f"merged {n_rec} records into {plain.name}", flush=True)
+    n_bed = covered_bed(jobs, cache, OUT / "gnomad_v4.1_covered.bed")
+    print(f"{n_bed} covered intervals in gnomad_v4.1_covered.bed", flush=True)
 
     ram = free_ram_gb()
     compressed, note = False, ""
@@ -285,6 +345,7 @@ def main():
         "queries": len(jobs), "failures": failures, "missing_from_mane": missing,
         "bytes_fetched_this_run": fetched_bytes, "records": n_rec, "variants_per_gene": per_gene,
         "compressed_and_indexed": compressed, "note": note,
+        "covered_bed": "gnomad_v4.1_covered.bed", "covered_intervals": n_bed,
         "output": str(final if compressed else plain),
         "bytes": (final if compressed else plain).stat().st_size if (final if compressed else plain).exists() else None,
     }
