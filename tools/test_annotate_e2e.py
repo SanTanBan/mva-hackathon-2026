@@ -10,6 +10,9 @@ tools/annotate_vcf.sh in WSL, then pipeline/annotate_table.py and pipeline/comph
   - ClinVar CLNSIG is attached to the known pathogenic alleles;
   - comphet pairs the two read-backed heterozygous alleles as 'trans';
   - pipeline/track1_rank.py ranks that pair first and writes a CSV that passes the validator.
+That first pass pins GNOMAD=/nonexistent (ClinVar frequencies only). A second pass runs the gnomAD
+branch with a tiny synthetic slice and covered BED, and checks that a listed variant takes
+gnomAD's FAF, a covered but unlisted variant counts as AF 0, and an uncovered one falls back.
 Everything is written under D:\\DevCache\\tmp\\claude\\mva and deleted afterwards.
 It is skipped (exit 0) when WSL or the toolchain is missing.
 
@@ -81,6 +84,35 @@ def build_vcf(path):
     path.write_text("\n".join(header + recs) + "\n", encoding="utf-8", newline="\n")
 
 
+def build_gnomad(vcf, bed):
+    """A synthetic gnomAD slice (chr contigs, like the real one) and covered BED (no chr).
+
+    The synonymous allele is listed as common. The BED covers 15:40,160,001-40,169,000, which
+    holds the deep-intronic SNV (unlisted, so AF 0) but neither the upstream SNV nor the
+    frameshift (both fall back to ClinVar or none).
+    """
+    header = [
+        "##fileformat=VCFv4.2",
+        "##contig=<ID=chr15>",
+        '##INFO=<ID=AF_joint,Number=A,Type=Float,Description="AF">',
+        '##INFO=<ID=nhomalt_joint,Number=A,Type=Integer,Description="nhomalt">',
+        '##INFO=<ID=fafmax_faf95_max_joint,Number=A,Type=Float,Description="FAF">',
+        t("#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO"),
+    ]
+    rec = t("chr15", 40161226, ".", "G", "A", ".", "PASS",
+            "AF_joint=0.3;nhomalt_joint=100;fafmax_faf95_max_joint=0.25")
+    vcf.write_text("\n".join(header + [rec]) + "\n", encoding="utf-8", newline="\n")
+    bed.write_text(t(15, 40160000, 40169000, "BUB1B") + "\n", encoding="utf-8", newline="\n")
+
+
+def annotate(env, out):
+    r = wsl(f"cd {TMP_WSL} && {env} bash {REPO_WSL}/tools/annotate_vcf.sh {TMP_WSL}/synth.vcf.gz {TMP_WSL}/{out}")
+    print(r.stdout.strip())
+    if r.returncode:
+        print(r.stderr)
+    return r.returncode == 0
+
+
 def main():
     if not (TOOLS.exists() and GFF.exists() and shutil.which("wsl")):
         print("SKIP: toolchain, MANE GFF3 or WSL missing")
@@ -88,10 +120,8 @@ def main():
     TMP.mkdir(parents=True, exist_ok=True)
     try:
         build_vcf(TMP / "synth.vcf")
-        r = wsl(f"cd {TMP_WSL} && /mnt/d/mva-hackathon/tools/env/bin/bgzip -f synth.vcf && "
-                f"bash {REPO_WSL}/tools/annotate_vcf.sh {TMP_WSL}/synth.vcf.gz {TMP_WSL}/annotated.vcf.gz")
-        print(r.stdout.strip())
-        if r.returncode:
+        r = wsl(f"cd {TMP_WSL} && /mnt/d/mva-hackathon/tools/env/bin/bgzip -f synth.vcf")
+        if r.returncode or not annotate("GNOMAD=/nonexistent GNOMAD_BED=/nonexistent", "annotated.vcf.gz"):
             print(r.stderr)
             return 1
         with open_text(GFF) as fh:
@@ -124,6 +154,19 @@ def main():
         print("validator:", errors or "no errors", warnings or "")
         checks["csv valid"] = not errors
         checks["trans pathogenic pair ranks first"] = (ranked[0][1]["pos"], ranked[0][2]["pos"]) == ("40165186", "40170578")
+        checks["no gnomAD when pinned off"] = all(r["pop_af_source"] != "gnomad_v4.1" for r in table)
+
+        build_gnomad(TMP / "gnomad.vcf", TMP / "covered.bed")
+        ok = annotate(f"GNOMAD={TMP_WSL}/gnomad.vcf GNOMAD_BED={TMP_WSL}/covered.bed", "annotated_gnomad.vcf.gz")
+        checks["gnomAD branch runs"] = ok
+        if ok:
+            with open_text(TMP / "annotated_gnomad.vcf.gz") as fh:
+                g = [row for row in annotate_table.rows(fh, genes) if row["gene"] == "BUB1B"]
+            src = {(row["pos"], row["alt"]): (row["pop_af"], row["pop_af_source"]) for row in g}
+            checks["gnomAD listed -> FAF"] = src.get(("40161226", "A")) == ("0.25", "gnomad_v4.1")
+            checks["covered, unlisted -> AF 0"] = [v for (p, _), v in src.items() if p == "40168000"] == [("0", "gnomad_v4.1")]
+            checks["uncovered -> fallback"] = (src.get(("40170578", "A"), ("", ""))[1] in ("clinvar", "none")
+                                               and all(v[1] != "gnomad_v4.1" for (p, _), v in src.items() if p == "40158000"))
         for name, ok in checks.items():
             print(("PASS " if ok else "FAIL ") + name)
         return 0 if all(checks.values()) else 1

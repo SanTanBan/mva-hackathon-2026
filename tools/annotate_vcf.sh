@@ -28,8 +28,10 @@ FA=${FA:-$REFS/grch38/GRCh38_no_alt_plus_hs38d1_analysis_set_no_chr.fa}
 GFF=${GFF:-$REFS/ensembl/GRCh38.116.mane_select.gff3.gz}
 CLINVAR=${CLINVAR:-$REFS/clinvar/clinvar.vcf.gz}
 GNOMAD_DIR=$(dirname "$(realpath "$0")")/../refs/gnomad
-GNOMAD=${GNOMAD:-$GNOMAD_DIR/gnomad_v4.1_joint_slices.vcf.gz}
-[ -f "$GNOMAD" ] || GNOMAD=$GNOMAD_DIR/gnomad_v4.1_joint_slices.vcf  # compression deferred
+if [ -z "${GNOMAD:-}" ]; then  # an explicit GNOMAD (e.g. /nonexistent in tests) is used as given
+  GNOMAD=$GNOMAD_DIR/gnomad_v4.1_joint_slices.vcf.gz
+  [ -f "$GNOMAD" ] || GNOMAD=$GNOMAD_DIR/gnomad_v4.1_joint_slices.vcf  # compression deferred
+fi
 GNOMAD_BED=${GNOMAD_BED:-$GNOMAD_DIR/gnomad_v4.1_covered.bed}
 LOW="nice -n 19 ionice -c3"
 export TMPDIR; TMPDIR=$(dirname "$(realpath -m "$OUT")")/tmp.annotate.$$
