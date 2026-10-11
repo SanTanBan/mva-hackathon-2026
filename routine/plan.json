@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-10-08T20:20+05:30",
+  "last_run": "2026-10-11T10:50+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -15,7 +15,7 @@
   "gates": {
     "data_access_granted": {
       "value": false,
-      "checked": "2026-10-08T20:08+05:30",
+      "checked": "2026-10-11T10:41+05:30",
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
@@ -406,6 +406,7 @@
     "2026-10-04 (scheduled run, 04:07-04:45 IST; it fired outside its 18:13 slot, probably catching up after the laptop slept, and no run happened on 2026-10-03): Access still 403 (21.1 days left). No package runnable. D02 prep: pre-registered PanelApp panel-gene list (1,987 genes) wired into run_d02.py; methods B4/B9 updated. Renderer hang fixed after a staging dry run. A live session ran in parallel: gnomAD v4.1 slices approved and fetching (refs/gnomad, log gnomad_slices.log); this run did not touch it. 99 tests pass (3 new), 1 skipped. Nothing staged.",
     "2026-10-04 (live session, 19:00-20:00 IST): Santanu approved the gnomAD v4.1 gene slices, to be stored inside the project folder (refs/gnomad, git-ignored) and never on C:. The tabix range queries on the joint VCFs were abandoned after ~0.5 GB (each exon cost ~10 MB). The gnomAD browser API was used instead (115 queries, ~130 MB, cached in refs/gnomad/api). The fetch runs detached at idle priority; added R10 to wire it in. Today's 18:13 run was skipped: the app was closed and reopened at 19:13 into a catch-up pile-up of about 15 sessions (CPU 100%, 0.4 GB RAM free), so no extra run was started. The routine prompt now gates work on measured load as well as time. CASMI now also runs at 01:53 IST, so the heavy-job window moved to 04:00-05:30 IST.",
     "2026-10-04 (scheduled run, light, 22:05-22:20 IST; started outside its slot, CPU 100%, 1.0 GB RAM free): Access still 403 (20.3 days left). gnomAD fetch from the live session finished with 8 of 115 queries failed (server 500s and dropped connections, including both TRIP13 chunks) and compression deferred; the failed ones were rerun in the background at idle priority. R10 in progress: gnomAD-aware pop_af, covered-intervals BED, annotate_vcf.sh wiring, methods B3 (code and unit tests only; WSL branch untested). 72 pipeline tests pass. Nothing staged.",
-    "2026-10-08 (scheduled run, light, 20:06-20:25 IST; CPU 100% x4 samples, 0.78 GB RAM free): Access still 403 (16.4 days left). No runs on 2026-10-05..07 left a note. R10: gnomAD rerun collected (5 of 8 recovered, 3 still HTTP 500), covered BED rebuilt from cache (1,863 intervals, 1.96 Mb). Compression and the WSL test deferred to a quiet run. Nothing staged."
+    "2026-10-08 (scheduled run, light, 20:06-20:25 IST; CPU 100% x4 samples, 0.78 GB RAM free): Access still 403 (16.4 days left). No runs on 2026-10-05..07 left a note. R10: gnomAD rerun collected (5 of 8 recovered, 3 still HTTP 500), covered BED rebuilt from cache (1,863 intervals, 1.96 Mb). Compression and the WSL test deferred to a quiet run. Nothing staged.",
+    "2026-10-11 (scheduled run, light, 10:40-10:55 IST; started outside its 18:13 slot, CPU 100% x4 samples, 0.94 GB RAM free): Access still 403 (13.8 days left). No runs on 2026-10-09..10 left a note. R10: restarted the idle-priority retry of the 3 gnomAD queries that returned HTTP 500 (log D:\\mva-hackathon\\logs\\gnomad_slices_api_rerun2.log); compression stays deferred while RAM is low; WSL e2e test still pending. Nothing staged."
   ]
 }
