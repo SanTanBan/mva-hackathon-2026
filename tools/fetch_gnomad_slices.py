@@ -49,6 +49,7 @@ API = "https://gnomad.broadinstitute.org/api"
 MVA_GENES = ["BUB1B", "CEP57", "TRIP13", "CENATAC", "SLF2", "SMC5", "MAD1L1", "MAD2L1BP", "CEP192", "BUB1"]
 ALIASES = {"CENATAC": ["CENATAC", "CCDC84"]}
 UPSTREAM, DOWNSTREAM, CHUNK = 60_000, 5_000, 60_000
+MIN_SPLIT = 5_000  # smallest sub-window tried when a region chunk keeps returning HTTP 5xx
 PAUSE_S = 2.0  # be polite to a free public service
 MIN_FREE_RAM_FOR_WSL_GB = 1.5
 WSL_TOOLS = "/mnt/d/mva-hackathon/tools/env/bin"
@@ -130,7 +131,24 @@ def plan():
     return jobs, missing
 
 
-def query(job):
+def query_split(job, min_span=MIN_SPLIT):
+    """Query a region, halving it on server errors (the API 500s on some dense 60 kb windows)."""
+    try:
+        return query(job, attempts=3 if job["kind"] == "region" else 6)
+    except urllib.error.HTTPError as e:
+        if job["kind"] != "region" or e.code < 500 or job["stop"] - job["start"] + 1 <= min_span:
+            raise
+    mid = (job["start"] + job["stop"]) // 2
+    variants, n = [], 0
+    for s, e in ((job["start"], mid), (mid + 1, job["stop"])):
+        v, b = query_split({**job, "start": s, "stop": e}, min_span)
+        variants += v
+        n += b
+        time.sleep(PAUSE_S)
+    return variants, n
+
+
+def query(job, attempts=6):
     if job["kind"] == "gene":
         q = f'query {{ gene(gene_symbol: "{job["gene"]}", reference_genome: GRCh38) {{ variants(dataset: gnomad_r4) {{ {FIELDS} }} }} }}'
     else:
@@ -138,24 +156,25 @@ def query(job):
              f'reference_genome: GRCh38) {{ variants(dataset: gnomad_r4) {{ {FIELDS} }} }} }}')
     req = urllib.request.Request(API, data=json.dumps({"query": q}).encode(),
                                  headers={"Content-Type": "application/json", "User-Agent": "mva-hackathon-2026"})
-    for attempt in range(6):
+    last = attempts - 1
+    for attempt in range(attempts):
         try:
             with urllib.request.urlopen(req, timeout=180) as r:
                 body = r.read()
         except urllib.error.HTTPError as e:
-            if e.code not in (429, 500, 502, 503, 504) or attempt == 5:
+            if e.code not in (429, 500, 502, 503, 504) or attempt == last:
                 raise  # a malformed query or unknown gene won't succeed on retry
             time.sleep(min(300, 20 * 2 ** attempt))
             continue
         except (urllib.error.URLError, TimeoutError):
-            if attempt == 5:
+            if attempt == last:
                 raise
             time.sleep(min(300, 20 * 2 ** attempt))
             continue
         d = json.loads(body)
         if d.get("errors"):
             msg = str(d["errors"][0].get("message", d["errors"][0]))
-            if "rate" in msg.lower() and attempt < 5:
+            if "rate" in msg.lower() and attempt < last:
                 time.sleep(30 * (attempt + 1))
                 continue
             raise RuntimeError(msg)
@@ -303,7 +322,7 @@ def main():
         cached = cache / f"{job['key']}.json"
         if not cached.exists():
             try:
-                variants, n = query(job)
+                variants, n = query_split(job)
             except Exception as e:  # record and continue; a rerun retries only the missing ones
                 failures.append(f"{job['key']}: {type(e).__name__}: {e}")
                 print(f"[{i}/{len(jobs)}] {job['key']}: FAILED {e}", flush=True)
