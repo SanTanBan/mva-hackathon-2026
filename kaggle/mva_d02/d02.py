@@ -70,10 +70,11 @@ def code_root():
 os.makedirs(W, exist_ok=True)
 os.makedirs(TMPD, exist_ok=True)
 
-# Toolchain (bioconda, pinned to the laptop's 1.24 where available).
-sh("mkdir -p /tmp/mm && curl -fsSL https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj -C /tmp/mm bin/micromamba")
-if sh(f"/tmp/mm/bin/micromamba create -y -q -p {ENV} -c conda-forge -c bioconda bcftools=1.24 samtools=1.24 htslib=1.24", check=False).returncode:
-    sh(f"/tmp/mm/bin/micromamba create -y -q -p {ENV} -c conda-forge -c bioconda bcftools samtools htslib")
+# Toolchain (bioconda, pinned to the laptop's 1.24 where available); kept if a wrapper installed it.
+if not os.path.exists(f"{TOOLS}/bcftools"):
+    sh("mkdir -p /tmp/mm && curl -fsSL https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj -C /tmp/mm bin/micromamba")
+    if sh(f"/tmp/mm/bin/micromamba create -y -q -p {ENV} -c conda-forge -c bioconda bcftools=1.24 samtools=1.24 htslib=1.24", check=False).returncode:
+        sh(f"/tmp/mm/bin/micromamba create -y -q -p {ENV} -c conda-forge -c bioconda bcftools samtools htslib")
 summary["bcftools"] = sh(f"{TOOLS}/bcftools --version | head -1").stdout.strip()
 
 # Inputs.
@@ -83,9 +84,11 @@ FA = f"{refs}/GRCh38_no_alt_plus_hs38d1_analysis_set_no_chr.fa.gz"
 GFF = f"{refs}/GRCh38.116.mane_select.gff3.gz"
 # Kaggle unpacks uploaded .gz files (sometimes into a folder of the same name), so accept a
 # bgzipped VCF with its index or a plain one, and bgzip + index into /tmp when needed.
-found = sorted({h for pat in ("*.vcf.gz", "*.vcf.bgz", "*.vcf")
-                for h in glob.glob(f"/kaggle/input/**/{pat}", recursive=True)
-                if os.path.isfile(h) and not any(x in h for x in ("/refs/", "clinvar", "gnomad"))})
+# MVA_D02_VCF overrides the search; only the synthetic dry run (kaggle/mva_d02_synth) sets it.
+found = [os.environ["MVA_D02_VCF"]] if os.environ.get("MVA_D02_VCF") else sorted(
+    {h for pat in ("*.vcf.gz", "*.vcf.bgz", "*.vcf")
+     for h in glob.glob(f"/kaggle/input/**/{pat}", recursive=True)
+     if os.path.isfile(h) and not any(x in h for x in ("/refs/", "clinvar", "gnomad"))})
 if len(found) != 1:
     raise SystemExit(f"expected one patient VCF, found {len(found)}")
 src = found[0]
@@ -95,7 +98,7 @@ else:
     vcf = f"{TMPD}/input.vcf.gz"
     sh(f"{'gzip -dc' if src.endswith(('.gz', '.bgz')) else 'cat'} {src} | {TOOLS}/bgzip -@4 -c > {vcf} && {TOOLS}/tabix -p vcf {vcf}", show=False)
 summary["input_recompressed"] = vcf != src
-pid_files = glob.glob("/kaggle/input/**/proband_id.txt", recursive=True)
+pid_files = [] if os.environ.get("MVA_D02_VCF") else glob.glob("/kaggle/input/**/proband_id.txt", recursive=True)
 code = code_root()
 
 # Header checks (counts only in the log).
