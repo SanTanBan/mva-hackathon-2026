@@ -239,15 +239,16 @@
     {
       "id": "R11",
       "owner": "routine",
-      "status": "in_progress",
+      "status": "done",
       "needs": [],
       "title": "Kaggle compute for the patient-data pipeline",
       "outputs": [
         "kaggle/mva_refs_build/",
         "kaggle/mva_d02/"
       ],
-      "progress": "2026-10-14: private datasets santanubanerjee9/mva-code (code only) and santanubanerjee9/mva-refs (MANE GFF3, PanelApp gene list, gnomAD slices, covered BED) created. Kernel mva-refs-build (public data) pushed: GRCh38 analysis set from NCBI (md5-checked, renamed without chr, bgzipped, faidx), ClinVar 2026-09-28 archive, gnomAD bgzip+tabix, unit tests and the native e2e test. Kernel mva-d02 written; it is pushed once the VCF is in the private dataset santanubanerjee9/mva-patient-vcf. 2026-10-14 13:58 IST: v1 failed (Kaggle unpacks uploaded .gz files); v2 COMPLETE: reference md5 matches NCBI (2,580 contigs), ClinVar 2026-09-28 archive md5 matches, bcftools/samtools 1.24, e2e 17/17 PASS, unit tests 71/72 (a hardcoded Windows temp dir; fixed, mva-code v2 uploaded, refs-build v3 pushed to confirm 72/72).",
-      "done_when": "mva-refs-build output has build.json with md5_matches_ncbi true, unit tests passing and every e2e check PASS; mva-d02 is ready to run on the child's VCF."
+      "progress": "2026-10-14: private datasets santanubanerjee9/mva-code (code only) and santanubanerjee9/mva-refs (MANE GFF3, PanelApp gene list, gnomAD slices, covered BED) created. Kernel mva-refs-build (public data) pushed: GRCh38 analysis set from NCBI (md5-checked, renamed without chr, bgzipped, faidx), ClinVar 2026-09-28 archive, gnomAD bgzip+tabix, unit tests and the native e2e test. Kernel mva-d02 written; it is pushed once the VCF is in the private dataset santanubanerjee9/mva-patient-vcf. 2026-10-14 13:58 IST: v1 failed (Kaggle unpacks uploaded .gz files); v2 COMPLETE: reference md5 matches NCBI (2,580 contigs), ClinVar 2026-09-28 archive md5 matches, bcftools/samtools 1.24, e2e 17/17 PASS, unit tests 71/72 (a hardcoded Windows temp dir; fixed, mva-code v2 uploaded, refs-build v3 pushed to confirm 72/72). 2026-10-14 14:19 IST: DONE. refs-build v3: unit tests 72/72, e2e 17/17, reference and ClinVar md5 match NCBI. Dry run mva-d02-synth (the real d02.py on the synthetic e2e VCF, public alleles only) completed end to end: annotation 8 records, ranked CSV of 10 rows with the trans pathogenic pair first, validator 0 errors/0 warnings (also locally), MVA-gene extract, BAF table and summary.json written. One bug found and fixed on the way (validate() needs a Path). When access arrives: tools/fetch_vcf_first.py -> tools/d01_intake.py -> tools/kaggle_patient_upload.py -> tools/kaggle_d02.py -> tools/draft_track1_report.py -> tools/render_reports.py -> submit.",
+      "done_when": "mva-refs-build output has build.json with md5_matches_ncbi true, unit tests passing and every e2e check PASS; mva-d02 is ready to run on the child's VCF.",
+      "completed": "2026-10-14"
     },
     {
       "id": "R12",
