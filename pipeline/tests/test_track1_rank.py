@@ -4,6 +4,7 @@
 Run: python -m unittest discover -s pipeline/tests -t .
 """
 import csv
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -84,7 +85,7 @@ class ScoreTest(unittest.TestCase):
         rows = [v(100, "T", clnsig="Likely_pathogenic"), v(500, "G", gene="GENEX", gt="1/1", impact="MODERATE")]
         ranked = track1_rank.score_candidates(rows)
         self.assertIn("second allele not seen", ranked[0][3])
-        with tempfile.TemporaryDirectory(dir=r"D:\DevCache\tmp") as d:
+        with tempfile.TemporaryDirectory(dir=r"D:\DevCache\tmp" if os.path.isdir(r"D:\DevCache\tmp") else None) as d:
             path = Path(d) / "SantanuBanerjee_synthetic.csv"
             track1_rank.write_csv(path, "SYNTH-1", ranked)
             errors, _ = validate(path, hf_user="SantanuBanerjee")

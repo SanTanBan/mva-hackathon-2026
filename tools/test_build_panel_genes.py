@@ -5,6 +5,7 @@ Run: python -m unittest tools.test_build_panel_genes
 """
 import gzip
 import sys
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -39,7 +40,7 @@ class PanelGenesTest(unittest.TestCase):
         self.assertEqual(got, {"BUB1B": [1, 2], "AARS1": [1]})
 
     def test_hgnc_map_and_write(self):
-        with tempfile.TemporaryDirectory(dir=r"D:\DevCache\tmp") as d:
+        with tempfile.TemporaryDirectory(dir=r"D:\DevCache\tmp" if os.path.isdir(r"D:\DevCache\tmp") else None) as d:
             gff = Path(d) / "x.gff3.gz"
             with gzip.open(gff, "wt", encoding="utf-8") as fh:
                 fh.write("##gff-version 3\n")
