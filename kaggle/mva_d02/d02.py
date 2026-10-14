@@ -26,6 +26,7 @@ import subprocess
 import sys
 import time
 import zipfile
+from pathlib import Path
 
 W = "/kaggle/working/d02"
 TMPD = "/tmp/d02"
@@ -134,7 +135,7 @@ panel = [ln.strip() for ln in open(f"{refs}/panel_genes_mva.txt") if ln.strip() 
 ranked = track1_rank.score_candidates(rows, panel)
 csv_path = f"{W}/{HF_USER}_track1.csv"
 track1_rank.write_csv(csv_path, proband_id, ranked)
-errors, warnings = validate(csv_path, hf_user=HF_USER)
+errors, warnings = validate(Path(csv_path), hf_user=HF_USER)
 summary["track1"] = {"rows": len(ranked), "validator_errors": errors, "validator_warnings": warnings,
                      "panel_genes": len(panel)}
 src_counts = {}

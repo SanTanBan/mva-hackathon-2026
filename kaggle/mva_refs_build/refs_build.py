@@ -114,6 +114,7 @@ src = CLINVAR_ARCHIVE
 if r.returncode:
     src = CLINVAR_CURRENT
     sh(f"curl -fsSL --retry 3 -o {cv} {CLINVAR_CURRENT} && curl -fsSL --retry 3 -o {cv}.tbi {CLINVAR_CURRENT}.tbi")
+sh(f"touch {cv}.tbi")  # the index must not look older than the VCF
 r = sh(f"curl -fsSL --retry 3 {src}.md5", check=False)
 build["clinvar"] = {"source": src, "fileDate": sh(f"{TOOLS}/bcftools view -h {cv} | grep -m1 '^##fileDate'").stdout.strip(),
                     "md5_matches_ncbi": (r.stdout.split() or [""])[0] == md5(cv) if not r.returncode else None}
