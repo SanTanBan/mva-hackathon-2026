@@ -81,8 +81,21 @@ refs = os.path.dirname(one("/kaggle/input/**/refs/build.json"))
 summary["refs_build"] = json.load(open(f"{refs}/build.json"))
 FA = f"{refs}/GRCh38_no_alt_plus_hs38d1_analysis_set_no_chr.fa.gz"
 GFF = f"{refs}/GRCh38.116.mane_select.gff3.gz"
-vcf = one("/kaggle/input/**/*.vcf.gz", exclude=("/refs/", "clinvar", "gnomad"))
-pid_files = glob.glob(os.path.join(os.path.dirname(vcf), "proband_id.txt"))
+# Kaggle unpacks uploaded .gz files (sometimes into a folder of the same name), so accept a
+# bgzipped VCF with its index or a plain one, and bgzip + index into /tmp when needed.
+found = sorted({h for pat in ("*.vcf.gz", "*.vcf.bgz", "*.vcf")
+                for h in glob.glob(f"/kaggle/input/**/{pat}", recursive=True)
+                if os.path.isfile(h) and not any(x in h for x in ("/refs/", "clinvar", "gnomad"))})
+if len(found) != 1:
+    raise SystemExit(f"expected one patient VCF, found {len(found)}")
+src = found[0]
+if src.endswith((".gz", ".bgz")) and (os.path.exists(src + ".tbi") or os.path.exists(src + ".csi")):
+    vcf = src
+else:
+    vcf = f"{TMPD}/input.vcf.gz"
+    sh(f"{'gzip -dc' if src.endswith(('.gz', '.bgz')) else 'cat'} {src} | {TOOLS}/bgzip -@4 -c > {vcf} && {TOOLS}/tabix -p vcf {vcf}", show=False)
+summary["input_recompressed"] = vcf != src
+pid_files = glob.glob("/kaggle/input/**/proband_id.txt", recursive=True)
 code = code_root()
 
 # Header checks (counts only in the log).

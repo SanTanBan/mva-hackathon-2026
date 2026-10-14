@@ -66,7 +66,7 @@ Pairs. The pipeline outputs compound heterozygous pairs in the `chrom_1…alt_1`
 
 ### A12. Run time and cost
 *Measured after the run.* Planned environment: free tiers only.
-- **Gated data:** one laptop (Intel i3-10110U, 4 threads, 7.8 GB RAM), working from the VCF; FASTQ steps run overnight at low priority, one pair at a time.
+- **Gated data:** private Kaggle CPU notebooks working from the VCF (free tier). A laptop (Intel i3-10110U, 4 threads, 7.8 GB RAM) handles downloads, validation and report rendering.
 - **Public splice map:** one Kaggle GPU session.
 - **Expected cost:** $0.
 
@@ -84,14 +84,23 @@ Pairs. The pipeline outputs compound heterozygous pairs in the `chrom_1…alt_1`
 ### B1. Data, access and governance
 - **Dataset:** whole-genome FASTQ (four pairs), one VCF with its index, and a phenotype document with HPO terms. It is shared under WCG IRB protocol #20252010 through gated access on Hugging Face.
 - **Reference build:** GRCh38 (no-alt analysis set with decoys); contigs have no `chr` prefix. Variants were called with Sentieon, then filtered with GATK VariantFiltration.
-- **Where the data is processed:** locally, on one laptop. The VCF, its index and the phenotype document are downloaded from the gated repository; FASTQ pairs are fetched one at a time and deleted after use. Gated and derived files stay under `D:\mva-hackathon\`, and nothing gated or derived enters git (a pre-commit guard enforces this).
-- **Deletion:** all of it is deleted by 2026-11-23. No patient data went to any other service.
+- **Where the data is processed:**
+  - The VCF, its index and the phenotype document are downloaded from the gated repository to one laptop. There, gated and derived files stay under `D:\mva-hackathon\`, and nothing gated or derived enters git (a pre-commit guard enforces this).
+  - From 2026-10-14, the compute runs in **private Kaggle notebooks** on the entrant's own account: the whole-VCF annotation, ranking and mosaicism statistics. The VCF and its index sit in a private Kaggle dataset that only the account owner can see. Each notebook keeps only small outputs: the ranked file, the rows for the ten MVA genes and summary statistics.
+  - The hackathon rules allow cloud instances and notebooks, provided everything is deleted within 30 days of close.
+- **Deletion:** all of it is deleted by 2026-11-23, on the laptop and on Kaggle. No patient data went to any other service.
 
 ### B2. Compute environment and VCF quality control
 - **Compute:**
-  - Patient data is processed locally on one laptop (4 threads, 7.8 GB RAM), with bcftools, samtools and htslib 1.24 and minimap2 2.31 under WSL Ubuntu. No patient data leaves the machine.
-  - Public-data precomputation (the *BUB1B* splice map) runs on Kaggle; no patient data goes there.
-  - Full-genome realignment does not fit this machine, so the analysis works from the VCF, plus targeted read-level checks on FASTQ pairs processed one at a time.
+  - Patient data is processed in private Kaggle CPU notebooks with bcftools, samtools and htslib from Bioconda (`kaggle/mva_d02/`). Their public inputs come from a separate notebook, `kaggle/mva_refs_build/`:
+    - the GRCh38 analysis set, checked against NCBI's md5;
+    - ClinVar;
+    - the gnomAD slices.
+
+    That notebook also reruns the unit tests and a synthetic end-to-end test before any patient data is touched.
+  - The same scripts also run on a laptop (4 threads, 7.8 GB RAM, WSL Ubuntu, the same tool versions), where the pipeline was first built and tested.
+  - Public-data precomputation (the *BUB1B* splice map) runs on Kaggle as well.
+  - The analysis works from the VCF, plus targeted read-level checks on FASTQ pairs processed one at a time.
 - **VCF quality control:** header, sample and build checks; left-alignment and multi-allelic splitting; quality filters; and the `chr` prefix added on output.
 
 ### B3. Annotation and inheritance-aware filtering
@@ -162,7 +171,7 @@ Public summary: *what was found, described without coordinates or identifiers.*
 *Repository URL, commit hash, environment file, and the exact commands, in order. Public data sources and their versions.*
 
 ### B14. Privacy and data deletion
-No names, dates, locations more specific than "UK (NHS-diagnosed)", or clinical timeline appear. The public version withholds all patient-level variants. The data must be deleted from every environment by 2026-11-23: the laptop, including the Hugging Face download cache. Deletion is then confirmed by email.
+No names, dates, locations more specific than "UK (NHS-diagnosed)", or clinical timeline appear. The public version withholds all patient-level variants. The data must be deleted from every environment by 2026-11-23: the laptop, including the Hugging Face download cache, and the private Kaggle dataset and notebooks that processed it. Deletion is then confirmed by email.
 
 ---
 

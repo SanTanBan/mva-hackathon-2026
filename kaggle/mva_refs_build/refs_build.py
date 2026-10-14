@@ -54,11 +54,20 @@ def md5(path):
     return h.hexdigest()
 
 
-def find_input(name):
-    hits = glob.glob(f"/kaggle/input/**/{name}", recursive=True)
-    if not hits:
-        raise SystemExit(f"input not found: {name}")
-    return hits[0]
+def find_input(*names):
+    """First regular file matching any name. Kaggle unpacks uploaded .gz files (sometimes into a
+    folder of the same name), so callers list both the .gz and the plain name."""
+    for name in names:
+        hits = [h for h in glob.glob(f"/kaggle/input/**/{name}", recursive=True) if os.path.isfile(h)]
+        if hits:
+            return hits[0]
+    raise SystemExit(f"input not found: {names}")
+
+
+def gz_copy(src, dst):
+    """Copy src to dst as bgzip, whether src is plain or gzip-compressed."""
+    cat = "gzip -dc" if src.endswith(".gz") else "cat"
+    sh(f"{cat} {src} | {TOOLS}/bgzip -@4 -c > {dst}")
 
 
 def code_root():
@@ -111,8 +120,10 @@ build["clinvar"] = {"source": src, "fileDate": sh(f"{TOOLS}/bcftools view -h {cv
 
 # 4. gnomAD v4.1 slices (R10): bgzip + tabix; copy the BED, manifest, MANE GFF3 and panel genes.
 g = f"{OUT}/gnomad_v4.1_joint_slices.vcf.gz"
-sh(f"gzip -dc {find_input('gnomad_v4.1_joint_slices.vcf.gz')} | {TOOLS}/bgzip -@4 -c > {g} && {TOOLS}/tabix -f -p vcf {g}")
-for name in ("gnomad_v4.1_covered.bed", "manifest.json", "GRCh38.116.mane_select.gff3.gz", "panel_genes_mva.txt"):
+gz_copy(find_input("gnomad_v4.1_joint_slices.vcf.gz", "gnomad_v4.1_joint_slices.vcf"), g)
+sh(f"{TOOLS}/tabix -f -p vcf {g}")
+gz_copy(find_input("GRCh38.116.mane_select.gff3.gz", "GRCh38.116.mane_select.gff3"), f"{OUT}/GRCh38.116.mane_select.gff3.gz")
+for name in ("gnomad_v4.1_covered.bed", "manifest.json", "panel_genes_mva.txt"):
     shutil.copy(find_input(name), OUT)
 build["gnomad"] = {"records": int(sh(f"{TOOLS}/bcftools index -n {g}").stdout.strip()),
                    "compressed_and_indexed": os.path.exists(g + ".tbi")}
