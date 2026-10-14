@@ -1,0 +1,14 @@
+{
+  "id": "santanubanerjee9/mva-md2pdf",
+  "title": "mva-md2pdf",
+  "code_file": "md2pdf.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["santanubanerjee9/mva-reports"],
+  "kernel_sources": [],
+  "competition_sources": []
+}

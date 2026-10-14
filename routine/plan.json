@@ -76,7 +76,15 @@
     "track2": {
       "used": 0,
       "max": 3,
-      "staged": [],
+      "staged": [
+        {
+          "date": "2026-10-14",
+          "folder": "D:/mva-hackathon/submissions/track2/2026-10-14",
+          "report": "SantanuBanerjee_track2_report.pdf (v1.2 + methods appendix)",
+          "status": "waiting for the video URL",
+          "purpose": "insurance attempt 1 of 3; v2 with the child's alleles should replace it by 2026-10-23"
+        }
+      ],
       "policy": "Autonomous (gates.auto_submit, 2026-10-14). Only the LATEST is judged, 3 attempts, and a pitch-video URL is mandatory. Submit an insurance version once the video link exists, then the final version by 2026-10-23, keeping one attempt in reserve."
     }
   },
@@ -253,7 +261,7 @@
     {
       "id": "R12",
       "owner": "routine",
-      "status": "in_progress",
+      "status": "done",
       "needs": [
         "R07"
       ],
@@ -262,8 +270,9 @@
         "kaggle/mva_pitch_video/",
         "D:\\mva-hackathon\\submissions\\track2\\video\\"
       ],
-      "progress": "2026-10-14: approved live ('Narrated slide video'); built on Kaggle in the private kernel santanubanerjee9/mva-pitch-video from reports/track2/pitch_script.md (public content only).",
-      "done_when": "An MP4 under 3:00 (1920x1080, narration of the script verbatim) is in D:\\mva-hackathon\\submissions\\track2\\video and checked; Santanu then uploads it (U6)."
+      "progress": "2026-10-14: approved live ('Narrated slide video'); built on Kaggle in the private kernel santanubanerjee9/mva-pitch-video from reports/track2/pitch_script.md (public content only). 2026-10-14 14:21 IST: DONE. MP4 2:49.6, 1920x1080, H.264/AAC, 17.1 MB; Kokoro-82M voice af_heart reading all 374 spoken words verbatim (checked programmatically against the script); 8 slides with the not-medical-advice footer and the acknowledgement on the closing card; captions.srt included. Kaggle kernel santanubanerjee9/mva-pitch-video (private, CPU, 3 versions). Not uploaded anywhere.",
+      "done_when": "An MP4 under 3:00 (1920x1080, narration of the script verbatim) is in D:\\mva-hackathon\\submissions\\track2\\video and checked; Santanu then uploads it (U6).",
+      "completed": "2026-10-14"
     },
     {
       "id": "U3",
@@ -407,7 +416,8 @@
         "R07"
       ],
       "title": "Upload the narrated pitch video (R12) to YouTube or Vimeo (unlisted is fine) and paste the link",
-      "done_when": "The video URL is recorded in plan.json notes, by 2026-10-21. A self-recorded video can replace it later (only the latest Track 2 submission is judged)."
+      "done_when": "The video URL is recorded in plan.json notes, by 2026-10-21. A self-recorded video can replace it later (only the latest Track 2 submission is judged).",
+      "progress": "2026-10-14: the MP4 is ready at D:/mva-hackathon/submissions/track2/video/mva_track2_pitch.mp4. Santanu uploads it (YouTube unlisted or Vimeo), pastes the acknowledgement into the description, and sends the link."
     },
     {
       "id": "D09",
