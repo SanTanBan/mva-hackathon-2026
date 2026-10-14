@@ -15,6 +15,9 @@ branch with a tiny synthetic slice and covered BED, and checks that a listed var
 gnomAD's FAF, a covered but unlisted variant counts as AF 0, and an uncovered one falls back.
 Everything is written under D:\\DevCache\\tmp\\claude\\mva and deleted afterwards.
 It is skipped (exit 0) when WSL or the toolchain is missing.
+With MVA_NATIVE=1 it runs natively on Linux (the private Kaggle kernels): bash instead of WSL, and
+the paths come from MVA_E2E_TMP, MVA_GFF, MVA_FA and TOOLS (annotate_vcf.sh also reads FA, GFF,
+CLINVAR and LOW from the environment).
 
 Run: python tools/test_annotate_e2e.py
 """
@@ -30,11 +33,23 @@ from pipeline import annotate_table, comphet, track1_rank  # noqa: E402
 from tools.validate_track1_csv import validate  # noqa: E402
 from pipeline.common import open_text  # noqa: E402
 
-TMP = Path(r"D:\DevCache\tmp\claude\mva\e2e")
-GFF = Path(r"D:\mva-hackathon\refs\ensembl\GRCh38.116.mane_select.gff3.gz")
-TOOLS = Path(r"D:\mva-hackathon\tools\env\bin\bcftools")
-REPO_WSL = "/mnt/d/GitHub_Ideas/For_Profit/Child-with-rare-Disease"
-TMP_WSL = "/mnt/d/DevCache/tmp/claude/mva/e2e"
+NATIVE = os.environ.get("MVA_NATIVE") == "1"
+if NATIVE:
+    TMP = Path(os.environ.get("MVA_E2E_TMP", "/tmp/mva-e2e"))
+    GFF = Path(os.environ["MVA_GFF"])
+    TOOLS_SH = os.environ["TOOLS"]
+    TOOLS = Path(TOOLS_SH) / "bcftools"
+    FA_SH = os.environ["MVA_FA"]
+    REPO_WSL = str(Path(__file__).resolve().parents[1])
+    TMP_WSL = str(TMP)
+else:
+    TMP = Path(r"D:\DevCache\tmp\claude\mva\e2e")
+    GFF = Path(r"D:\mva-hackathon\refs\ensembl\GRCh38.116.mane_select.gff3.gz")
+    TOOLS = Path(r"D:\mva-hackathon\tools\env\bin\bcftools")
+    TOOLS_SH = "/mnt/d/mva-hackathon/tools/env/bin"
+    FA_SH = "/mnt/d/mva-hackathon/refs/grch38/GRCh38_no_alt_plus_hs38d1_analysis_set_no_chr.fa"
+    REPO_WSL = "/mnt/d/GitHub_Ideas/For_Profit/Child-with-rare-Disease"
+    TMP_WSL = "/mnt/d/DevCache/tmp/claude/mva/e2e"
 
 
 def t(*f):
@@ -42,14 +57,16 @@ def t(*f):
 
 
 def wsl(cmd):
+    """Run a bash command in WSL on the laptop, or natively with MVA_NATIVE=1."""
+    if NATIVE:
+        return subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=1800)
     env = dict(os.environ, MSYS_NO_PATHCONV="1")
     return subprocess.run(["wsl", "-d", "Ubuntu", "--", "bash", "-c", cmd], capture_output=True,
                           text=True, env=env, timeout=1800)
 
 
 def ref_base(pos):
-    fa = "/mnt/d/mva-hackathon/refs/grch38/GRCh38_no_alt_plus_hs38d1_analysis_set_no_chr.fa"
-    r = wsl(f"/mnt/d/mva-hackathon/tools/env/bin/samtools faidx {fa} 15:{pos}-{pos} | tail -1")
+    r = wsl(f"{TOOLS_SH}/samtools faidx {FA_SH} 15:{pos}-{pos} | tail -1")
     return r.stdout.strip().upper()
 
 
@@ -114,13 +131,13 @@ def annotate(env, out):
 
 
 def main():
-    if not (TOOLS.exists() and GFF.exists() and shutil.which("wsl")):
+    if not (TOOLS.exists() and GFF.exists() and (NATIVE or shutil.which("wsl"))):
         print("SKIP: toolchain, MANE GFF3 or WSL missing")
         return 0
     TMP.mkdir(parents=True, exist_ok=True)
     try:
         build_vcf(TMP / "synth.vcf")
-        r = wsl(f"cd {TMP_WSL} && /mnt/d/mva-hackathon/tools/env/bin/bgzip -f synth.vcf")
+        r = wsl(f"cd {TMP_WSL} && {TOOLS_SH}/bgzip -f synth.vcf")
         if r.returncode or not annotate("GNOMAD=/nonexistent GNOMAD_BED=/nonexistent", "annotated.vcf.gz"):
             print(r.stderr)
             return 1

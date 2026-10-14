@@ -22,8 +22,10 @@ IN=${1:?input VCF}; OUT=${2:?output .vcf.gz}
 case "$(realpath -m "$OUT")" in
   /mnt/d/GitHub_Ideas/*) echo "refusing to write inside the repository: $OUT" >&2; exit 2;;
 esac
-TOOLS=/mnt/d/mva-hackathon/tools/env/bin
-REFS=/mnt/d/mva-hackathon/refs
+# TOOLS, REFS, FA, GFF, CLINVAR, GNOMAD, GNOMAD_BED and LOW can be set from the environment, so the
+# same script runs in WSL on the laptop and natively in the private Kaggle kernel (kaggle/mva_d02).
+TOOLS=${TOOLS:-/mnt/d/mva-hackathon/tools/env/bin}
+REFS=${REFS:-/mnt/d/mva-hackathon/refs}
 FA=${FA:-$REFS/grch38/GRCh38_no_alt_plus_hs38d1_analysis_set_no_chr.fa}
 GFF=${GFF:-$REFS/ensembl/GRCh38.116.mane_select.gff3.gz}
 CLINVAR=${CLINVAR:-$REFS/clinvar/clinvar.vcf.gz}
@@ -33,7 +35,7 @@ if [ -z "${GNOMAD:-}" ]; then  # an explicit GNOMAD (e.g. /nonexistent in tests)
   [ -f "$GNOMAD" ] || GNOMAD=$GNOMAD_DIR/gnomad_v4.1_joint_slices.vcf  # compression deferred
 fi
 GNOMAD_BED=${GNOMAD_BED:-$GNOMAD_DIR/gnomad_v4.1_covered.bed}
-LOW="nice -n 19 ionice -c3"
+LOW=${LOW-nice -n 19 ionice -c3}  # set LOW= (empty) on Kaggle, where the kernel has the machine to itself
 export TMPDIR; TMPDIR=$(dirname "$(realpath -m "$OUT")")/tmp.annotate.$$
 mkdir -p "$TMPDIR"; trap 'rm -rf "$TMPDIR"' EXIT
 

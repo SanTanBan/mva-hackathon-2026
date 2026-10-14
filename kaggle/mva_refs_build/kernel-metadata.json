@@ -1,0 +1,14 @@
+{
+  "id": "santanubanerjee9/mva-refs-build",
+  "title": "mva-refs-build",
+  "code_file": "refs_build.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["santanubanerjee9/mva-code", "santanubanerjee9/mva-refs"],
+  "kernel_sources": [],
+  "competition_sources": []
+}

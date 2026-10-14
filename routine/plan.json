@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-10-13T18:15+05:30",
+  "last_run": "2026-10-14T13:05+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -15,7 +15,7 @@
   "gates": {
     "data_access_granted": {
       "value": false,
-      "checked": "2026-10-13T18:19+05:30",
+      "checked": "2026-10-14T13:20+05:30",
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
@@ -54,6 +54,16 @@
       "value": true,
       "enabled": "2026-10-02",
       "how": "Only if the user explicitly opts in: push code-only commits to the private repo at the end of each run."
+    },
+    "kaggle_patient_compute": {
+      "value": true,
+      "approved": "2026-10-14",
+      "record": "Santanu, live chat 2026-10-14 ('never rely on this laptop; use free resources like Colab, HF or Kaggle'; then chose 'Private Kaggle notebook'): the VCF-first files and tables derived from them may be processed in PRIVATE Kaggle datasets and kernels named mva-* on santanubanerjee9. Never public, never attached to non-mva kernels, deleted with everything else by 2026-11-23. The hackathon rules allow cloud instances and notebooks if all data is deleted within 30 days of close. Colab and other services stay public-data only."
+    },
+    "auto_submit": {
+      "value": true,
+      "approved": "2026-10-14",
+      "record": "Santanu, live chat 2026-10-14: 'Don't waste daily submissions! Please submit something and always test and keep trying to improve in the rankings', then 'Yes, you can submit autonomously for all tracks without asking me; you may notify me later'. Submit validated packages without asking and notify him afterwards. The Space signs people in with HF OAuth in a browser: submit through his logged-in Chrome (Claude in Chrome) when available, otherwise stage with SUBMIT.md and notify."
     }
   },
   "submissions": {
@@ -61,13 +71,13 @@
       "used": 0,
       "max": 6,
       "staged": [],
-      "policy": "Stage once early to bank the score, then only when the report materially improves."
+      "policy": "Autonomous (gates.auto_submit, 2026-10-14). Submit a validated CSV as soon as one exists, then again whenever the ranking or the report improves. Best of 6 counts; the CSV is auto-scored (rank points, F-max EPCR); the report is judged."
     },
     "track2": {
       "used": 0,
       "max": 3,
       "staged": [],
-      "policy": "Only the LATEST is judged. Stage the final version only, by 2026-10-23."
+      "policy": "Autonomous (gates.auto_submit, 2026-10-14). Only the LATEST is judged, 3 attempts, and a pitch-video URL is mandatory. Submit an insurance version once the video link exists, then the final version by 2026-10-23, keeping one attempt in reserve."
     }
   },
   "packages": [
@@ -213,7 +223,7 @@
       "id": "R10",
       "owner": "routine",
       "status": "in_progress",
-      "progress": "2026-10-04 22:05 IST (light run): annotate_table.py now takes pop_af from gnomAD (fafmax, else AF_joint; covered-but-absent = 0) with pop_af_source, af_joint and nhomalt_joint columns; 4 synthetic tests pass. fetch_gnomad_slices.py writes refs/gnomad/gnomad_v4.1_covered.bed from successful queries only (1,863 intervals; SF genes as MANE exons +/- 20 bp; --bed-only rewrites it from the cache). annotate_vcf.sh adds the gnomAD fields and the GNOMAD_COVERED flag (bcftools annotate -m), ClinVar-only if the slices are absent. Methods B3 updated. Left: (1) the 8 failed queries (both TRIP13 chunks, so TRIP13 has no gnomAD coverage yet; SLF2, SMC5, MAD1L1 x3, MAD2L1BP) were rerun in the background at idle priority (log D:\\mva-hackathon\\logs\\gnomad_slices_api_rerun.log); then compress and index when the laptop is quiet. That rerun was started before the BED code was added, so afterwards run `python tools/fetch_gnomad_slices.py --bed-only` to cover the newly fetched chunks (until then they get gnomAD AFs but not the absent-means-0 rule). (2) annotate_vcf.sh's gnomAD branch is untested in WSL: run tools/test_annotate_e2e.py, pin it to GNOMAD=/nonexistent for its existing checks and add one case with a tiny synthetic slice. 2026-10-08 20:06 IST (light run, CPU 100%, 0.78 GB free): the idle-priority rerun recovered 5 of the 8 failed queries (the second TRIP13 chunk, SLF2, SMC5, two MAD1L1 chunks); 3 still return HTTP 500 (region_TRIP13_5_832849_892848, region_MAD1L1_7_2230787_2290786, region_MAD2L1BP_6_43569494_43629493). Merged VCF: 1,071,454 records, still uncompressed (WSL off, low RAM). Ran --bed-only: 1,863 merged intervals, 1.96 Mb (the new chunks merged into neighbours, so the count is unchanged); TRIP13 now partly covered. Left: retry the 3 queries and compress/index on a quiet run (plain `python tools/fetch_gnomad_slices.py`); then item (2), the WSL e2e test of the gnomAD branch. 2026-10-11 18:20 IST (light run, CPU 100% x4, 1.1 GB free): the 3 queries had returned HTTP 500 on every retry, so the fetcher now halves a region chunk that keeps returning 5xx (down to 5 kb) and caches the combined result under the original key. All 3 then succeeded (17.1 MB): manifest failures = [], 1,185,269 records, 1,862 covered intervals (log D:\\mva-hackathon\\logs\\gnomad_slices_api_rerun3.log). Compression still deferred (0.6 GB free). Item (2) code done: tools/test_annotate_e2e.py pins GNOMAD=/nonexistent for its first pass and adds a gnomAD-branch pass with a synthetic slice and BED (listed -> FAF, covered unlisted -> 0, uncovered -> fallback); annotate_vcf.sh no longer swaps an explicit missing GNOMAD for the repo VCF. Not yet run. Queued for 04:00-05:30 IST 2026-10-12: D:\\mva-hackathon\\tools\\jobs\\r10_overnight_compress.ps1 waits for CPU <= 70% and >= 1.5 GB free, reruns fetch_gnomad_slices.py (compress + index), then the e2e test (logs r10_overnight_*.log). Left: collect those; mark done if compressed_and_indexed is true and all e2e checks pass. 2026-10-12 18:30 IST (light run, CPU 100% x4, 0.5 GB free): the 04:00-05:30 job never got a quiet check: its log jumps from 'queued' (18:24) to 'window ended' at 09:09, so the laptop was most likely asleep through the window. Manifest unchanged (failures = [], compressed_and_indexed = false, plain VCF 114 MB). The job script now takes -Start/-End; re-queued for a wider 01:00-05:40 IST window on 2026-10-13 (free per list_scheduled_tasks: CASMI now 20:50/22:50, UMUD 09:00). Left: collect r10_overnight_*.log; mark done if compressed_and_indexed is true and all e2e checks pass. 2026-10-13 18:15 IST (light run, CPU 100% x4, 0.66 GB free): the 01:00-05:40 job did not run either. When it was queued, the space inside '2026-10-13 01:00' split the arguments, so both times parsed as midnight (the log reads 'waiting for 00:00, window ends 00:00'), and the laptop was asleep anyway: the Windows event log shows sleep by 'Button or Lid' at 21:19 on 10-11 and 23:08 on 10-12, with wake at 09:07 and 06:08. So both overnight windows were lost to the lid being closed. The script now parses ISO times strictly, refuses an empty window and logs any long sleep gap. Re-queued for 2026-10-14 01:00-05:40 IST (PID 2304); the next routine after CASMI 22:50 is UMUD 09:00. Code side checked: 72 pipeline tests pass, including the three gnomAD cases (common dropped, absent-covered rare, uncovered falls back); methods B3 states the 1% fafmax/ClinVar threshold. Left: the WSL steps only (compress + index the slices, run the e2e gnomAD-branch test). They need the laptop awake and quiet in the window.",
+      "progress": "2026-10-04 22:05 IST (light run): annotate_table.py now takes pop_af from gnomAD (fafmax, else AF_joint; covered-but-absent = 0) with pop_af_source, af_joint and nhomalt_joint columns; 4 synthetic tests pass. fetch_gnomad_slices.py writes refs/gnomad/gnomad_v4.1_covered.bed from successful queries only (1,863 intervals; SF genes as MANE exons +/- 20 bp; --bed-only rewrites it from the cache). annotate_vcf.sh adds the gnomAD fields and the GNOMAD_COVERED flag (bcftools annotate -m), ClinVar-only if the slices are absent. Methods B3 updated. Left: (1) the 8 failed queries (both TRIP13 chunks, so TRIP13 has no gnomAD coverage yet; SLF2, SMC5, MAD1L1 x3, MAD2L1BP) were rerun in the background at idle priority (log D:\\mva-hackathon\\logs\\gnomad_slices_api_rerun.log); then compress and index when the laptop is quiet. That rerun was started before the BED code was added, so afterwards run `python tools/fetch_gnomad_slices.py --bed-only` to cover the newly fetched chunks (until then they get gnomAD AFs but not the absent-means-0 rule). (2) annotate_vcf.sh's gnomAD branch is untested in WSL: run tools/test_annotate_e2e.py, pin it to GNOMAD=/nonexistent for its existing checks and add one case with a tiny synthetic slice. 2026-10-08 20:06 IST (light run, CPU 100%, 0.78 GB free): the idle-priority rerun recovered 5 of the 8 failed queries (the second TRIP13 chunk, SLF2, SMC5, two MAD1L1 chunks); 3 still return HTTP 500 (region_TRIP13_5_832849_892848, region_MAD1L1_7_2230787_2290786, region_MAD2L1BP_6_43569494_43629493). Merged VCF: 1,071,454 records, still uncompressed (WSL off, low RAM). Ran --bed-only: 1,863 merged intervals, 1.96 Mb (the new chunks merged into neighbours, so the count is unchanged); TRIP13 now partly covered. Left: retry the 3 queries and compress/index on a quiet run (plain `python tools/fetch_gnomad_slices.py`); then item (2), the WSL e2e test of the gnomAD branch. 2026-10-11 18:20 IST (light run, CPU 100% x4, 1.1 GB free): the 3 queries had returned HTTP 500 on every retry, so the fetcher now halves a region chunk that keeps returning 5xx (down to 5 kb) and caches the combined result under the original key. All 3 then succeeded (17.1 MB): manifest failures = [], 1,185,269 records, 1,862 covered intervals (log D:\\mva-hackathon\\logs\\gnomad_slices_api_rerun3.log). Compression still deferred (0.6 GB free). Item (2) code done: tools/test_annotate_e2e.py pins GNOMAD=/nonexistent for its first pass and adds a gnomAD-branch pass with a synthetic slice and BED (listed -> FAF, covered unlisted -> 0, uncovered -> fallback); annotate_vcf.sh no longer swaps an explicit missing GNOMAD for the repo VCF. Not yet run. Queued for 04:00-05:30 IST 2026-10-12: D:\\mva-hackathon\\tools\\jobs\\r10_overnight_compress.ps1 waits for CPU <= 70% and >= 1.5 GB free, reruns fetch_gnomad_slices.py (compress + index), then the e2e test (logs r10_overnight_*.log). Left: collect those; mark done if compressed_and_indexed is true and all e2e checks pass. 2026-10-12 18:30 IST (light run, CPU 100% x4, 0.5 GB free): the 04:00-05:30 job never got a quiet check: its log jumps from 'queued' (18:24) to 'window ended' at 09:09, so the laptop was most likely asleep through the window. Manifest unchanged (failures = [], compressed_and_indexed = false, plain VCF 114 MB). The job script now takes -Start/-End; re-queued for a wider 01:00-05:40 IST window on 2026-10-13 (free per list_scheduled_tasks: CASMI now 20:50/22:50, UMUD 09:00). Left: collect r10_overnight_*.log; mark done if compressed_and_indexed is true and all e2e checks pass. 2026-10-13 18:15 IST (light run, CPU 100% x4, 0.66 GB free): the 01:00-05:40 job did not run either. When it was queued, the space inside '2026-10-13 01:00' split the arguments, so both times parsed as midnight (the log reads 'waiting for 00:00, window ends 00:00'), and the laptop was asleep anyway: the Windows event log shows sleep by 'Button or Lid' at 21:19 on 10-11 and 23:08 on 10-12, with wake at 09:07 and 06:08. So both overnight windows were lost to the lid being closed. The script now parses ISO times strictly, refuses an empty window and logs any long sleep gap. Re-queued for 2026-10-14 01:00-05:40 IST (PID 2304); the next routine after CASMI 22:50 is UMUD 09:00. Code side checked: 72 pipeline tests pass, including the three gnomAD cases (common dropped, absent-covered rare, uncovered falls back); methods B3 states the 1% fafmax/ClinVar threshold. Left: the WSL steps only (compress + index the slices, run the e2e gnomAD-branch test). They need the laptop awake and quiet in the window. 2026-10-14 (live session): moved off the laptop. The private Kaggle kernel santanubanerjee9/mva-refs-build bgzips and tabix-indexes the slices and runs tools/test_annotate_e2e.py natively (new MVA_NATIVE=1 mode; annotate_vcf.sh now reads TOOLS and LOW from the environment). Done when refs/build.json in its output shows gnomad.compressed_and_indexed true and every e2e check PASS.",
       "needs": [],
       "title": "Wire gnomAD v4.1 frequencies into the annotation table",
       "inputs": [
@@ -224,6 +234,34 @@
       ],
       "done_when": "refs/gnomad/manifest.json shows no failures and compressed_and_indexed: true. If not, rerun `python tools/fetch_gnomad_slices.py`: every finished query is cached, so a rerun fetches only what is missing and then compresses. Run it when the laptop is quiet; it runs at idle priority. Then annotate_vcf.sh adds AF_joint, nhomalt_joint and fafmax_faf95_max_joint from the slices, matching on chrom, pos, ref and alt after norm, with the slices' chr contigs mapped to the VCF's no-chr names. annotate_table.py takes pop_af from gnomAD where the variant is covered and falls back to ClinVar's ExAC/1000G/ESP maximum elsewhere. It records a pop_af_source column (gnomad_v4.1, clinvar or none), and records inside a covered region but absent from gnomAD count as AF 0, not unknown. comphet/track1_rank use fafmax_faf95_max_joint for rarity, with thresholds stated in methods §B3. Synthetic tests cover a gnomAD-common variant being dropped, an absent covered variant being rare, and an uncovered variant falling back. All tests pass. Public data only: never look up the child's variants online.",
       "notes": "Approved by Santanu in a live chat on 2026-10-04 ('approve gnomAD gene slices', inside the project folder, never C:). Scope: 10 MVA genes (gene + 60 kb upstream + 5 kb downstream, all variants) and 84 ACMG SF v3.3 genes (gnomAD's exonic set per gene). Other genes still rely on ClinVar frequencies."
+    },
+    {
+      "id": "R11",
+      "owner": "routine",
+      "status": "in_progress",
+      "needs": [],
+      "title": "Kaggle compute for the patient-data pipeline",
+      "outputs": [
+        "kaggle/mva_refs_build/",
+        "kaggle/mva_d02/"
+      ],
+      "progress": "2026-10-14: private datasets santanubanerjee9/mva-code (code only) and santanubanerjee9/mva-refs (MANE GFF3, PanelApp gene list, gnomAD slices, covered BED) created. Kernel mva-refs-build (public data) pushed: GRCh38 analysis set from NCBI (md5-checked, renamed without chr, bgzipped, faidx), ClinVar 2026-09-28 archive, gnomAD bgzip+tabix, unit tests and the native e2e test. Kernel mva-d02 written; it is pushed once the VCF is in the private dataset santanubanerjee9/mva-patient-vcf.",
+      "done_when": "mva-refs-build output has build.json with md5_matches_ncbi true, unit tests passing and every e2e check PASS; mva-d02 is ready to run on the child's VCF."
+    },
+    {
+      "id": "R12",
+      "owner": "routine",
+      "status": "in_progress",
+      "needs": [
+        "R07"
+      ],
+      "title": "Narrated slide video of the 3-minute pitch (synthetic voice)",
+      "outputs": [
+        "kaggle/mva_pitch_video/",
+        "D:\\mva-hackathon\\submissions\\track2\\video\\"
+      ],
+      "progress": "2026-10-14: approved live ('Narrated slide video'); built on Kaggle in the private kernel santanubanerjee9/mva-pitch-video from reports/track2/pitch_script.md (public content only).",
+      "done_when": "An MP4 under 3:00 (1920x1080, narration of the script verbatim) is in D:\\mva-hackathon\\submissions\\track2\\video and checked; Santanu then uploads it (U6)."
     },
     {
       "id": "U3",
@@ -285,8 +323,8 @@
         "setup_downloads_done"
       ],
       "title": "Track 1 fast path, then stage the first submission",
-      "done_when": "A validated CSV and report are staged in D:\\mva-hackathon\\submissions\\track1\\<date> with SUBMIT.md; the brief asks the user to approve submission 1 to bank the score.",
-      "progress": "2026-10-02 (before data access): the fast path is built and tested end to end on a synthetic VCF with the real toolchain. tools/annotate_vcf.sh (bcftools norm, csq on the 19,299 MANE Select transcripts from pipeline/mane_gff.py, ClinVar annotate), pipeline/annotate_table.py (BCSQ to the comphet table; intron/upstream/downstream placement), pipeline/track1_rank.py (EPCR rule fixed before data access, in methods B9: gene prior x allele evidence x phase; single-allele BUB1B rows; EPCR over the 10 written rows plus a 0.25 reserve), tools/run_d02.py (one command). tools/test_annotate_e2e.py passes 12/12. Gaps: no gnomAD frequencies (ClinVar AF_EXAC/AF_TGP/AF_ESP only; missing counts as rare), no panel-gene file yet, and annotation run time on the full VCF is untested (run it in the background). 2026-10-04: the --panel-genes file is built and pre-registered (tools/build_panel_genes.py: green, recessive-compatible genes of the ten PanelApp panels where BUB1B is green and biallelic; 1,987 genes, MANE symbols via HGNC ID; cached in D:\\mva-hackathon\\refs\\panelapp) and run_d02.py uses it by default. A staging dry run of the renderer with a synthetic private block exposed a hang: headless Edge writes the PDF but never exits inside the scheduled-run sandbox, so the full version was never written. Fixed (finish on a complete PDF; scratch under D:\\mva-hackathon\\work\\render-scratch); both versions now render in about 50 s. gnomAD gap: slices approved live on 2026-10-04 (tools/fetch_gnomad_slices.py); annotate_vcf.sh does not use them yet."
+      "done_when": "A validated CSV and report are submitted to Track 1 (autonomous since 2026-10-14), with a copy of the package in D:\\mva-hackathon\\submissions\\track1\\<date> and SUBMIT.md.",
+      "progress": "2026-10-02 (before data access): the fast path is built and tested end to end on a synthetic VCF with the real toolchain. tools/annotate_vcf.sh (bcftools norm, csq on the 19,299 MANE Select transcripts from pipeline/mane_gff.py, ClinVar annotate), pipeline/annotate_table.py (BCSQ to the comphet table; intron/upstream/downstream placement), pipeline/track1_rank.py (EPCR rule fixed before data access, in methods B9: gene prior x allele evidence x phase; single-allele BUB1B rows; EPCR over the 10 written rows plus a 0.25 reserve), tools/run_d02.py (one command). tools/test_annotate_e2e.py passes 12/12. Gaps: no gnomAD frequencies (ClinVar AF_EXAC/AF_TGP/AF_ESP only; missing counts as rare), no panel-gene file yet, and annotation run time on the full VCF is untested (run it in the background). 2026-10-04: the --panel-genes file is built and pre-registered (tools/build_panel_genes.py: green, recessive-compatible genes of the ten PanelApp panels where BUB1B is green and biallelic; 1,987 genes, MANE symbols via HGNC ID; cached in D:\\mva-hackathon\\refs\\panelapp) and run_d02.py uses it by default. A staging dry run of the renderer with a synthetic private block exposed a hang: headless Edge writes the PDF but never exits inside the scheduled-run sandbox, so the full version was never written. Fixed (finish on a complete PDF; scratch under D:\\mva-hackathon\\work\\render-scratch); both versions now render in about 50 s. gnomAD gap: slices approved live on 2026-10-04 (tools/fetch_gnomad_slices.py); annotate_vcf.sh does not use them yet. 2026-10-14: the fast path now runs in the private Kaggle kernel santanubanerjee9/mva-d02 (kaggle/mva_d02/d02.py) on the VCF uploaded to the private dataset santanubanerjee9/mva-patient-vcf; references come from the mva-refs-build output. Only the CSV, the ten MVA genes' rows plus ranked rows, a per-chromosome BAF table and summary.json are kept."
     },
     {
       "id": "D03",
@@ -366,8 +404,8 @@
       "needs": [
         "R07"
       ],
-      "title": "Record the 3-minute pitch video and upload it to YouTube or Vimeo",
-      "done_when": "The video URL is recorded in plan.json notes, by 2026-10-21."
+      "title": "Upload the narrated pitch video (R12) to YouTube or Vimeo (unlisted is fine) and paste the link",
+      "done_when": "The video URL is recorded in plan.json notes, by 2026-10-21. A self-recorded video can replace it later (only the latest Track 2 submission is judged)."
     },
     {
       "id": "D09",
@@ -384,9 +422,11 @@
     {
       "id": "U7",
       "owner": "live",
-      "status": "todo",
+      "status": "done",
       "title": "Approve each submission",
-      "done_when": "submissions.track1.used and submissions.track2.used are updated after each approved submission."
+      "done_when": "submissions.track1.used and submissions.track2.used are updated after each approved submission.",
+      "completed": "2026-10-14",
+      "progress": "Superseded by the standing approval gates.auto_submit (2026-10-14): submissions no longer need a per-submission yes."
     },
     {
       "id": "U8",
@@ -411,6 +451,7 @@
     "2026-10-11 (scheduled run, light, 10:40-10:55 IST; started outside its 18:13 slot, CPU 100% x4 samples, 0.94 GB RAM free): Access still 403 (13.8 days left). No runs on 2026-10-09..10 left a note. R10: restarted the idle-priority retry of the 3 gnomAD queries that returned HTTP 500 (log D:\\mva-hackathon\\logs\\gnomad_slices_api_rerun2.log); compression stays deferred while RAM is low; WSL e2e test still pending. Nothing staged.",
     "2026-10-11 (scheduled run, light, 18:20-18:35 IST; CPU 100% x4 samples, 1.1 GB RAM free): Access still 403 (13.5 days left). R10: all 3 failing gnomAD queries recovered by splitting the 60 kb windows (manifest has no failures now); e2e test extended to the gnomAD branch (code only); compression and the e2e run queued for 04:00 IST. Nothing staged.",
     "2026-10-12 (scheduled run, light, 18:30-18:45 IST; CPU 100% x4 samples, 0.5 GB RAM free): Access still 403 (12.5 days left). The overnight R10 job did not run (laptop apparently asleep 04:00-05:30); re-queued for 01:00-05:40 IST 2026-10-13. Nothing staged.",
-    "2026-10-13 (scheduled run, light, 18:15-18:45 IST; CPU 100% x4 samples, 0.66 GB RAM free): Access still 403 (11.5 days left). The overnight R10 job lost its window again: an argument-quoting bug emptied it, and the event log shows the lid is closed every night (sleep 21:19 and 23:08, wake 06:08-09:07), so no overnight window can run unless the laptop stays open. The job was fixed and re-queued for 01:00-05:40 on 10-14. R10 code side verified (72 tests). HF thread #16: access has no institutional requirement (18+ and accepting the terms in the request), so a 403 after two weeks suggests the request was never filed or is stuck. Thread #15: the deletion-confirmation address only accepts mail from Synapse-registered addresses (noted under U8). Nothing staged."
+    "2026-10-13 (scheduled run, light, 18:15-18:45 IST; CPU 100% x4 samples, 0.66 GB RAM free): Access still 403 (11.5 days left). The overnight R10 job lost its window again: an argument-quoting bug emptied it, and the event log shows the lid is closed every night (sleep 21:19 and 23:08, wake 06:08-09:07), so no overnight window can run unless the laptop stays open. The job was fixed and re-queued for 01:00-05:40 on 10-14. R10 code side verified (72 tests). HF thread #16: access has no institutional requirement (18+ and accepting the terms in the request), so a 403 after two weeks suggests the request was never filed or is stuck. Thread #15: the deletion-confirmation address only accepts mail from Synapse-registered addresses (noted under U8). Nothing staged.",
+    "2026-10-14 (live session with Santanu, from 13:05 IST): Santanu asked not to waste submissions and not to rely on the laptop. Findings: the dataset gate is automatic, and the Hub says this account is 'not in the authorized list', so access was never requested (his classic token can read gated repos once he clicks). Track 2 needs a pitch-video URL; Track 1 needs the VCF. Decisions (live): patient data may be processed in private Kaggle mva-* kernels and datasets; a narrated slide video is acceptable; submissions are autonomous on both tracks. Done: CLAUDE.md, plan.json and the routine prompt updated; private Kaggle datasets mva-code and mva-refs created; kernels mva-refs-build (pushed) and mva-d02 (ready) written; pitch video kernel started. The laptop's overnight R10 job is retired: the lid is closed every night (sleep 00:28 to 08:54 last night)."
   ]
 }
