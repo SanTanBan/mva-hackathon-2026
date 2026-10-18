@@ -2,6 +2,7 @@
 # Package D02 annotation step, run in WSL: normalise, MANE Select consequences, ClinVar fields.
 #   1. bcftools norm: split multi-allelics and left-align indels against the no-chr GRCh38
 #      analysis set (the VCF has no 'chr' prefix; the reference, GFF3 and ClinVar match it).
+#      Only chromosomes 1-22, X and Y are kept: MANE Select has no chrM, decoy or unplaced contigs.
 #   2. bcftools csq: consequences on MANE Select transcripts only (pipeline/mane_gff.py),
 #      written to INFO/BCSQ.
 #   3. bcftools annotate: CLNSIG, CLNREVSTAT, ALLELEID and the ClinVar population frequencies
@@ -39,7 +40,10 @@ LOW=${LOW-nice -n 19 ionice -c3}  # set LOW= (empty) on Kaggle, where the kernel
 export TMPDIR; TMPDIR=$(dirname "$(realpath -m "$OUT")")/tmp.annotate.$$
 mkdir -p "$TMPDIR"; trap 'rm -rf "$TMPDIR"' EXIT
 
-if ! $LOW "$TOOLS/bcftools" norm -m-any -f "$FA" --check-ref w -Ou "$IN" \
+# csq stops at the first contig missing from the MANE GFF (chrM, decoys, unplaced), so annotate
+# the primary nuclear chromosomes only; -t streams, so the input needs no index.
+CHROMS="$(seq -s, 1 22),X,Y"
+if ! $LOW "$TOOLS/bcftools" norm -t "$CHROMS" -m-any -f "$FA" --check-ref w -Ou "$IN" \
   | $LOW "$TOOLS/bcftools" csq -f "$FA" -g "$GFF" -p a --ncsq 64 -Ob -o "$TMPDIR/csq.bcf" 2> "$TMPDIR/csq.log"; then
   # csq.log is inside TMPDIR, which the trap deletes: show its end before exiting.
   echo "bcftools norm | csq failed; last lines of csq.log:" >&2
