@@ -39,8 +39,13 @@ LOW=${LOW-nice -n 19 ionice -c3}  # set LOW= (empty) on Kaggle, where the kernel
 export TMPDIR; TMPDIR=$(dirname "$(realpath -m "$OUT")")/tmp.annotate.$$
 mkdir -p "$TMPDIR"; trap 'rm -rf "$TMPDIR"' EXIT
 
-$LOW "$TOOLS/bcftools" norm -m-any -f "$FA" --check-ref w -Ou "$IN" \
-  | $LOW "$TOOLS/bcftools" csq -f "$FA" -g "$GFF" -p a --ncsq 64 -Ob -o "$TMPDIR/csq.bcf" 2> "$TMPDIR/csq.log"
+if ! $LOW "$TOOLS/bcftools" norm -m-any -f "$FA" --check-ref w -Ou "$IN" \
+  | $LOW "$TOOLS/bcftools" csq -f "$FA" -g "$GFF" -p a --ncsq 64 -Ob -o "$TMPDIR/csq.bcf" 2> "$TMPDIR/csq.log"; then
+  # csq.log is inside TMPDIR, which the trap deletes: show its end before exiting.
+  echo "bcftools norm | csq failed; last lines of csq.log:" >&2
+  tail -n 20 "$TMPDIR/csq.log" >&2
+  exit 1
+fi
 grep -E "^(Indexed|Calling)" "$TMPDIR/csq.log" || true
 # annotate -a reads both files by region, so its input must be an indexed file, not a pipe.
 "$TOOLS/bcftools" index "$TMPDIR/csq.bcf"
