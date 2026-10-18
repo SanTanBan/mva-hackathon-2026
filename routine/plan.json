@@ -81,7 +81,7 @@
           "date": "2026-10-14",
           "folder": "D:/mva-hackathon/submissions/track2/2026-10-14",
           "report": "SantanuBanerjee_track2_report.pdf (v1.2 + methods appendix)",
-          "status": "ready: video URL filled into SUBMIT.md 2026-10-18; browser submit attempted 12:20 IST but Claude in Chrome did not respond (2 timeouts), so not submitted",
+          "status": "ready: video URL filled into SUBMIT.md 2026-10-18; browser submit attempted 12:20 IST but Claude in Chrome did not respond (2 timeouts); retried in the desktop app's built-in browser at Santanu's request, but every Gradio script on *.hf.space fails with net::ERR_BLOCKED_BY_CLIENT, so the form never renders (both the hf.space URL and the huggingface.co/spaces wrapper). Not submitted",
           "purpose": "insurance attempt 1 of 3; v2 with the child's alleles should replace it by 2026-10-23"
         }
       ],
