@@ -93,12 +93,18 @@ found = [os.environ["MVA_D02_VCF"]] if os.environ.get("MVA_D02_VCF") else sorted
 if len(found) != 1:
     raise SystemExit(f"expected one patient VCF, found {len(found)}")
 src = found[0]
-if src.endswith((".gz", ".bgz")) and (os.path.exists(src + ".tbi") or os.path.exists(src + ".csi")):
-    vcf = src
-else:
-    vcf = f"{TMPD}/input.vcf.gz"
-    sh(f"{'gzip -dc' if src.endswith(('.gz', '.bgz')) else 'cat'} {src} | {TOOLS}/bgzip -@4 -c > {vcf} && {TOOLS}/tabix -p vcf {vcf}", show=False)
-summary["input_recompressed"] = vcf != src
+# Never trust an uploaded index: a .tbi is BGZF too, and Kaggle's unpacking leaves it unreadable
+# (run of 2026-10-18). Index a link to the bgzipped VCF in /tmp; if that fails, re-bgzip in full.
+vcf = f"{TMPD}/input.vcf.gz"
+recompressed = True
+if src.endswith((".gz", ".bgz")):
+    os.symlink(src, vcf)
+    recompressed = sh(f"{TOOLS}/tabix -f -p vcf {vcf}", check=False, show=False).returncode != 0
+    if recompressed:
+        os.remove(vcf)
+if recompressed:
+    sh(f"{'gzip -dc' if src.endswith(('.gz', '.bgz')) else 'cat'} {src} | {TOOLS}/bgzip -@4 -c > {vcf} && {TOOLS}/tabix -f -p vcf {vcf}", show=False)
+summary["input_recompressed"] = recompressed
 pid_files = [] if os.environ.get("MVA_D02_VCF") else glob.glob("/kaggle/input/**/proband_id.txt", recursive=True)
 code = code_root()
 
