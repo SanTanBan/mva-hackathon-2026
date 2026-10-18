@@ -32,7 +32,8 @@ HF_USER = "SantanuBanerjee"
 def kaggle(*args):
     KTMP.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, TEMP=str(KTMP), TMP=str(KTMP))
-    r = subprocess.run(["kaggle", *args], env=env, capture_output=True, text=True)
+    r = subprocess.run(["kaggle", *args], env=env, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")  # progress bars are not cp1252
     out = "\n".join(ln for ln in (r.stdout + r.stderr).splitlines()
                     if "warn" not in ln.lower() and "%|" not in ln)
     return r.returncode, out

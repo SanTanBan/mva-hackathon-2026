@@ -37,7 +37,8 @@ KTMP = Path(r"D:\DevCache\tmp\claude\Child-with-rare-Disease\ktmp")
 def kaggle(*args):
     KTMP.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, TEMP=str(KTMP), TMP=str(KTMP))
-    r = subprocess.run(["kaggle", *args], env=env, capture_output=True, text=True)
+    r = subprocess.run(["kaggle", *args], env=env, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")  # progress bars are not cp1252
     out = "\n".join(ln for ln in (r.stdout + r.stderr).splitlines()
                     if "warn" not in ln.lower() and "%|" not in ln)
     return r.returncode, out
@@ -76,15 +77,18 @@ def main():
     idx = [Path(f["local"]) for f in local if f["kind"] == "vcf-index"]
     if len(vcfs) != 1:
         raise SystemExit(f"expected one VCF in the D00 inventory, found {len(vcfs)}")
-    if not all(f.get("local_sha256_ok") for f in local):
-        raise SystemExit("D00 checksums are not all OK; rerun tools/fetch_vcf_first.py first")
+    # Only the uploaded files must verify; small non-LFS files (the phenotype document) have no Hub hash.
+    if not all(f.get("local_sha256_ok") for f in local if f["kind"] in ("vcf", "vcf-index")):
+        raise SystemExit("D00 checksums for the VCF or its index are not OK; rerun tools/fetch_vcf_first.py first")
 
     folder = assert_outside_repo(FOLDER)
     if folder.exists():
         shutil.rmtree(folder)
     folder.mkdir(parents=True)
     for src in vcfs + idx:
-        dst = folder / src.name
+        # Kaggle "unpacks" .gz uploads but keeps only the first BGZF block (~64 KB), truncating the
+        # VCF; .bgz is left alone and d02.py accepts it.
+        dst = folder / src.name.replace(".vcf.gz", ".vcf.bgz")
         try:
             os.link(src, dst)
         except OSError:

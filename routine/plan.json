@@ -40,8 +40,9 @@
       "how": "Only needed if the HF Space route is revived: Santanu would create a fine-grained, read-only HF token and paste it himself as the secret HF_TOKEN. Claude never handles the token."
     },
     "dataset_downloaded": {
-      "value": false,
-      "how": "Approved in a live chat on 2026-09-30 (laptop, VCF-first route). Once access is granted, download the VCF, its index and the phenotype document to D:\\mva-hackathon\\data and verify checksums against the HF metadata. FASTQ pairs are fetched one pair at a time for overnight low-priority jobs and deleted after use. True once the VCF, index and phenotype document are in place (package D00)."
+      "value": true,
+      "how": "Approved in a live chat on 2026-09-30 (laptop, VCF-first route). Once access is granted, download the VCF, its index and the phenotype document to D:\\mva-hackathon\\data and verify checksums against the HF metadata. FASTQ pairs are fetched one pair at a time for overnight low-priority jobs and deleted after use. True once the VCF, index and phenotype document are in place (package D00).",
+      "checked": "2026-10-18T13:45+05:30"
     },
     "github_repo_created": {
       "value": true,
@@ -303,32 +304,35 @@
     {
       "id": "D00",
       "owner": "routine",
-      "status": "in_progress",
+      "status": "done",
       "needs": [
         "data_access_granted",
         "llm_terms_confirmed",
         "R08"
       ],
       "title": "Download the VCF-first files",
-      "progress": "2026-10-18 12:10 IST: access granted; running tools/fetch_vcf_first.py was denied by the Claude Code auto-mode permission classifier ('PII Data Handling'). Nothing downloaded. Needs Santanu to allow the command (a permission rule for `python tools\\fetch_vcf_first.py`) or run it himself.",
-      "done_when": "The VCF, its index and the phenotype document are in D:\\mva-hackathon\\data. Their sizes and SHA-256 checksums match the HF metadata, and gates.dataset_downloaded is true."
+      "progress": "2026-10-18 12:10 IST: access granted; running tools/fetch_vcf_first.py was denied by the Claude Code auto-mode permission classifier ('PII Data Handling'). Nothing downloaded. Needs Santanu to allow the command (a permission rule for `python tools\\fetch_vcf_first.py`) or run it himself. 2026-10-18 ~13:30 IST (live, Santanu approved and ran the prompt): downloaded to D:\\\\mva-hackathon\\\\data. VCF 0.32 GB and index match the Hub SHA-256; the phenotype document (.docx) is not an LFS file, so the Hub gives no hash to check. Inventory in D:\\\\mva-hackathon\\\\work\\\\d00_inventory.json. No FASTQs (never on the laptop; confirmed live).",
+      "done_when": "The VCF, its index and the phenotype document are in D:\\mva-hackathon\\data. Their sizes and SHA-256 checksums match the HF metadata, and gates.dataset_downloaded is true.",
+      "completed": "2026-10-18"
     },
     {
       "id": "D01",
       "owner": "routine",
-      "status": "todo",
+      "status": "done",
       "needs": [
         "D00",
         "data_access_granted",
         "llm_terms_confirmed"
       ],
       "title": "Data intake and integrity",
-      "done_when": "File inventory and checksums are recorded; VCF header, sample and build are checked; HPO terms are extracted to D:\\mva-hackathon\\work; sample and proband IDs are appended to D:\\mva-hackathon\\private-terms.txt."
+      "done_when": "File inventory and checksums are recorded; VCF header, sample and build are checked; HPO terms are extracted to D:\\mva-hackathon\\work; sample and proband IDs are appended to D:\\mva-hackathon\\private-terms.txt.",
+      "completed": "2026-10-18",
+      "progress": "2026-10-18: VCFv4.2, no chr prefix, 2,580 contigs (matches the no-alt + hs38d1 reference), 5,012,204 records (4,740,790 PASS or missing filter), Sentieon 202308.02 + GATK VariantFiltration, no header problems; 8 HPO terms in D:\\\\mva-hackathon\\\\work\\\\hpo_terms.tsv; 1 private term added (the file-stem ID tokens were already guarded). Summary: D:\\\\mva-hackathon\\\\work\\\\d01_intake.json."
     },
     {
       "id": "D02",
       "owner": "routine",
-      "status": "todo",
+      "status": "in_progress",
       "needs": [
         "D01",
         "R01",
@@ -337,7 +341,7 @@
       ],
       "title": "Track 1 fast path, then stage the first submission",
       "done_when": "A validated CSV and report are submitted to Track 1 (autonomous since 2026-10-14), with a copy of the package in D:\\mva-hackathon\\submissions\\track1\\<date> and SUBMIT.md.",
-      "progress": "2026-10-02 (before data access): the fast path is built and tested end to end on a synthetic VCF with the real toolchain. tools/annotate_vcf.sh (bcftools norm, csq on the 19,299 MANE Select transcripts from pipeline/mane_gff.py, ClinVar annotate), pipeline/annotate_table.py (BCSQ to the comphet table; intron/upstream/downstream placement), pipeline/track1_rank.py (EPCR rule fixed before data access, in methods B9: gene prior x allele evidence x phase; single-allele BUB1B rows; EPCR over the 10 written rows plus a 0.25 reserve), tools/run_d02.py (one command). tools/test_annotate_e2e.py passes 12/12. Gaps: no gnomAD frequencies (ClinVar AF_EXAC/AF_TGP/AF_ESP only; missing counts as rare), no panel-gene file yet, and annotation run time on the full VCF is untested (run it in the background). 2026-10-04: the --panel-genes file is built and pre-registered (tools/build_panel_genes.py: green, recessive-compatible genes of the ten PanelApp panels where BUB1B is green and biallelic; 1,987 genes, MANE symbols via HGNC ID; cached in D:\\mva-hackathon\\refs\\panelapp) and run_d02.py uses it by default. A staging dry run of the renderer with a synthetic private block exposed a hang: headless Edge writes the PDF but never exits inside the scheduled-run sandbox, so the full version was never written. Fixed (finish on a complete PDF; scratch under D:\\mva-hackathon\\work\\render-scratch); both versions now render in about 50 s. gnomAD gap: slices approved live on 2026-10-04 (tools/fetch_gnomad_slices.py); annotate_vcf.sh does not use them yet. 2026-10-14: the fast path now runs in the private Kaggle kernel santanubanerjee9/mva-d02 (kaggle/mva_d02/d02.py) on the VCF uploaded to the private dataset santanubanerjee9/mva-patient-vcf; references come from the mva-refs-build output. Only the CSV, the ten MVA genes' rows plus ranked rows, a per-chromosome BAF table and summary.json are kept."
+      "progress": "2026-10-02 (before data access): the fast path is built and tested end to end on a synthetic VCF with the real toolchain. tools/annotate_vcf.sh (bcftools norm, csq on the 19,299 MANE Select transcripts from pipeline/mane_gff.py, ClinVar annotate), pipeline/annotate_table.py (BCSQ to the comphet table; intron/upstream/downstream placement), pipeline/track1_rank.py (EPCR rule fixed before data access, in methods B9: gene prior x allele evidence x phase; single-allele BUB1B rows; EPCR over the 10 written rows plus a 0.25 reserve), tools/run_d02.py (one command). tools/test_annotate_e2e.py passes 12/12. Gaps: no gnomAD frequencies (ClinVar AF_EXAC/AF_TGP/AF_ESP only; missing counts as rare), no panel-gene file yet, and annotation run time on the full VCF is untested (run it in the background). 2026-10-04: the --panel-genes file is built and pre-registered (tools/build_panel_genes.py: green, recessive-compatible genes of the ten PanelApp panels where BUB1B is green and biallelic; 1,987 genes, MANE symbols via HGNC ID; cached in D:\\mva-hackathon\\refs\\panelapp) and run_d02.py uses it by default. A staging dry run of the renderer with a synthetic private block exposed a hang: headless Edge writes the PDF but never exits inside the scheduled-run sandbox, so the full version was never written. Fixed (finish on a complete PDF; scratch under D:\\mva-hackathon\\work\\render-scratch); both versions now render in about 50 s. gnomAD gap: slices approved live on 2026-10-04 (tools/fetch_gnomad_slices.py); annotate_vcf.sh does not use them yet. 2026-10-14: the fast path now runs in the private Kaggle kernel santanubanerjee9/mva-d02 (kaggle/mva_d02/d02.py) on the VCF uploaded to the private dataset santanubanerjee9/mva-patient-vcf; references come from the mva-refs-build output. Only the CSV, the ten MVA genes' rows plus ranked rows, a per-chromosome BAF table and summary.json are kept. 2026-10-18: private dataset santanubanerjee9/mva-patient-vcf created. The first upload kept the .vcf.gz name; Kaggle unpacked it but kept only the first BGZF block (65,498 bytes), so it was re-uploaded as .vcf.bgz (version 2: 315,153,971 bytes, intact). tools/kaggle_patient_upload.py now uses .bgz names and checks only the uploaded files checksums; both kaggle helpers decode CLI output as UTF-8. proband_id.txt: the VCF sample name and file stem differ and the phenotype document names none, so the VCF sample name was used (tie). mva-d02 pushed ~13:40 IST; log D:\\\\mva-hackathon\\\\logs\\\\kaggle_d02_2026-10-18.log."
     },
     {
       "id": "D03",
