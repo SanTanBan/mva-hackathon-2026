@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-10-18T11:33+05:30",
+  "last_run": "2026-10-18T12:08+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -14,8 +14,8 @@
   },
   "gates": {
     "data_access_granted": {
-      "value": false,
-      "checked": "2026-10-18T11:34+05:30",
+      "value": true,
+      "checked": "2026-10-18T12:09+05:30",
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
@@ -92,7 +92,8 @@
     {
       "id": "U1",
       "owner": "you",
-      "status": "todo",
+      "status": "done",
+      "completed": "2026-10-18",
       "title": "Request dataset access on Hugging Face",
       "done_when": "check_access.py reports dataset_access = granted. Critical path: nothing counts without it, and registration IS this request."
     },
@@ -302,13 +303,14 @@
     {
       "id": "D00",
       "owner": "routine",
-      "status": "todo",
+      "status": "in_progress",
       "needs": [
         "data_access_granted",
         "llm_terms_confirmed",
         "R08"
       ],
       "title": "Download the VCF-first files",
+      "progress": "2026-10-18 12:10 IST: access granted; running tools/fetch_vcf_first.py was denied by the Claude Code auto-mode permission classifier ('PII Data Handling'). Nothing downloaded. Needs Santanu to allow the command (a permission rule for `python tools\\fetch_vcf_first.py`) or run it himself.",
       "done_when": "The VCF, its index and the phenotype document are in D:\\mva-hackathon\\data. Their sizes and SHA-256 checksums match the HF metadata, and gates.dataset_downloaded is true."
     },
     {
@@ -468,6 +470,7 @@
     "2026-10-14 (scheduled run, light, 19:29-19:45 IST; CPU 100% x4 samples, 0.74 GB RAM free): Access still 403 (10.4 days left). Kaggle: mva-refs-build and mva-pitch-video COMPLETE (already collected in the live session); mva-d02 not pushed yet (waits for the VCF). GPU quota 0.00 h left until 2026-10-17 (not needed: all mva kernels are CPU). No routine package is unblocked: D00-D09 wait on U1, Track 2 waits on the video URL (U6). Nothing submitted (T1 0/6, T2 0/3).",
     "2026-10-16 (scheduled run, light, 10:09-10:25 IST; fired outside its 18:13 slot as a catch-up, CPU 100% x4 samples, 0.72 GB RAM free): Access still 403 (8.8 days left). No run on 2026-10-15 left a note. Kaggle: mva-refs-build and mva-pitch-video COMPLETE (collected 10-14); mva-d02 not pushed (waits for the VCF). GPU 0.00 h left until 10-17, TPU 16.7 h (neither needed). HF boards: nothing new since thread #26. No routine package is unblocked: D00-D09 wait on U1, the Track 2 insurance submission waits on the video URL (U6). Nothing submitted (T1 0/6, T2 0/3).",
     "2026-10-17 (scheduled run, light, 03:03-03:10 IST; fired far outside its 18:13 slot as a catch-up, CPU 100% x4 samples, 0.64 GB RAM free): Access still 403 (8.1 days left). Kaggle: mva-refs-build and mva-pitch-video COMPLETE (collected 10-14); mva-d02 not pushed (status call returns 'kernels.get denied' because it was never pushed; it waits for the VCF). GPU 0.00 h shown (refresh 10-17 00:00 UTC not yet reflected), TPU 13.6 h (neither needed). No routine package is unblocked: D00-D09 wait on U1, the Track 2 insurance submission waits on the video URL (U6). Nothing submitted (T1 0/6, T2 0/3).",
-    "2026-10-18 (scheduled run, light, 11:33-11:45 IST; fired outside its 18:13 slot as a catch-up, CPU 62/59/35/97 (avg 63%), 0.67 GB RAM free): Access still 403 (6.7 days left). Kaggle: mva-refs-build and mva-pitch-video COMPLETE (collected 10-14); mva-d02 never pushed (waits for the VCF). Quota refreshed: GPU 29.98 h, TPU 19.99 h left until 10-24 (neither needed; all mva kernels are CPU). No video URL found. No routine package is unblocked: D00-D09 wait on U1, the Track 2 insurance submission waits on U6. Nothing submitted (T1 0/6, T2 0/3)."
+    "2026-10-18 (scheduled run, light, 11:33-11:45 IST; fired outside its 18:13 slot as a catch-up, CPU 62/59/35/97 (avg 63%), 0.67 GB RAM free): Access still 403 (6.7 days left). Kaggle: mva-refs-build and mva-pitch-video COMPLETE (collected 10-14); mva-d02 never pushed (waits for the VCF). Quota refreshed: GPU 29.98 h, TPU 19.99 h left until 10-24 (neither needed; all mva kernels are CPU). No video URL found. No routine package is unblocked: D00-D09 wait on U1, the Track 2 insurance submission waits on U6. Nothing submitted (T1 0/6, T2 0/3).",
+    "2026-10-18 (scheduled run, light, 12:08-12:20 IST; second catch-up firing today, CPU 100% x4 samples, 0.83 GB RAM free): ACCESS GRANTED (check_access.py: dataset_access = granted), so gates.data_access_granted is now true and U1 is done. D00 started but blocked: the Claude Code auto-mode classifier denied running tools/fetch_vcf_first.py ('PII Data Handling'), so nothing was downloaded and D:\\mva-hackathon\\data was not opened. D00-D09 wait on that permission (or on Santanu running the fetch himself). Kaggle: mva-refs-build and mva-pitch-video COMPLETE; mva-d02 never pushed. Quota GPU 29.28 h, TPU 19.99 h (not needed). No video URL. Nothing submitted (T1 0/6, T2 0/3)."
   ]
 }
