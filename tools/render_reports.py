@@ -51,6 +51,9 @@ VARIANT_TOKEN = re.compile(
     r"\b(?:chr|Chr|CHR)?(?:[1-9]|1[0-9]|2[0-2]|X|Y|M|MT)[:_-]\d{5,}[:_-]?[ACGTN]+(?:>|[:_/-])[ACGTN]+\b")
 EDGE_PATHS = (r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
               r"C:\Program Files\Microsoft\Edge\Application\msedge.exe")
+# Fallback: on 2026-10-21 headless Edge exited 0 without writing any PDF, while Chrome printed fine.
+CHROME_PATHS = (r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")
 CSS = """body{font-family:Segoe UI,Arial,sans-serif;max-width:48em;margin:2em auto;line-height:1.45;color:#111}
 table{border-collapse:collapse;margin:1em 0;font-size:.9em}th,td{border:1px solid #bbb;padding:.3em .5em;vertical-align:top}
 th{background:#f0f0f0}code{font-size:.9em}blockquote{border-left:4px solid #ccc;margin-left:0;padding-left:1em;color:#333}"""
@@ -95,6 +98,16 @@ def find_edge():
     return next((p for p in EDGE_PATHS if Path(p).is_file()), None)
 
 
+def find_browsers():
+    """Headless browsers to try for printing, Edge first, then Chrome."""
+    found = []
+    for name, paths in (("msedge", EDGE_PATHS), ("chrome", CHROME_PATHS)):
+        exe = shutil.which(name) or next((p for p in paths if Path(p).is_file()), None)
+        if exe:
+            found.append(exe)
+    return found
+
+
 def stop_profile_processes(profile):
     """Stop the headless Edge processes started with this throwaway profile, and only those.
     Edge's launcher hands off to child processes, so killing the launcher's PID is not enough."""
@@ -108,9 +121,9 @@ def stop_profile_processes(profile):
 
 
 def write_pdf(md_text, pdf_path, title):
-    """Markdown -> HTML -> PDF with headless Edge. Returns False if Edge is unavailable."""
-    edge = find_edge()
-    if not edge:
+    """Markdown -> HTML -> PDF with headless Edge, else Chrome. Returns False if neither prints."""
+    browsers = find_browsers()
+    if not browsers:
         return False
     body = markdown.markdown(md_text, extensions=["tables", "fenced_code", "sane_lists"])
     page = (f"<!doctype html><html><head><meta charset='utf-8'><title>{html.escape(title)}</title>"
@@ -122,23 +135,27 @@ def write_pdf(md_text, pdf_path, title):
     try:
         src = work / "page.html"
         src.write_text(page, encoding="utf-8")
-        if pdf_path.exists():
-            pdf_path.unlink()
-        proc = subprocess.Popen([edge, "--headless", "--disable-gpu", "--no-first-run", "--no-pdf-header-footer",
-                                 f"--user-data-dir={work / 'profile'}", f"--print-to-pdf={pdf_path}", src.as_uri()],
-                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        # Edge can write the PDF and then never exit (seen 2026-10-04 in the scheduled-run
-        # sandbox, where the processes also could not be stopped), so stop
-        # waiting once the file is complete and its size has settled.
-        deadline, last = time.monotonic() + 180, -1
-        while proc.poll() is None and time.monotonic() < deadline:
-            time.sleep(2)
-            size = pdf_path.stat().st_size if pdf_path.is_file() else -1
-            if size > 0 and size == last and pdf_path.read_bytes().rstrip().endswith(b"%%EOF"):
+        for n, browser in enumerate(browsers):
+            profile = work / f"profile{n}"
+            if pdf_path.exists():
+                pdf_path.unlink()
+            proc = subprocess.Popen([browser, "--headless", "--disable-gpu", "--no-first-run", "--no-pdf-header-footer",
+                                     f"--user-data-dir={profile}", f"--print-to-pdf={pdf_path}", src.as_uri()],
+                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # Edge can write the PDF and then never exit (seen 2026-10-04 in the scheduled-run
+            # sandbox, where the processes also could not be stopped), so stop
+            # waiting once the file is complete and its size has settled.
+            deadline, last = time.monotonic() + 180, -1
+            while proc.poll() is None and time.monotonic() < deadline:
+                time.sleep(2)
+                size = pdf_path.stat().st_size if pdf_path.is_file() else -1
+                if size > 0 and size == last and pdf_path.read_bytes().rstrip().endswith(b"%%EOF"):
+                    break
+                last = size
+            if proc.poll() is None:
+                stop_profile_processes(profile)
+            if pdf_path.is_file() and pdf_path.read_bytes()[:5] == b"%PDF-":
                 break
-            last = size
-        if proc.poll() is None:
-            stop_profile_processes(work / "profile")
     finally:
         shutil.rmtree(work, ignore_errors=True)
     return pdf_path.is_file() and pdf_path.read_bytes()[:5] == b"%PDF-"
