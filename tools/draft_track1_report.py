@@ -44,6 +44,61 @@ def section(text, heading, body):
     return pat.sub(lambda m: m.group(1) + body.rstrip() + "\n\n", text, count=1)
 
 
+def append_to(text, heading, extra):
+    """Add extra at the end of the body under '### heading', keeping what is there."""
+    pat = re.compile(rf"(^### {re.escape(heading)}\n.*?)(?=^### |^## |^---)", re.S | re.M)
+    if not pat.search(text):
+        raise SystemExit(f"section not found: {heading}")
+    return pat.sub(lambda m: m.group(1).rstrip() + "\n\n" + extra.rstrip() + "\n\n", text, count=1)
+
+
+# What each model has actually run, so the methods text never claims a step that is still pending.
+STATUS_MODEL_1 = {
+    "A3. Model or approach in detail":
+        "**Status in model 1:** steps 1, 2 and the ranking in step 6 ran on the child's VCF, plus the "
+        "B-allele-fraction part of step 4. The read-level and splice checks of step 3, low-pass depth, the "
+        "coverage check and secondary-findings screen of step 5, and the ACMG points of step 6 are written "
+        "and tested on synthetic data, and follow in later models.",
+    "B5. *BUB1B* locus deep-dive":
+        "**Status in model 1:** VCF level only. The Pangolin lookup of the child's variants, k-mer baiting "
+        "and read-level phase follow in a later model.",
+    "B6. Evidence for mosaic aneuploidy":
+        "**Status in model 1:** B-allele fractions from the VCF only (results in §B10); low-pass depth follows.",
+    "B7. Differential genes and secondary findings":
+        "**Status in model 1:** variant counts for the ten MVA genes are in §B10; the coverage check and the "
+        "ACMG SF v3.3 screen follow.",
+    "B8. ACMG/AMP classification":
+        "**Status in model 1:** not yet applied; the ranking uses the pre-registered allele-evidence weights in §B9.",
+}
+
+
+def baf_leads(baf):
+    """Choose which rows of baf_by_chromosome.tsv to test, and which of those to flag.
+
+    baf: dicts with keys chrom, n_het, median_depth, centre, delta, lr_stat,
+    trisomy_fraction_if_gain, monosomy_fraction_if_loss, robust_z (all strings). The table covers
+    every contig in the VCF, including about 1,000 decoy and unplaced ones.
+    Returns (tested, flagged): two lists of those dicts, flagged being a subset of tested.
+    """
+    # Autosomes only. Decoy and unplaced contigs are mostly collapsed repeats, so their allele balance
+    # is wide for mapping reasons. X and Y are left out because their expected balance depends on sex,
+    # which this pipeline never infers. A floor of 1,000 heterozygous sites keeps the fit stable.
+    # Flag one-sided (robust z >= 3): a gain or a loss in a fraction of cells widens the spread around
+    # 0.5, so a narrower-than-usual spread is not a lead. robust_z comes from pipeline/baf_mosaic.py
+    # (median and MAD over the autosomes); the >= 3 cut-off was in this script before any results.
+    autosomes = {str(i) for i in range(1, 23)}
+
+    def num(r, key):
+        try:
+            return float(r.get(key) or "nan")
+        except ValueError:
+            return float("nan")
+
+    tested = [r for r in baf if r.get("chrom", "").removeprefix("chr") in autosomes and num(r, "n_het") >= 1000]
+    flagged = [r for r in tested if num(r, "robust_z") >= 3]
+    return tested, flagged
+
+
 def private(block):
     return "<!-- private:start -->\n" + block.rstrip() + "\n<!-- private:end -->\n"
 
@@ -66,10 +121,17 @@ def main():
     baf = read_tsv(baf_files[0]) if baf_files else []
     with open(csv_path, encoding="utf-8") as fh:
         ranked = list(csv.DictReader(fh))
-    by_key = {variant_key(r["chrom"], r["pos"], r["ref"], r["alt"]): r for r in extract}
+    by_key = {}
+    for r in extract:
+        by_key.setdefault(variant_key(r["chrom"], r["pos"], r["ref"], r["alt"]), []).append(r)
+    severity = {"HIGH": 3, "MODERATE": 2, "LOW": 1}
 
-    def describe(chrom, pos, ref, alt):
-        r = by_key.get(variant_key(chrom, pos, ref, alt), {})
+    def describe(chrom, pos, ref, alt, gene=None):
+        # A variant can lie in two genes' intervals (BUB1B's 3' end is inside PAK6): prefer the
+        # ranked gene, then the most severe impact.
+        hits = by_key.get(variant_key(chrom, pos, ref, alt), [])
+        hits = [h for h in hits if h["gene"] == gene] or hits
+        r = max(hits, key=lambda h: severity.get(h.get("impact", ""), 0), default={})
         hgvs = " ".join(x for x in (r.get("dna_change", ""), r.get("aa_change", "")) if x)
         return r, hgvs
 
@@ -78,10 +140,11 @@ def main():
              "|---|---|---|---|---|---|---|---|---|"]
     top_public = None
     for i, row in enumerate(ranked, 1):
-        v1, h1 = describe(row["chrom_1"], row["pos_1"], row["ref_1"], row["alt_1"])
+        note_gene = (row.get("notes", "").split() or [None])[0]  # notes start with the ranked gene
+        v1, h1 = describe(row["chrom_1"], row["pos_1"], row["ref_1"], row["alt_1"], note_gene)
         cells2 = ("", None, "")
         if row.get("pos_2"):
-            v2, h2 = describe(row["chrom_2"], row["pos_2"], row["ref_2"], row["alt_2"])
+            v2, h2 = describe(row["chrom_2"], row["pos_2"], row["ref_2"], row["alt_2"], v1.get("gene"))
             cells2 = (f"{row['chrom_2']}:{row['pos_2']} {row['ref_2']}>{row['alt_2']} {h2}".strip(), v2, h2)
         gene = v1.get("gene", "")
         cons = v1.get("consequence", "") + (f" + {cells2[1].get('consequence', '')}" if cells2[1] else "")
@@ -93,9 +156,9 @@ def main():
         cells = [str(i), gene, f"{row['chrom_1']}:{row['pos_1']} {row['ref_1']}>{row['alt_1']} {h1}".strip(),
                  cells2[0], cons, clin, af, f"{gt}; {row.get('notes', '')}", row["epcr"]]
         lines.append("| " + " | ".join(c.replace("|", "\\|") for c in cells) + " |")  # phased GTs contain '|'
-        if i == 1:
-            top_public = (gene, v1.get("consequence", ""), cells2[1].get("consequence", "") if cells2[1] else None,
-                          row.get("notes", ""))
+        if i == 1:  # public text: gene, consequence class, ClinVar class and phase only, never the allele
+            phase = re.search(r"phase (unknown|trans|cis)|in (trans|cis)\b", row.get("notes", ""))
+            top_public = (gene, v1, cells2[1], phase.group(0) if phase else "")
     ranked_table = "\n".join(lines)
 
     # Public counts for the ten MVA genes.
@@ -112,23 +175,19 @@ def main():
     gene_table = "\n".join(["| Gene | Variant rows | Rare (AF ≤ 1%) | Rare, high or moderate impact |",
                             "|---|---|---|---|"] + gene_counts)
 
-    # Public BAF summary: chromosomes whose robust z-score is notable.
+    # BAF summary. Public text gives counts only; which chromosomes deviate stays in the private block.
     baf_note = "The per-chromosome B-allele-fraction table was not produced in this run."
+    baf_private = ""
     if baf:
-        zcol = next((c for c in baf[0] if "z" in c.lower()), None)
-        flagged = []
-        if zcol:
-            for r in baf:
-                try:
-                    if abs(float(r[zcol])) >= 3:
-                        flagged.append(r.get("chrom", "?"))
-                except ValueError:
-                    pass
-        baf_note = (f"B-allele fractions were fitted for {len(baf)} chromosomes. "
-                    + (f"{len(flagged)} chromosome(s) deviate from the autosomal pattern (robust |z| ≥ 3): "
-                       f"{', '.join(flagged)}. A deviation is a lead to check against read depth, not a diagnosis."
-                       if flagged else "None deviates from the autosomal pattern (robust |z| ≥ 3)")
+        tested, flagged = baf_leads(baf)
+        baf_note = (f"B-allele fractions were tested on {len(tested)} chromosomes; "
+                    + (f"{len(flagged)} deviate from the autosomal pattern. A deviation is a lead to check "
+                       "against read depth, not a diagnosis: the smallest chromosomes, which are GC-rich or acrocentric, "
+                       "often show a wider allele balance in short-read data for mapping reasons." if flagged else "none deviates from the autosomal pattern.")
                     + " Variegated mosaicism can sit below this test's detection limit even when a karyotype shows it.")
+        if flagged:
+            baf_private = private("**Chromosomes flagged by the B-allele-fraction screen:** "
+                                  + ", ".join(f"{r['chrom']} (robust z {r['robust_z']})" for r in flagged))
 
     t = TEMPLATE.read_text(encoding="utf-8")
     today = date.today().isoformat()
@@ -141,14 +200,23 @@ def main():
                 "Automated. The ranked rows are the direct output of the pipeline (`kaggle/mva_d02/d02.py`, "
                 "rule pre-registered in Part B §B9 before data access); no row or EPCR value was edited by hand.")
     t = section(t, "A6. Downstream manual review", "None for this model.")
+    if args.model == 1:
+        for heading, status in STATUS_MODEL_1.items():
+            t = append_to(t, heading, status)
     t = section(t, "A12. Run time and cost",
                 f"- **Gated data:** one private Kaggle CPU notebook (free tier); annotation, ranking and the "
                 f"mosaicism statistics took {summary.get('minutes_total', '?')} minutes in total.\n"
                 "- **Public references and tests:** one private Kaggle CPU notebook (`kaggle/mva_refs_build`).\n"
                 "- **Public splice map:** one Kaggle GPU session.\n- **Cost:** $0.")
-    gene, c1, c2, note = top_public or ("", "", None, "")
-    top_sentence = (f"The top-ranked genotype is in *{gene}*: " + (f"a compound heterozygous pair ({c1} and {c2}; {note})"
-                    if c2 else f"a single allele ({c1}; {note})") + ".") if gene else "No candidate passed the filters."
+    t = section(t, "A1. Team name", "SantanuBanerjee (Hugging Face username, also used as the display name).")
+    gene, a1, a2, phase = top_public or ("", {}, None, "")
+
+    def allele_class(a):
+        clin = (a.get("clnsig") or "").replace("_", " ")
+        return f"a {a.get('consequence') or 'non-coding'} allele" + (f" (ClinVar: {clin})" if clin else " (not in ClinVar)")
+    top_sentence = (f"The top-ranked genotype is in *{gene}*: " + (
+        f"a compound heterozygous pair, {phase or 'phase as scored'}, of {allele_class(a1)} and {allele_class(a2)}"
+        if a2 else f"{allele_class(a1)}") + ".") if gene else "No candidate passed the filters."
     t = section(t, "A13. Method abstract (up to 500 words)",
                 "We ranked recessive genotypes from the proband's VCF with a rule fixed before data access. "
                 "Variants were normalised and annotated against MANE Select transcripts only (bcftools csq), "
@@ -169,6 +237,7 @@ def main():
                   private("**Ranked rows as submitted (model %d)**\n\n%s" % (args.model, ranked_table)))
     b10 = (private("**Ranked rows, with HGVS names, ClinVar, population frequency and genotype:**\n\n" + ranked_table)
            + "\nPublic summary: " + top_sentence + "\n\n" + gene_table + "\n\n" + baf_note + "\n\n"
+           + (baf_private + "\n" if baf_private else "")
            + f"Input: {summary.get('input', {}).get('records', '?')} VCF records; "
              f"{summary.get('table_rows', '?')} annotated (variant, gene) rows; frequency sources "
              f"{summary.get('pop_af_source_counts', {})}.")

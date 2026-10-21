@@ -51,7 +51,7 @@ Yes. Only public reference data, databases and literature were used, together wi
 - **Variant and gene knowledge:** ClinVar; gnomAD, for frequency and constraint; Genomics England PanelApp; UniProt features; the ACMG SF v3.3 gene list.
 - **Splicing:** Pangolin (Zeng & Li 2022, GPL-3.0), run over every possible single-nucleotide change in *BUB1B* on public sequence only (`kaggle/bub1b_splice_map/`).
 - **Literature:** every citation was checked against its PubMed record; the list is in the locus dossier.
-- *Versions and download dates are listed in Part B §B10.*
+- Versions and download dates are listed in Part B §B13.
 
 ### A9. Proprietary data used
 None.
@@ -104,7 +104,7 @@ Pairs. The pipeline outputs compound heterozygous pairs in the `chrom_1…alt_1`
 - **VCF quality control:** header, sample and build checks; left-alignment and multi-allelic splitting; quality filters; and the `chr` prefix added on output.
 
 ### B3. Annotation and inheritance-aware filtering
-- **Consequences** come from `bcftools csq` given only the 19,299 MANE Select transcripts of Ensembl release 116 (`pipeline/mane_gff.py`), so readthrough transcripts cannot give a gene a spurious consequence (locus dossier §1). Indels are left-aligned and multi-allelic records split first (`bcftools norm`). Variants with no coding or splice consequence are placed by gene interval as intronic, upstream or downstream (within 5 kb), so the *BUB1B* upstream interval is not lost (`tools/annotate_vcf.sh`, `pipeline/annotate_table.py`).
+- **Consequences** come from `bcftools csq` given only the 19,299 MANE Select transcripts of Ensembl release 116 (`pipeline/mane_gff.py`), so readthrough transcripts cannot give a gene a spurious consequence (locus dossier §1). Indels are left-aligned and multi-allelic records split first (`bcftools norm`). Only chromosomes 1–22, X and Y are annotated: MANE Select has no mitochondrial, decoy or unplaced-contig transcripts. Variants with no coding or splice consequence are placed by gene interval as intronic, upstream or downstream (within 5 kb), so the *BUB1B* upstream interval is not lost (`tools/annotate_vcf.sh`, `pipeline/annotate_table.py`).
 - **ClinVar** classification and review status are attached by position and alleles (release of 2026-09-28).
 - **Population frequency:** gnomAD v4.1 joint (exome + genome) frequencies, fetched from the public gnomAD browser API for the ten MVA genes (gene, 60 kb upstream, 5 kb downstream, all variants) and the 84 ACMG SF v3.3 genes (gnomAD's exonic set), and matched on chromosome, position and alleles after normalisation (`tools/fetch_gnomad_slices.py`). Inside these slices the rarity measure is the maximum filtering allele frequency across genetic ancestry groups (fafmax, 95% CI), and a variant gnomAD does not list counts as 0. Elsewhere it is the highest of ClinVar's ExAC, 1000 Genomes and ESP frequencies. The source is recorded per row (`pop_af_source`).
 - **Rare-variant filter:** that frequency at most 1%. A missing frequency counts as rare, so the filter can only over-include.
@@ -128,7 +128,7 @@ We seek both alleles by mechanism, not by ClinVar status, because the classic hy
 - **Mechanism class and antisense lanes,** applied with the rules fixed in advance in `reports/track2/d08_worksheet.md`.
 
 ### B6. Evidence for mosaic aneuploidy
-- Per-chromosome B-allele fraction from VCF allele depths.
+- Per-chromosome B-allele fraction from VCF allele depths (`pipeline/baf_mosaic.py`): the spread of heterozygous allele fractions around 0.5, scored as a robust z against the other autosomes (median and MAD). Autosomes with at least 1,000 heterozygous sites are tested; a chromosome is a lead when z ≥ 3. X and Y are not tested, because their expected balance depends on sex, and decoy contigs are skipped.
 - Low-pass depth from alignments of reads taken from the start of the FASTQs.
 - Stated detection limits, and the caveat that variegated mosaicism is spread across different chromosomes in different cells.
 
