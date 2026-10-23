@@ -1,8 +1,10 @@
 # Repurposing hypotheses for BUB1B-related mosaic variegated aneuploidy (MVA1)
 
-**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 2 · Version 2 · literature and database checks run 2026-09-27, registries and drug labels added 2026-09-29, allele-classification rules fixed in advance 2026-09-29, applied to the child's alleles 2026-10-23**
+**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 2 · Version 3 (final) · literature and database checks run 2026-09-27, registries and drug labels added 2026-09-29, allele-classification rules fixed in advance 2026-09-29, applied to the child's alleles 2026-10-23, stability map and Track 1 confirmation added 2026-10-23**
 
 > **What this is.** A ranked set of research hypotheses for expert follow-up in patient-derived cells. It is not medical advice and is not addressed to the family. It contains no doses, no schedules and no treatment recommendations. Clinical decisions belong to the child's treating team.
+>
+> **What changed in version 3.** Two additions. First, our Track 1 submission ranked the same *BUB1B* allele pair first and scored full marks against the organisers' clinically confirmed answer, so the alleles this report reasons from are the confirmed cause. Second, a structure-based stability map of every possible BUBR1 substitution tests the missense allele's provisional class, read with rules fixed before the map was computed (§4.1).
 >
 > **What changed in version 2.** Version 1 was written before we had access to the hackathon dataset. Version 2 adds the child's own two *BUB1B* alleles, found in the VCF and classified with rules we fixed and tested on 2026-09-29, before seeing any patient data (§4.1). The ranking did not change, but the support for H1 and H2 is stronger, and the first experiments are now specific to this child.
 >
@@ -17,7 +19,7 @@ Citations are given as first author, year and PubMed ID (PMID). Every PubMed-ind
 - **MVA1 is a BUBR1 dosage disease.** Patients pair a truncating allele with a hypomorphic one, total BUBR1 protein is low, and re-expressing BUBR1 restores checkpoint function in patient cells (Suijkerbuijk 2010, PMID 20516114). The coherent therapeutic goal is to raise or protect BUBR1 protein. "Activating the kinase" is not a goal: BUBR1 is a pseudokinase whose catalysis is dispensable (Suijkerbuijk 2012a, PMID 22698286).
 - **The druggable biology is an acetylation–degradation cycle.** Acetylation at K250 protects BUBR1 from APC/C-mediated destruction, and HDAC2 and HDAC3 remove that mark to start degradation. Mice that cannot acetylate BubR1 phenocopy MVA (Choi 2009, PMID 19407811; Park 2013, PMID 23878276; Park 2017, PMID 28985013). SIRT2 deacetylation at a different lysine, K668, stabilises BubR1, and the NAD+ precursor NMN raised BubR1 levels in mice (North 2014, PMID 24825348).
 - **Nothing exists yet (checked 2026-09-27 and 2026-09-29).** ClinicalTrials.gov, ISRCTN, EU CTIS, ANZCTR and the WHO ICTRP portal list no studies for MVA, premature chromatid separation or *BUB1B*. PubMed contains no report of disease-modifying drug therapy in MVA. ChEMBL's most potent BUB1B measurement is about 10 µM. Open Targets lists no clinical-stage agent, and its two positive tractability signals point the wrong way (§3.2).
-- **The child's alleles fit the classic MVA1 pattern (version 2, §4.1).** The VCF shows a truncating *BUB1B* allele predicted to trigger nonsense-mediated decay, which removes its transcript, and a rare missense substitution that our pre-registered position rule places in the abundance class: an unstable protein that worked normally when its level was raised in published experiments. Phase could not be resolved from short reads. Under the rules fixed in advance, the ranking stands, H1 and H2 gain support, HSP90 inhibitors are excluded for a second reason, and antisense up-regulation becomes the child's most plausible oligonucleotide route.
+- **The child's alleles fit the classic MVA1 pattern, and they are the confirmed cause (§4.1).** The VCF shows a truncating *BUB1B* allele predicted to trigger nonsense-mediated decay, which removes its transcript, and a rare missense substitution that our pre-registered position rule places in the abundance class: an unstable protein that worked normally when its level was raised in published experiments. Phase could not be resolved from short reads. Under the rules fixed in advance, the ranking stands, H1 and H2 gain support, HSP90 inhibitors are excluded for a second reason, and antisense up-regulation becomes the child's most plausible oligonucleotide route.
 - **Ranked hypotheses**, by priority for the first decisive experiment in patient cells:
   - (H1) NAD+ precursors, to stabilise BUBR1
   - (H2) HDAC2/3 inhibition, to protect acetylated BUBR1
@@ -124,9 +126,11 @@ Human BUBR1 keeps a kinase-like domain, but its putative catalytic activity is d
 
 Each item is a hypothesis for expert follow-up, not a proposal to treat.
 
-### 4.1 What the child's alleles changed (version 2)
+### 4.1 What the child's alleles changed (versions 2 and 3)
 
 We applied the rules in `reports/track2/d08_worksheet.md` without changing them. They were written, coded (`pipeline/allele_mechanism.py`) and tested on 2026-09-29, before we had dataset access.
+
+**Confirmed.** Our Track 1 submission ranked this allele pair first. The organisers' automatic scoring against the clinically confirmed answer gave 100 of 100 rank points and an F-max of 1.000, a full match at rank 1.
 
 **The alleles.** The child's VCF carries two rare *BUB1B* variants on the MANE Select transcript and no other rare coding or splice-region *BUB1B* variant:
 
@@ -146,6 +150,29 @@ We applied the rules in `reports/track2/d08_worksheet.md` without changing them.
 **Pre-registered consequences that fired** (worksheet step 4):
 1. **The non-null allele is an abundance-class substitution.** H1 and H2 keep their places with stronger support, because the tested abundance-class mutants regained function when their level was raised (I909T and L1012P; Suijkerbuijk 2010, PMID 20516114). HSP90 inhibitors are excluded for a second reason, since HSP90 inhibition sharply lowers these mutants (see "Considered and not ranked" below). The up-regulation lane becomes a candidate (§8.1).
 2. **A rule about the truncating allele's exon also fired.** It keeps H4 at rank 4 and adds one cheap protein-stability experiment, described in the submitted version. *[Withheld from the public version: patient-level detail. It appears in the submitted report.]*
+
+**A stability map of every possible BUBR1 substitution (new in version 3).** The missense allele's class above rests on position alone. To test it, we predicted the effect of all 19,950 possible single amino-acid substitutions in BUBR1 on the AlphaFold DB model (Varadi 2024, PMID 37933859), on public data only, in a private Kaggle notebook (`kaggle/mva_bub1b_stability_map/`). Stability change (ΔΔG) came from ThermoMPNN (Dieckhaus 2024, PMID 38285937), and a sequence-based score from the ESM-2 protein language model (Lin 2023, PMID 36927031). We wrote down how the result would be read, and what it could change, before computing it (`reports/track2/stability_map_rules.md`, committed first). The child's substitution was looked up afterwards on the laptop, so it never entered the notebook.
+
+The published substitutions of Suijkerbuijk 2010 are the controls:
+
+| Substitution | Tested class | Predicted ΔΔG (positive = destabilising) | ESM-2 score (lower = less tolerated) | AlphaFold pLDDT |
+|---|---|---|---|---|
+| R727C | abundance | 0.91 | -2.95 | 88 |
+| R814H | abundance | 0.86 | -4.56 | 90 |
+| L844F | abundance | 1.51 | -3.14 | 86 |
+| I909T | abundance | 1.94 | -5.63 | 87 |
+| L1012P | abundance | 3.11 | -7.02 | 95 |
+| R550Q | no defect | 0.04 | 0.36 | 35 |
+| Q921H | no defect | 0.98 | -0.42 | 83 |
+| Y155C | functional | 2.23 | -8.55 | 96 |
+
+- **Validity gate:** 3 of the 5 abundance-class controls are predicted more destabilising than both no-defect controls, so the gate passes, at the minimum of 3. The two below are R727C and R814H. The functional-class Y155C, which was stable in cells, is also predicted destabilising (2.23). The predictor therefore separates the classes only partly, which is why it informs but does not decide.
+- **ESM-2 alone** ranks 5 of the 5 abundance-class controls as less tolerated than both no-defect controls. By the rules fixed in advance, it is reported as context and does not make the call.
+- **The child's missense allele:** the pre-registered reading is **inconclusive**: the predicted destabilisation is neither in the top nor the bottom quarter of the C-terminal reference set. The class therefore stays positional, and the ranking stays H1–H5 until assay 1. For context only, outside the pre-registered call: its predicted destabilisation is within the range of the five tested abundance-class substitutions and above both no-defect controls, so it does not contradict the positional class either.
+
+*[Withheld from the public version: patient-level detail. It appears in the submitted report.]*
+
+The map is a reusable resource: any future *BUB1B* missense allele can be read against the same controls in seconds, before a cell line exists.
 
 **The order is unchanged:** H1, H2, H3, H4, H5. What changes is the first experiment for this child. Assay 1, BUBR1 protein in patient-derived cells, now tests a specific prediction: low total BUBR1 from an absent truncated product plus an unstable full-length product. If the substitution turns out to be stable (functional class), the worksheet's rule moves H3 to first place.
 
@@ -357,13 +384,15 @@ The mechanism map (§2), the six-point screen (§6) and the five-assay rule (§7
 - *MAD1L1* (MVA7) (Villarroya-Beltri 2022);
 - *CEP57* (MVA2), where the checkpoint defect is minimal (Yost 2017), so the ranking would change.
 
+The stability map (§4.1) is built the same way for any protein with an AlphaFold model, and its validity gate uses the published controls of that gene, so a new patient's missense allele can be read in context the day it is found.
+
 Work package R06 automates the landscape and screening steps over public data (ChEMBL, Open Targets, openFDA drug labels). It runs on *BUB1B*, *TRIP13* and *CEP57* from one configuration file, and adding a gene is one line. In the *BUB1B* demo, all 28 negative-control compounds (TTK, Aurora B and PLK1 inhibitors) were excluded automatically, as were 11 of the 12 HDAC2/3 candidates. That matches the do-not-use list (§5) without hand curation. The twelfth, mocetinostat, is held as "insufficient data": its recorded mechanism does not meet the broad-HDAC rule and it has no US label.
 
 ---
 
 ## 11. Limitations
 
-- **Provisional allele classes.** The missense allele's mechanism class follows from its position, not from an experiment, and phase is assumed, not shown (§4.1). Assay 1 in patient-derived cells, and parental testing or long reads, would settle both.
+- **Provisional allele classes.** The missense allele's mechanism class follows from its position and a computational stability prediction, not from an experiment; ThermoMPNN and ESM-2 are not calibrated as ACMG evidence, and phase is assumed, not shown (§4.1). Assay 1 in patient-derived cells, and parental testing or long reads, would settle both.
 - **Registries.** Five registries were searched by keyword (§3.1). A trial registered under a different disease name, for example a generic chromosomal-instability or cancer-predisposition label, could still be missed.
 - **Model systems.** Most mechanistic evidence comes from mice, cancer cell lines or yeast. Direct data from human MVA1 cells are few.
 - **No exposure-margin analysis.** By design this report gives no doses. Comparing active concentrations in cells with achievable exposure in patients is left to expert follow-up.
@@ -422,6 +451,7 @@ The organisers require this acknowledgement in any public communication arising 
 - Choi SY et al. 2026. Linking kinetochore attachment to checkpoint control: the role of Aurora B in BubR1 acetylation. *Nucleic Acids Res* 54. PMID 41533580. https://doi.org/10.1093/nar/gkaf1517
 - Cohen-Sharir Y et al. 2021. Aneuploidy renders cancer cells vulnerable to mitotic checkpoint inhibition. *Nature* 590:486-491. PMID 33505028. https://doi.org/10.1038/s41586-020-03114-6
 - Conze DB, Crespo-Barreto J, Kruger CL. 2016. Safety assessment of nicotinamide riboside, a form of vitamin B3. *Hum Exp Toxicol* 35:1149-60. PMID 26791540. https://doi.org/10.1177/0960327115626254
+- Dieckhaus H et al. 2024. Transfer learning to leverage larger datasets for improved prediction of protein stability changes. *Proc Natl Acad Sci U S A* 121:e2314853121. PMID 38285937. https://doi.org/10.1073/pnas.2314853121
 - Dixon-Zegeye M et al. 2024. Cancer Precision-Prevention trial of Metformin in adults with Li Fraumeni syndrome (MILI) undergoing yearly MRI surveillance: a randomised controlled trial protocol. *Trials* 25:103. PMID 38308321. https://doi.org/10.1186/s13063-024-07929-w
 - Eiden C et al. 2009. Posaconazole-increased vincristine neurotoxicity in a child: a case report. *J Pediatr Hematol Oncol* 31:292-5. PMID 19346885. https://doi.org/10.1097/MPH.0b013e31819b9d01
 - Elhajouji A, Tibaldi F, Kirsch-Volders M. 1997. Indication for thresholds of chromosome non-disjunction versus chromosome lagging induced by spindle inhibitors in vitro in human lymphocytes. *Mutagenesis* 12:133-40. PMID 9175637. https://doi.org/10.1093/mutage/12.3.133
@@ -442,6 +472,7 @@ The organisers require this acknowledgement in any public communication arising 
 - Laberko A et al. 2019. Hematopoietic stem cell transplantation in a patient with type 1 mosaic variegated aneuploidy syndrome. *Orphanet J Rare Dis* 14:97. PMID 31053147. https://doi.org/10.1186/s13023-019-1073-x
 - Lamb YN. 2024. Givinostat: First Approval. *Drugs* 84:849-856. PMID 38967716. https://doi.org/10.1007/s40265-024-02052-1
 - Lim KH et al. 2020. Antisense oligonucleotide modulation of non-productive alternative splicing upregulates gene expression. *Nat Commun* 11:3501. PMID 32647108. https://doi.org/10.1038/s41467-020-17093-9
+- Lin Z et al. 2023. Evolutionary-scale prediction of atomic-level protein structure with a language model. *Science* 379:1123-1130. PMID 36927031. https://doi.org/10.1126/science.ade2574
 - Mahadevan D et al. 2025. First in human phase 1 study of DT2216, a selective BCL-xL degrader, in patients with relapsed/refractory solid malignancies. *J Hematol Oncol* 18:98. PMID 41225624. https://doi.org/10.1186/s13045-025-01753-8
 - Malumbres M, Villarroya-Beltri C. 2024. Mosaic variegated aneuploidy in development, ageing and cancer. *Nat Rev Genet* 25:864-878. PMID 39169218. https://doi.org/10.1038/s41576-024-00762-6
 - Matsuura S et al. 2000. Chromosomal instability syndrome of total premature chromatid separation with mosaic variegated aneuploidy is defective in mitotic-spindle checkpoint. *Am J Hum Genet* 67:483-6. PMID 10877982. https://doi.org/10.1086/303022
@@ -480,6 +511,7 @@ The organisers require this acknowledgement in any public communication arising 
 - Vohra S et al. 2015. CONSORT extension for reporting N-of-1 trials (CENT) 2015 Statement. *BMJ* 350:h1738. PMID 25976398. https://doi.org/10.1136/bmj.h1738
 - Watanabe Y et al. 2014. Dendrite development regulated by the schizophrenia-associated gene FEZ1 involves the ubiquitin proteasome system. *Cell Rep* 7:552-564. PMID 24726361. https://doi.org/10.1016/j.celrep.2014.03.022
 - Woodward HL et al. 2018. Introduction of a Methyl Group Curbs Metabolism of Pyrido[3,4- d]pyrimidine Monopolar Spindle 1 (MPS1) Inhibitors and Enables the Discovery of the Phase 1 Clinical Candidate N-(2-Ethoxy-4-(4-methyl-4 H-1,2,4-triazol-3-yl)phenyl)-6-methyl- N-neopentylpyrido[3,4- d]pyrimidine-2,8-diamine (BOS172722). *J Med Chem* 61:8226-8240. PMID 30199249. https://doi.org/10.1021/acs.jmedchem.8b00690
+- Varadi M et al. 2024. AlphaFold Protein Structure Database in 2024: providing structure coverage for over 214 million protein sequences. *Nucleic Acids Res* 52:D368-D375. PMID 37933859. https://doi.org/10.1093/nar/gkad1011
 - Wu LE et al. 2023. SIRT2 transgenic over-expression does not impact lifespan in mice. *Aging Cell* 22:e14027. PMID 38009412. https://doi.org/10.1111/acel.14027
 - Yost S et al. 2017. Biallelic TRIP13 mutations predispose to Wilms tumor and chromosome missegregation. *Nat Genet* 49:1148-1151. PMID 28553959. https://doi.org/10.1038/ng.3883
 - Zardetto B et al. 2024. Practical recommendations for the selection of patients for individualized splice-switching ASO-based treatments. *Hum Mutat* 2024:9920230. PMID 40225926. https://doi.org/10.1155/2024/9920230
@@ -561,7 +593,7 @@ None.
   - **Functional class:** a stable protein with a specific defect.
 - **Pathway disrupted.** The spindle assembly checkpoint, through the mitotic checkpoint complex and APC/C-mediated degradation, regulated by the acetylation cycle above.
 - **Downstream consequences.** Chromosome missegregation and mosaic aneuploidy, premature senescence, and embryonal cancer predisposition.
-- **For each of the child's alleles,** the class and the antisense lanes were assigned with rules fixed before the genotype was seen (D08 worksheet). Result (§4.1): a truncating allele predicted to trigger NMD (abundance class), and a rare missense substitution, provisionally abundance class by position. Neither alters splicing in our Pangolin map, and phase is unresolved from short reads.
+- **For each of the child's alleles,** the class and the antisense lanes were assigned with rules fixed before the genotype was seen (D08 worksheet). Result (§4.1): a truncating allele predicted to trigger NMD (abundance class), and a rare missense substitution, provisionally abundance class by position. Neither alters splicing in our Pangolin map, and phase is unresolved from short reads. A stability map of every possible BUBR1 substitution (ThermoMPNN and ESM-2 on the AlphaFold model), read with rules fixed in advance, is inconclusive for the missense allele; its class stays positional. The pair is the clinically confirmed cause (Track 1: full match at rank 1).
 
 ## 10. Time or effort
 *Finalised at submission.* So far:
@@ -586,7 +618,7 @@ An open pipeline applies the same screens to any checkpoint gene from public dat
 
 The rules that re-rank the hypotheses by the child's own alleles were fixed before the genotype was seen. Applied to the child's VCF, they classify one allele as a truncating null and the other as a missense substitution of the unstable, abundance class, which strengthens the case for raising BUBR1 (H1, H2) and points the oligonucleotide lane to up-regulation. A public map of every possible single-nucleotide change in *BUB1B* confirmed that neither allele creates a correctable cryptic splice site.
 
-**Strengths:** mechanism-first reasoning; stated weaknesses; safety filters designed for a cancer-predisposed child; genotype rules fixed in advance; reproducible public-data tooling.
+**Strengths:** mechanism-first reasoning; alleles confirmed by the Track 1 scoring; a pre-registered stability map of every BUBR1 substitution; stated weaknesses; safety filters designed for a cancer-predisposed child; genotype rules fixed in advance; reproducible public-data tooling.
 
 **Limitations:**
 - Most mechanistic evidence comes from mice and cell lines.

@@ -1,6 +1,6 @@
 # Track 1 methods report
 
-**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 1 · model 1, 2026-10-21**
+**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 1 · model 2, 2026-10-23**
 
 ---
 
@@ -10,7 +10,7 @@
 SantanuBanerjee (Hugging Face username, also used as the display name).
 
 ### A2. Model number
-1.
+2.
 
 ### A3. Model or approach in detail
 The approach combines a gene-agnostic pipeline with a mechanism-led search of *BUB1B*:
@@ -26,7 +26,7 @@ The approach combines a gene-agnostic pipeline with a mechanism-led search of *B
 5. **Show the differential MVA genes negative.** This includes a coverage check (Part B §B7).
 6. **Classify and rank.** Each allele is classified with ACMG/AMP points (Part B §B8), and candidate rows are ranked by EPCR (Part B §B9).
 
-**Status in model 1:** steps 1, 2 and the ranking in step 6 ran on the child's VCF, plus the B-allele-fraction part of step 4. The read-level and splice checks of step 3, low-pass depth, the coverage check and secondary-findings screen of step 5, and the ACMG points of step 6 are written and tested on synthetic data, and follow in later models.
+**Status in model 2:** the ranking and the submission file are model 1's, unchanged. Model 2 adds the allele-level work of steps 3, 5 and 6 on the child's data: the splice lookup and phase of the *BUB1B* alleles, their mechanism class, a structure-based stability prediction, the coverage check of the other MVA genes, the ACMG SF v3.3 screen and the per-allele ACMG points. Low-pass depth and k-mer baiting were not run: both need the FASTQ files inside the private compute, and two rare *BUB1B* alleles were already found.
 
 ### A4. Generative AI used (required)
 Anthropic Claude Max (consumer plan), used through Claude Code, with model-training opt-out enabled and no feedback or ratings given in sessions involving the data. These are Sage's conditions for consumer plans (HF thread #2, 29 September 2026). The wording was confirmed on 2026-09-30 and matches `routine/plan.json` → `gates.llm_terms_confirmed.record`. No patient data was used with an LLM before that date.
@@ -35,7 +35,7 @@ Anthropic Claude Max (consumer plan), used through Claude Code, with model-train
 Automated. The ranked rows are the direct output of the pipeline (`kaggle/mva_d02/d02.py`, rule pre-registered in Part B §B9 before data access); no row or EPCR value was edited by hand.
 
 ### A6. Downstream manual review
-None for this model.
+The ranked rows and EPCR values are model 1's, unedited. The allele-level results in §B5, §B7 and §B8 were produced by scripts whose rules were fixed before they ran (`reports/track2/d08_worksheet.md`, `reports/track2/stability_map_rules.md`, the evidence codes in `tools/draft_track1_report.py`), and were read by the author.
 
 ### A7. Public data only?
 Yes. Only public reference data, databases and literature were used, together with the hackathon dataset itself. No proprietary data.
@@ -121,25 +121,59 @@ We seek both alleles by mechanism, not by ClinVar status, because the classic hy
 - **Read-backed phase.**
 - **Mechanism class and antisense lanes,** applied with the rules fixed in advance in `reports/track2/d08_worksheet.md`.
 
-**Status in model 1:** VCF level only. The Pangolin lookup of the child's variants, k-mer baiting and read-level phase follow in a later model.
+**Results in model 2.**
+
+- **Both alleles found.** The VCF carries two rare *BUB1B* variants on MANE Select: a truncating allele and a missense allele, both heterozygous PASS calls. 2 further rare *BUB1B* variant(s) are called, none protein-altering.
+- **Phase: unknown.** The two variants are about 11 kb apart, beyond read-backed phasing, and no parental data were provided. Compound heterozygosity is assumed, and PM3 is scored at the reduced strength for unknown phase (§B8).
+- **Splicing.** In the public Pangolin map of every possible *BUB1B* single-nucleotide change, neither allele nor the 2 other rare variant(s) looked up changes a splice site (largest |Δ| 0.01; a strong call needs 0.5).
+- **Upstream interval.** 2 upstream variants are called, all common in gnomAD v4.1 (lowest allele frequency 0.087).
+- **Mechanism class** (rules fixed on 2026-09-29, `reports/track2/d08_worksheet.md`): the truncating allele is in the abundance class (nonsense-mediated decay predicted); the missense allele is in the abundance class (provisional).
+- **Stability prediction** (rules fixed before the run, `reports/track2/stability_map_rules.md`): validity gate passed (3 of 5 abundance-class controls above both no-defect controls); call for the missense allele: **inconclusive**. For context only, outside the pre-registered call: its predicted destabilisation is within the range of the five tested abundance-class substitutions and above both no-defect controls.
+- **Not run:** k-mer baiting for transposon insertions and structural variants, which needs the FASTQ files.
+
+
+*[Withheld from the public version: patient-level detail. It appears in the submitted report.]*
+
 
 ### B6. Evidence for mosaic aneuploidy
 - Per-chromosome B-allele fraction from VCF allele depths (`pipeline/baf_mosaic.py`): the spread of heterozygous allele fractions around 0.5, scored as a robust z against the other autosomes (median and MAD). Autosomes with at least 1,000 heterozygous sites are tested; a chromosome is a lead when z ≥ 3. X and Y are not tested, because their expected balance depends on sex, and decoy contigs are skipped.
 - Low-pass depth from alignments of reads taken from the start of the FASTQs.
 - Stated detection limits, and the caveat that variegated mosaicism is spread across different chromosomes in different cells.
 
-**Status in model 1:** B-allele fractions from the VCF only (results in §B10); low-pass depth follows.
+**Status in model 2:** B-allele fractions from the VCF only (results in §B10). Low-pass depth was not run.
 
 ### B7. Differential genes and secondary findings
 - Coverage and negative results for the other MVA genes (locus dossier §7).
 - The ACMG SF v3.3 screen, reported as counts only in the public version.
 
-**Status in model 1:** variant counts for the ten MVA genes are in §B10; the coverage check and the ACMG SF v3.3 screen follow.
+**Results in model 2.**
+
+- **The other nine MVA genes are negative.** None carries a ClinVar pathogenic or likely pathogenic call, and no gene has two rare protein-altering alleles or a rare homozygous one.
+
+| Gene | Calls | Median depth of calls | ClinVar P/LP | Rare high or moderate impact |
+|---|---|---|---|---|
+| *CEP57* | 7 | 41 | 0 | 0 |
+| *TRIP13* | 3 | 7 | 0 | 0 |
+| *CENATAC* | 20 | 43.5 | 0 | 0 |
+| *SLF2* | 75 | 40 | 0 | 0 |
+| *SMC5* | 100 | 39.5 | 0 | 0 |
+| *MAD1L1* | 910 | 42.0 | 0 | 1 |
+| *MAD2L1BP* | 7 | 33 | 0 | 0 |
+| *CEP192* | 192 | 42.0 | 0 | 0 |
+| *BUB1* | 15 | 42 | 0 | 0 |
+
+- **Coverage caveat:** *TRIP13* has few calls at low depth. A VCF does not record depth where nothing is called, so a cause there is not excluded by this data.
+- **ACMG SF v3.3 screen** (84 genes; ClinVar pathogenic or likely pathogenic calls, `pipeline/sf_screen.py`): 0 gene(s) with such a call; 0 reportable or for review; 0 carrier-only or not reportable. A further 13 call(s) in these genes carry only conflicting ClinVar classifications and are not reportable. X-linked findings depend on the sex stated in the phenotype document, which this pipeline never infers.
 
 ### B8. ACMG/AMP classification
-Points-based classification shown per allele, with the evidence codes and their strengths (`pipeline/acmg_points.py`).
+Points-based classification (Tavtigian 2020, PMID 32720330; `pipeline/acmg_points.py`). Codes were fixed in `tools/draft_track1_report.py` before this report was drafted. PM2 is applied at Supporting (ClinGen SVI). PM3 counts only a pathogenic partner, at Supporting because phase is unknown. PP4 is not applied because MVA has several causal genes. PP3 and PS3 are not applied, because the computational scores are not calibrated for ACMG strength and no functional data exist for these alleles.
 
-**Status in model 1:** not yet applied; the ranking uses the pre-registered allele-evidence weights in §B9.
+| Allele | Evidence | Points | Class |
+|---|---|---|---|
+| truncating | PVS1, PM2_Supporting | 9 | Likely pathogenic |
+| missense | PM2_Supporting, PM3_Supporting | 2 | Uncertain significance |
+
+**What would settle the missense allele.** It stands at 2 points, a variant of uncertain significance. A BUBR1 immunoblot in patient-derived cells showing low protein (PS3, Strong: +4) would bring it to 6 points, likely pathogenic. Confirming the two alleles in trans by parental testing would raise PM3 to Moderate (+1). This is the same first experiment that the Track 2 report puts first (assay 1).
 
 ### B9. Submission file
 Candidates and their scores (`epcr`) come from `pipeline/track1_rank.py`, whose rule was fixed on 2026-10-02, before any access to the data:
@@ -184,7 +218,10 @@ B-allele fractions were tested on 22 chromosomes; 3 deviate from the autosomal p
 Input: 5012204 VCF records; 5149105 annotated (variant, gene) rows; frequency sources {'none': 5102894, 'clinvar': 43179, 'gnomad_v4.1': 3032}.
 
 ### B11. Interpretation
-Each allele's mechanism class (functional or abundance; Suijkerbuijk 2010, PMID 20516114) is assigned with the rules fixed in advance in `reports/track2/d08_worksheet.md`, and feeds the Track 2 report. This model reports the ranking; the per-allele ACMG points follow in the next model.
+- **The top-ranked pair is the confirmed answer.** Model 1, which submitted the same rows, scored 100 rank points and F-max 1.000 on the leaderboard: the clinically confirmed variants are the *BUB1B* pair at rank 1.
+- **The pair fits the classic MVA1 architecture:** a truncating null allele with a missense allele in the C-terminal region where every tested substitution made an unstable protein (Suijkerbuijk 2010, PMID 20516114).
+- **Ranking and classification answer different questions.** Under ACMG/AMP the missense allele is still a variant of uncertain significance (§B8), yet the gene-first, inheritance-aware ranking put the pair first. A pipeline that kept only ClinVar or ACMG pathogenic calls would have reported the truncating allele alone, worth half credit; this is why the rule keeps every rare *BUB1B* variant whatever its predicted impact (§B9).
+- **Mechanism feeds Track 2.** Both alleles are classed as abundance-class, so raising BUBR1 is the coherent therapeutic goal, and assay 1 (BUBR1 protein in patient cells) is the experiment that settles both the classification and the drug hypotheses.
 
 ### B12. Limitations
 - No parental data: phase is known only where reads span both variants; otherwise it is scored as unknown.
@@ -193,8 +230,11 @@ Each allele's mechanism class (functional or abundance; Suijkerbuijk 2010, PMID 
 - gnomAD frequencies cover only the ten MVA genes and the ACMG SF genes; elsewhere ClinVar's frequencies are used, and a missing frequency counts as rare.
 - The B-allele-fraction screen cannot see low-level variegated mosaicism.
 
+- The missense allele's mechanism class rests on its position and a computational stability prediction, not on an experiment.
+- Low-pass depth and k-mer baiting were not run in this model.
+
 ### B13. Reproducibility
-- Repository: https://github.com/SanTanBan/mva-hackathon-2026 (commit `dff631f`).
+- Repository: https://github.com/SanTanBan/mva-hackathon-2026 (commit `91d0cb9`).
 - Public references and tests: `kaggle/mva_refs_build/refs_build.py` (GRCh38 analysis set from NCBI, md5-checked; ClinVar 2026-09-28; gnomAD v4.1 slices; bcftools/samtools/htslib 1.24).
 - Patient data: `kaggle/mva_d02/d02.py`, run by `tools/kaggle_d02.py` after `tools/fetch_vcf_first.py`, `tools/d01_intake.py` and `tools/kaggle_patient_upload.py`.
 - Validation: `tools/validate_track1_csv.py`.

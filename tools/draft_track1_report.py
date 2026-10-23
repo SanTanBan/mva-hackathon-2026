@@ -131,6 +131,16 @@ def private(block):
     return "<!-- private:start -->\n" + block.rstrip() + "\n<!-- private:end -->\n"
 
 
+def stability_context(stab):
+    """Descriptive context beside the pre-registered call; it never changes the call."""
+    ab = [stab["controls"][k]["ddg_destab"] for k in ("R727C", "R814H", "L844F", "I909T", "L1012P")]
+    nd = max(stab["controls"][k]["ddg_destab"] for k in ("R550Q", "Q921H"))
+    v = stab["ddg_destab"]
+    where = ("within the range of" if min(ab) <= v <= max(ab) else "above" if v > max(ab) else "below")
+    return (f"For context only, outside the pre-registered call: its predicted destabilisation is {where} the five tested "
+            f"abundance-class substitutions and {'above' if v > nd else 'not above'} both no-defect controls.")
+
+
 def model2_sections(t, d04, d02, extract):
     """Model 2: allele-level results (D04), other MVA genes and the SF screen (D05), ACMG points."""
     from pipeline.acmg_points import classify  # noqa: E402
@@ -197,7 +207,8 @@ def model2_sections(t, d04, d02, extract):
         b5.append(f"- **Stability prediction** (rules fixed before the run, `reports/track2/stability_map_rules.md`): "
                   f"validity gate {'passed' if stab['gate']['passes'] else 'failed'} "
                   f"({stab['gate']['abundance_controls_above_both_no_defect']} of 5 abundance-class controls above both "
-                  f"no-defect controls); call for the missense allele: **{stab['call']}**.")
+                  f"no-defect controls); call for the missense allele: **{stab['call']}**. "
+                  + stability_context(stab))
     b5.append("- **Not run:** k-mer baiting for transposon insertions and structural variants, which needs the FASTQ files.")
     priv = ["| Allele | HGVS (NM_001211.6) | Protein | Genomic (GRCh38) | Exon | Reads ref,alt | gnomAD v4.1 AF | ClinVar |",
             "|---|---|---|---|---|---|---|---|"]
