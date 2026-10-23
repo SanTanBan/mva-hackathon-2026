@@ -69,7 +69,7 @@
   },
   "submissions": {
     "track1": {
-      "used": 1,
+      "used": 2,
       "max": 6,
       "staged": [
         {
@@ -93,7 +93,7 @@
           "folder": "D:/mva-hackathon/submissions/track1/2026-10-23-model2",
           "csv": "SantanuBanerjee_vcf-first-epcr-model2.csv (same rows as model 1; VALID)",
           "report": "SantanuBanerjee_track1_report.pdf (model 2: allele-level results, SF screen, ACMG points; 12 pages)",
-          "status": "STAGED for Santanu to submit (attempt 2/6).",
+          "status": "SUBMITTED 2026-10-23 (evening IST) by Santanu: attempt 2/6. Score not yet reported (expected 100/100, F-max 1.000: same rows as model 1).",
           "purpose": "model 2"
         }
       ],
@@ -107,7 +107,7 @@
       }
     },
     "track2": {
-      "used": 2,
+      "used": 3,
       "max": 3,
       "staged": [
         {
@@ -135,7 +135,7 @@
           "date": "2026-10-23",
           "folder": "D:/mva-hackathon/submissions/track2/2026-10-23-v3",
           "report": "SantanuBanerjee_track2_report.pdf (version 3, final; 31 pages; tables fit)",
-          "status": "STAGED for Santanu to submit as attempt 3/3 (agreed live: v3 by 2026-10-24 20:00 IST).",
+          "status": "SUBMITTED 2026-10-23 (evening IST) by Santanu: attempt 3/3, the final judged version. Confirmation text not yet pasted.",
           "purpose": "final version, attempt 3 of 3"
         }
       ],
@@ -466,7 +466,7 @@
         "D04"
       ],
       "title": "Track 2 report v2 with the actual alleles",
-      "progress": "2026-09-29: rules pre-registered before data access: reports/track2/d08_worksheet.md and pipeline/allele_mechanism.py (18 tests). Applying them needs the D04 allele table (hgvs_c, consequence, hgvs_p, ptc_c, rna). 2026-10-23: applied unchanged (pipeline.allele_mechanism --tsv; output D:/mva-hackathon/work/d04/2026-10-23/d08_alleles.json). Fired: abundance-class substitution -> H1/H2 kept with stronger support, HSP90 doubly excluded, up-regulation candidate; truncating-allele exon rule -> H4 stays rank 4 with a skip-stability test (details only in the full report). Track 2 report v2 written (source D:/mva-hackathon/work/reports/track2/SantanuBanerjee_track2_report.src.md, new section 4.1), rendered public (reports/track2/SantanuBanerjee_track2_report.*) and full (D:/mva-hackathon/submissions/track2/2026-10-23), staged with SUBMIT.md as attempt 2/3.",
+      "progress": "2026-09-29: rules pre-registered before data access: reports/track2/d08_worksheet.md and pipeline/allele_mechanism.py (18 tests). Applying them needs the D04 allele table (hgvs_c, consequence, hgvs_p, ptc_c, rna). 2026-10-23: applied unchanged (pipeline.allele_mechanism --tsv; output D:/mva-hackathon/work/d04/2026-10-23/d08_alleles.json). Fired: abundance-class substitution -> H1/H2 kept with stronger support, HSP90 doubly excluded, up-regulation candidate; truncating-allele exon rule -> H4 stays rank 4 with a skip-stability test (details only in the full report). Track 2 report v2 written (source D:/mva-hackathon/work/reports/track2/SantanuBanerjee_track2_report.src.md, new section 4.1), rendered public (reports/track2/SantanuBanerjee_track2_report.*) and full (D:/mva-hackathon/submissions/track2/2026-10-23), staged with SUBMIT.md as attempt 2/3. 2026-10-23: version 3 (final) submitted by Santanu as Track 2 attempt 3/3.",
       "done_when": "Each allele is classified by mechanism (functional class vs abundance class); oligonucleotide eligibility is assessed with the N1C VARIANT guidelines (the framework our notes called VAEAOT); candidate ranking is revisited."
     },
     {
@@ -549,6 +549,7 @@
     "2026-10-23 (scheduled run, light, from 13:51 IST; fired outside its 18:13 slot, CPU 100% x4, 0.41 GB RAM free): access granted; Kaggle mva-refs-build, mva-d02, mva-pitch-video COMPLETE (nothing new to collect). Quota GPU 5.00 h, TPU 11.86 h until 10-24 00:00 UTC (not needed). D04 mostly done (both alleles, phase unknown, splice negative; SV/MEI left). D08 done: Track 2 v2 rendered and staged (attempt 2/3). Track 1 model 1 still staged and unsubmitted (0/6). Both need Santanu's signed-in browser; Claude in Chrome sees only macOS browsers.",
     "2026-10-23 (live, afternoon IST): Santanu submitted Track 2 v2 (attempt 2/3, received). His Track 1 try was rejected: the scorer accepts only proband_id PROBAND01. Fixed: validator enforces PROBAND01 (test added), kaggle/mva_d02/d02.py writes it, corrected CSV staged in submissions/track1/2026-10-23. Both PDFs had tables cut off at the right margin; render_reports.py now adds break points to long table tokens and prints 8+-column tables smaller; all tables measured to fit at A4 width. Santanu granted unlimited use of free Kaggle/HF CPU, GPU and TPU for the remaining day (live chat).",
     "2026-10-23 (live): Track 1 model 1 scored 100/100 rank points, F-max 1.000, full match at rank 1 (1/6 used). The CSV cannot improve; only the report can. Track 2: 2/3 used, 1 left.",
-    "2026-10-23 (live, evening IST): Santanu gave a free hand on free Kaggle/HF CPU, GPU and TPU for the remaining day and approved the R13 downloads inside Kaggle; asked for further Track 1 versions and agreed Track 2 v3 by 2026-10-24 20:00 IST. Done: R13 stability map (call inconclusive), D05 (SF screen negative, ACMG points), mva-d02 v5 (CSV identical, PROBAND01). Staged: Track 1 model 2 and Track 2 v3 (final). Kaggle CPU pushes can be refused when other projects fill the 5 CPU slots; tools/kaggle_d02.py now stops instead of collecting stale output."
+    "2026-10-23 (live, evening IST): Santanu gave a free hand on free Kaggle/HF CPU, GPU and TPU for the remaining day and approved the R13 downloads inside Kaggle; asked for further Track 1 versions and agreed Track 2 v3 by 2026-10-24 20:00 IST. Done: R13 stability map (call inconclusive), D05 (SF screen negative, ACMG points), mva-d02 v5 (CSV identical, PROBAND01). Staged: Track 1 model 2 and Track 2 v3 (final). Kaggle CPU pushes can be refused when other projects fill the 5 CPU slots; tools/kaggle_d02.py now stops instead of collecting stale output.",
+    "2026-10-23 (live): Santanu submitted Track 2 v3 (3/3, final) and Track 1 model 2 (2/6). Track 2 has no attempts left."
   ]
 }
