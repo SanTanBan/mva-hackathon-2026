@@ -77,14 +77,22 @@
           "folder": "D:/mva-hackathon/submissions/track1/2026-10-21",
           "csv": "SantanuBanerjee_vcf-first-epcr-model1.csv (validator: VALID, 0 errors, 0 warnings)",
           "report": "SantanuBanerjee_track1_report.pdf (+ .md), full version; public copy in reports/track1/",
-          "status": "STAGED, not yet submitted. No Chrome is connected to Claude in Chrome; the built-in browser now loads the Space but is not signed in to Hugging Face, and signing in is Santanu's step.",
+          "status": "REJECTED by the scorer on 2026-10-23: 'Unknown proband_id ... Only PROBAND01 is accepted in this challenge.' Superseded by the 2026-10-23 package.",
           "purpose": "model 1, attempt 1 of 6"
+        },
+        {
+          "date": "2026-10-23",
+          "folder": "D:/mva-hackathon/submissions/track1/2026-10-23",
+          "csv": "SantanuBanerjee_vcf-first-epcr-model1.csv (proband_id PROBAND01; validator: VALID, 0 errors, 0 warnings)",
+          "report": "SantanuBanerjee_track1_report.pdf (same text as 2026-10-21, tables fit the page)",
+          "status": "STAGED for Santanu to submit. Check whether the rejected try used an attempt.",
+          "purpose": "model 1, corrected"
         }
       ],
       "policy": "Autonomous (gates.auto_submit, 2026-10-14). Submit a validated CSV as soon as one exists, then again whenever the ranking or the report improves. Best of 6 counts; the CSV is auto-scored (rank points, F-max EPCR); the report is judged."
     },
     "track2": {
-      "used": 1,
+      "used": 2,
       "max": 3,
       "staged": [
         {
@@ -98,8 +106,15 @@
           "date": "2026-10-23",
           "folder": "D:/mva-hackathon/submissions/track2/2026-10-23",
           "report": "SantanuBanerjee_track2_report.pdf (version 2, §4.1 child's alleles; 29 pages)",
-          "status": "STAGED, not yet submitted. No signed-in browser on this laptop is reachable: Claude in Chrome lists only two macOS browsers.",
+          "status": "SUBMITTED 2026-10-23 (afternoon IST) by Santanu; the Space confirmed receipt (attempt 2/3, 1 remaining). No score (panel-judged). Copy of what was submitted: D:/mva-hackathon/submissions/receipts/2026-10-23/track2_attempt2_as_submitted. Known flaw: the last column of the section 6 table was cut off at the right margin.",
           "purpose": "final version, attempt 2 of 3; keep attempt 3 in reserve"
+        },
+        {
+          "date": "2026-10-23",
+          "folder": "D:/mva-hackathon/submissions/track2/2026-10-23-tables-fixed",
+          "report": "SantanuBanerjee_track2_report.pdf (same text as attempt 2; tables fit the page; 30 pages)",
+          "status": "STAGED as an option for attempt 3 (the last). Santanu decides whether a layout fix is worth the final attempt.",
+          "purpose": "optional attempt 3 of 3"
         }
       ],
       "policy": "Autonomous (gates.auto_submit, 2026-10-14). Only the LATEST is judged, 3 attempts, and a pitch-video URL is mandatory. Submit an insurance version once the video link exists, then the final version by 2026-10-23, keeping one attempt in reserve."
@@ -498,6 +513,7 @@
     "2026-10-18 (~12:10 IST, relayed from Santanu's live chat by another Claude session): pitch video uploaded to YouTube as UNLISTED, https://youtu.be/OpTEsDaAQnM; U6 done. Track 2 insurance submission unblocked. Also confirmed live: never download the FASTQs (84.7 GB) to the laptop; only the VCF-first files (VCF 0.32 GB + index + phenotype doc) go to D:\\mva-hackathon\\data; any FASTQ step must run inside Kaggle/HF compute.",
     "2026-10-18 (~13:10 IST, live): Santanu submitted the Track 2 insurance version himself in Edge; the Space confirms attempt 1/3 (2 remaining). Track 1 is still 0/6. Unattended browser submission isn't possible on this laptop right now: the Claude extension is connected only to a macOS browser, Edge has no extension, and the built-in browser blocks *.hf.space scripts. So future submissions are staged with SUBMIT.md for him to submit.",
     "2026-10-21 (live session, from 10:20 IST; CPU 100% x4, 0.71 GB free): Track 1 model 1 staged (CSV valid; full and public reports with PDFs). mva-d02 v4 had completed on 10-18. Quota GPU 8.79 h, TPU 11.86 h left until 10-24 (not needed). Submission waits on a signed-in browser.",
-    "2026-10-23 (scheduled run, light, from 13:51 IST; fired outside its 18:13 slot, CPU 100% x4, 0.41 GB RAM free): access granted; Kaggle mva-refs-build, mva-d02, mva-pitch-video COMPLETE (nothing new to collect). Quota GPU 5.00 h, TPU 11.86 h until 10-24 00:00 UTC (not needed). D04 mostly done (both alleles, phase unknown, splice negative; SV/MEI left). D08 done: Track 2 v2 rendered and staged (attempt 2/3). Track 1 model 1 still staged and unsubmitted (0/6). Both need Santanu's signed-in browser; Claude in Chrome sees only macOS browsers."
+    "2026-10-23 (scheduled run, light, from 13:51 IST; fired outside its 18:13 slot, CPU 100% x4, 0.41 GB RAM free): access granted; Kaggle mva-refs-build, mva-d02, mva-pitch-video COMPLETE (nothing new to collect). Quota GPU 5.00 h, TPU 11.86 h until 10-24 00:00 UTC (not needed). D04 mostly done (both alleles, phase unknown, splice negative; SV/MEI left). D08 done: Track 2 v2 rendered and staged (attempt 2/3). Track 1 model 1 still staged and unsubmitted (0/6). Both need Santanu's signed-in browser; Claude in Chrome sees only macOS browsers.",
+    "2026-10-23 (live, afternoon IST): Santanu submitted Track 2 v2 (attempt 2/3, received). His Track 1 try was rejected: the scorer accepts only proband_id PROBAND01. Fixed: validator enforces PROBAND01 (test added), kaggle/mva_d02/d02.py writes it, corrected CSV staged in submissions/track1/2026-10-23. Both PDFs had tables cut off at the right margin; render_reports.py now adds break points to long table tokens and prints 8+-column tables smaller; all tables measured to fit at A4 width. Santanu granted unlimited use of free Kaggle/HF CPU, GPU and TPU for the remaining day (live chat)."
   ]
 }

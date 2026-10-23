@@ -105,7 +105,6 @@ if src.endswith((".gz", ".bgz")):
 if recompressed:
     sh(f"{'gzip -dc' if src.endswith(('.gz', '.bgz')) else 'cat'} {src} | {TOOLS}/bgzip -@4 -c > {vcf} && {TOOLS}/tabix -f -p vcf {vcf}", show=False)
 summary["input_recompressed"] = recompressed
-pid_files = [] if os.environ.get("MVA_D02_VCF") else glob.glob("/kaggle/input/**/proband_id.txt", recursive=True)
 code = code_root()
 
 # Header checks (counts only in the log).
@@ -114,8 +113,9 @@ contigs = sh(f"{TOOLS}/bcftools view -h {vcf} | grep -c '^##contig'", show=False
 chr_prefixed = sh(f"{TOOLS}/bcftools view -h {vcf} | grep -m1 '^##contig' | grep -c 'ID=chr'", check=False, show=False).stdout.strip()
 summary["input"] = {"samples": len(samples), "contigs": int(contigs), "contigs_chr_prefixed": chr_prefixed == "1",
                     "records": int(sh(f"{TOOLS}/bcftools index -n {vcf}", show=False).stdout.strip() or 0)}
-proband_id = open(pid_files[0]).read().strip() if pid_files else samples[0]
-summary["proband_id_source"] = "proband_id.txt" if pid_files else "VCF sample name"
+# The Space's scorer accepts only PROBAND01 (2026-10-23), whatever the VCF sample or proband_id.txt says.
+proband_id = "PROBAND01"
+summary["proband_id_source"] = "fixed by the scorer (PROBAND01)"
 
 # 1. Annotation (whole genome, kept in /tmp only).
 annotated = f"{TMPD}/annotated.vcf.gz"

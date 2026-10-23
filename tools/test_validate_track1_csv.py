@@ -14,7 +14,7 @@ from validate_track1_csv import COLUMNS, validate  # noqa: E402
 
 
 def pair(epcr=0.9, **over):
-    row = dict(proband_id="P1", chrom_1="chr15", pos_1="1000001", ref_1="A", alt_1="G",
+    row = dict(proband_id="PROBAND01", chrom_1="chr15", pos_1="1000001", ref_1="A", alt_1="G",
                chrom_2="chr15", pos_2="1000500", ref_2="C", alt_2="T",
                epcr=str(epcr), finding_type="primary", notes="")
     row.update(over)
@@ -22,7 +22,7 @@ def pair(epcr=0.9, **over):
 
 
 def single(epcr=0.5, **over):
-    row = dict(proband_id="P1", chrom_1="chr2", pos_1="2000001", ref_1="G", alt_1="A",
+    row = dict(proband_id="PROBAND01", chrom_1="chr2", pos_1="2000001", ref_1="G", alt_1="A",
                chrom_2="", pos_2="", ref_2="", alt_2="",
                epcr=str(epcr), finding_type="secondary", notes="actionable, unrelated to phenotype")
     row.update(over)
@@ -47,6 +47,9 @@ class Track1CsvTest(unittest.TestCase):
         errors, warnings = self.run_rows([pair(), single()])
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
+
+    def test_only_proband01_accepted(self):
+        self.assert_error([pair(proband_id="SAMPLE_X"), single(proband_id="SAMPLE_X")], "must be PROBAND01")
 
     def test_bare_chromosome_gets_chr_hint(self):
         self.assert_error([pair(chrom_1="15")], "no 'chr' prefix")

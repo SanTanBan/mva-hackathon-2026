@@ -104,6 +104,19 @@ class RenderTest(unittest.TestCase):
             rr.render(self.write_source(SOURCE), "track1", "x", "2026-01-01", self.public, False)
 
     @unittest.skipUnless(os.environ.get("MVA_TEST_PDF") == "1", "set MVA_TEST_PDF=1 to test Edge PDF printing")
+    def test_long_table_tokens_get_break_points(self):
+        body = ("<p>stop_gained&amp;splice_region_variant</p>"
+                "<table><tr><th>Rank</th><td>stop_gained&amp;splice_region_variant</td><td>ACGTACGTACGTACGTACGT</td></tr></table>")
+        out = self.rr.break_long_tokens(body)
+        self.assertIn("<p>stop_gained&amp;splice_region_variant</p>", out)  # outside tables: untouched
+        self.assertIn("<th>Rank</th>", out)  # short words stay whole
+        self.assertIn("stop_<wbr>gained&amp;<wbr>splice_<wbr>region_<wbr>variant", out)
+        self.assertIn("ACGTACGTACGT<wbr>ACGTACGT", out)
+        self.assertEqual(out.replace("<wbr>", ""), body)
+        wide = "<table><tr>" + "<th>c</th>" * 8 + "</tr></table>"
+        self.assertIn('<table class="wide">', self.rr.break_long_tokens(wide))
+        self.assertNotIn("wide", self.rr.break_long_tokens(wide.replace("<th>c</th>", "", 1)))
+
     def test_pdf_written_when_edge_available(self):
         if not self.rr.find_edge():
             self.skipTest("Microsoft Edge not found")

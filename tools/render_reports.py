@@ -54,9 +54,48 @@ EDGE_PATHS = (r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
 # Fallback: on 2026-10-21 headless Edge exited 0 without writing any PDF, while Chrome printed fine.
 CHROME_PATHS = (r"C:\Program Files\Google\Chrome\Application\chrome.exe",
                 r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")
-CSS = """body{font-family:Segoe UI,Arial,sans-serif;max-width:48em;margin:2em auto;line-height:1.45;color:#111}
-table{border-collapse:collapse;margin:1em 0;font-size:.9em}th,td{border:1px solid #bbb;padding:.3em .5em;vertical-align:top}
-th{background:#f0f0f0}code{font-size:.9em}blockquote{border-left:4px solid #ccc;margin-left:0;padding-left:1em;color:#333}"""
+# Tables must fit the printed page: wide tables with unbroken tokens (consequence terms joined by
+# "&", long alleles, ClinVar terms) ran past the right margin and were cut off in the PDF (2026-10-23).
+# Long tokens in tables get invisible break points (break_long_tokens), and tables use a smaller font.
+# Breaking every cell anywhere was tried and rejected: it squeezed short columns to one letter wide.
+CSS = """@page{size:A4;margin:14mm 12mm}
+body{font-family:Segoe UI,Arial,sans-serif;max-width:48em;margin:2em auto;line-height:1.45;color:#111}
+@media print{body{max-width:none;margin:0}}
+table{border-collapse:collapse;margin:1em 0;font-size:.82em;max-width:100%}
+th,td{border:1px solid #bbb;padding:.25em .4em;vertical-align:top;overflow-wrap:break-word}
+table.wide{font-size:.7em}th{background:#f0f0f0}code{font-size:.9em}pre{white-space:pre-wrap;overflow-wrap:anywhere}
+blockquote{border-left:4px solid #ccc;margin-left:0;padding-left:1em;color:#333}"""
+TABLE = re.compile(r"<table>.*?</table>", re.S)
+LONG_TOKEN = re.compile(r"\S{12,}")
+WIDE_COLUMNS = 8
+BREAK_AFTER = re.compile(r"(?<=[&_/>:,;|+=.\-])")
+CHUNK = 12
+
+
+def break_long_tokens(body):
+    """Add <wbr> break points to tokens of 12+ characters inside tables: after punctuation, and
+    every 12 characters in what is left. <wbr> adds no character, so copied text is unchanged.
+    Tables with 8 or more columns also get class "wide", which prints them smaller."""
+    def token(m):
+        parts = []
+        for piece in filter(None, BREAK_AFTER.split(m.group(0))):
+            parts += [piece[i:i + CHUNK] for i in range(0, len(piece), CHUNK)]
+        return "\0".join(parts)
+
+    def text(segment):
+        if segment.startswith("<"):
+            return segment
+        marked = LONG_TOKEN.sub(token, html.unescape(segment))
+        return "<wbr>".join(html.escape(p, quote=False) for p in marked.split("\0"))
+
+    def table(m):
+        out = "".join(text(s) for s in re.split(r"(<[^>]+>)", m.group(0)) if s)
+        first_row = out.split("</tr>", 1)[0]
+        if first_row.count("<th") + first_row.count("<td") >= WIDE_COLUMNS:
+            out = out.replace("<table>", '<table class="wide">', 1)
+        return out
+
+    return TABLE.sub(table, body)
 
 
 def split_versions(text):
@@ -125,7 +164,7 @@ def write_pdf(md_text, pdf_path, title):
     browsers = find_browsers()
     if not browsers:
         return False
-    body = markdown.markdown(md_text, extensions=["tables", "fenced_code", "sane_lists"])
+    body = break_long_tokens(markdown.markdown(md_text, extensions=["tables", "fenced_code", "sane_lists"]))
     page = (f"<!doctype html><html><head><meta charset='utf-8'><title>{html.escape(title)}</title>"
             f"<style>{CSS}</style></head><body>{body}</body></html>")
     # Scratch files go under D:\mva-hackathon\work, never on C: or inside the repository: the

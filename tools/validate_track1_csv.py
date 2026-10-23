@@ -25,6 +25,9 @@ BARE_CHROM = re.compile(r"^([1-9]|1[0-9]|2[0-2]|X|Y|M|MT)$")
 ALLELE = re.compile(r"^[ACGTN]+$")
 FINDING_TYPES = {"primary", "secondary"}
 MAX_ROWS = 10
+# The Space's scorer rejects any other ID ("Only PROBAND01 is accepted in this challenge", 2026-10-23),
+# although the VCF sample name differs.
+ACCEPTED_PROBAND = "PROBAND01"
 
 
 def check_variant(row, n, suffix, errors):
@@ -86,6 +89,8 @@ def validate(path, hf_user=None, template=None):
         errors.append("proband_id is blank on at least one row")
     if len(probands - {""}) > 1:
         errors.append(f"rows use more than one proband_id: {sorted(probands - {''})}")
+    if probands - {"", ACCEPTED_PROBAND}:
+        errors.append(f"proband_id must be {ACCEPTED_PROBAND}; the scorer rejects any other value")
 
     seen, epcrs = set(), []
     for n, row in enumerate(rows, start=1):
