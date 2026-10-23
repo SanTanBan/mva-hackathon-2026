@@ -25,3 +25,6 @@ refs/
 *.local.json
 .env
 __pycache__/
+
+# Saved Space pages (may hold session data); never commit
+webpages/
