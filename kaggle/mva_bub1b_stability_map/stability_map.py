@@ -170,18 +170,34 @@ try:
     if not csvs:
         raise RuntimeError("ThermoMPNN wrote no CSV")
     import pandas as pd  # noqa: E402
-    df = pd.read_csv(max(csvs, key=os.path.getmtime))
+    tm_csv = max(csvs, key=os.path.getmtime)
+    df = pd.read_csv(tm_csv)
+    df.to_csv(OUT / "thermompnn_raw.csv", index=False)
     log("ThermoMPNN columns", list(df.columns), len(df))
-    mcol = next(c for c in df.columns if df[c].astype(str).str.match(r"^[A-Z]\d+[A-Z]$").mean() > 0.5)
+    print(df.head(3).to_string(), flush=True)
     dcol = next(c for c in df.columns if "ddg" in c.lower())
-    for m, v in zip(df[mcol].astype(str), df[dcol]):
-        mm = re.match(r"^([A-Z])(\d+)([A-Z])$", m)
-        if mm and mm.group(3) in AA:
-            p = int(mm.group(2))
-            if 1 <= p <= L and seq[p - 1] == mm.group(1):
-                ddg_raw[p, AA.index(mm.group(3))] = float(v)
-    summary["thermompnn"].update({"file": os.path.basename(max(csvs, key=os.path.getmtime)), "mutation_col": mcol,
-                                  "ddg_col": dcol, "scored": int(np.isfinite(ddg_raw[1:]).sum())})
+    combined = [c for c in df.columns if df[c].astype(str).str.match(r"^[A-Z]\d+[A-Z]$").mean() > 0.5]
+    if combined:  # one column such as "A123G"
+        parts = df[combined[0]].astype(str).str.extract(r"^([A-Z])(\d+)([A-Z])$")
+        wt, pos, mut = parts[0], parts[1].astype(float), parts[2]
+        layout = f"combined:{combined[0]}"
+    else:  # separate wild type, position and mutant columns (ThermoMPNN custom_inference, 2026)
+        wcol = next(c for c in df.columns if c.lower() in ("wildtype", "wild_type", "wt", "wtaa"))
+        pcol = next(c for c in df.columns if c.lower() in ("position", "pos", "resnum", "residue"))
+        mcol = next(c for c in df.columns if c.lower() in ("mutation", "mutant", "mut", "mutaa"))
+        wt, pos, mut = df[wcol].astype(str), df[pcol].astype(float), df[mcol].astype(str)
+        layout = f"separate:{wcol},{pcol},{mcol}"
+    # The position may be 0- or 1-based: keep the offset under which the wild type matches UniProt.
+    best = max((0, 1), key=lambda off: sum(1 <= p + off <= L and seq[int(p + off) - 1] == w
+                                         for w, p in zip(wt, pos) if p == p))
+    for w, p, a, v in zip(wt, pos, mut, df[dcol]):
+        if p != p or a not in AA:
+            continue
+        q = int(p + best)
+        if 1 <= q <= L and seq[q - 1] == w and a != w:
+            ddg_raw[q, AA.index(a)] = float(v)
+    summary["thermompnn"].update({"file": os.path.basename(tm_csv), "layout": layout, "ddg_col": dcol,
+                                  "position_offset": best, "scored": int(np.isfinite(ddg_raw[1:]).sum())})
 except Exception as e:  # keep the ESM and structure results even if ThermoMPNN fails
     summary["thermompnn_error"] = repr(e)
     log("ThermoMPNN failed:", e)

@@ -238,10 +238,14 @@ def model2_sections(t, d04, d02, extract):
     if sf_files:
         findings = read_tsv(sf_files[0])
         rep = [f for f in findings if f["status"].startswith("reportable")]
+        sf_rows = read_tsv(sf_files[0].with_name("sf_plp_rows.tsv")) if sf_files[0].with_name("sf_plp_rows.tsv").is_file() else []
+        conflicting = sum("onflicting" in r.get("classification", "") for r in sf_rows)
         b7.append(f"- **ACMG SF v3.3 screen** (84 genes; ClinVar pathogenic or likely pathogenic calls, `pipeline/sf_screen.py`): "
                   f"{len(findings)} gene(s) with such a call; {len(rep)} reportable or for review; "
-                  f"{len(findings) - len(rep)} carrier-only or not reportable. X-linked findings depend on the sex stated in the "
-                  "phenotype document, which this pipeline never infers.")
+                  f"{len(findings) - len(rep)} carrier-only or not reportable. "
+                  + (f"A further {conflicting} call(s) in these genes carry only conflicting ClinVar classifications and are "
+                     "not reportable. " if conflicting else "")
+                  + "X-linked findings depend on the sex stated in the phenotype document, which this pipeline never infers.")
         if findings:
             b7.append(private("**SF findings:**\n\n| Gene | Inheritance | P/LP calls | Status |\n|---|---|---|---|\n"
                               + "\n".join(f"| {f['gene']} | {f['inheritance']} | {f['n_plp']} | {f['status']} |" for f in findings)))
