@@ -1,0 +1,14 @@
+{
+  "id": "santanubanerjee9/mva-d03",
+  "title": "mva-d03",
+  "code_file": "d03.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "competition_sources": []
+}
