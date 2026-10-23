@@ -12,9 +12,10 @@ Inputs:
 Steps (same code as the laptop route, run natively):
   1. tools/annotate_vcf.sh: bcftools norm, csq on MANE Select, ClinVar, gnomAD v4.1 slices;
   2. pipeline/annotate_table.py; 3. pipeline/track1_rank.py (rule pre-registered in methods B9);
-  4. tools/validate_track1_csv.py; 5. pipeline/baf_mosaic.py (per-chromosome BAF, D03 lead).
+  4. tools/validate_track1_csv.py; 5. pipeline/baf_mosaic.py (per-chromosome BAF, D03 lead);
+  6. pipeline/sf_screen.py (ACMG SF v3.3 secondary findings, D05).
 Only small outputs are kept in /kaggle/working/d02: the ranked CSV, the rows of the ten MVA
-genes plus every ranked variant, the BAF table and summary.json. The whole-genome annotated
+genes plus every ranked variant, the BAF table, the SF-gene P/LP rows and findings, and summary.json. The whole-genome annotated
 VCF and table stay in /tmp and vanish with the session. Logs print counts, never variants.
 """
 import csv
@@ -171,6 +172,29 @@ summary["extract_rows"] = n
 r = subprocess.run([sys.executable, "-m", "pipeline.baf_mosaic", vcf, f"{W}/baf_by_chromosome.tsv"],
                    cwd=code, env=penv, text=True, capture_output=True)
 summary["baf"] = {"exit": r.returncode, "log_tail": r.stdout.strip().splitlines()[-3:] if r.stdout else []}
+
+# 6. ACMG SF v3.3 secondary-findings screen (package D05): ClinVar P/LP calls in the 84 genes.
+# Sex is not known to this kernel, so X-linked findings stay "depends on stated sex".
+from pipeline import sf_screen  # noqa: E402
+
+sf_rows = []
+with open(table) as fh:
+    rd = csv.DictReader(fh, delimiter="\t")
+    sf_fields = rd.fieldnames + ["classification"]
+    for row in rd:
+        if row["gene"] in sf_screen.SF_V33 and "athogenic" in row.get("clnsig", ""):
+            row["classification"] = row["clnsig"].replace("_", " ")
+            sf_rows.append(row)
+with open(f"{W}/sf_plp_rows.tsv", "w", newline="") as out:
+    wr = csv.DictWriter(out, fieldnames=sf_fields, delimiter="\t")
+    wr.writeheader()
+    wr.writerows(sf_rows)
+findings = sf_screen.screen(sf_rows, "unknown")
+with open(f"{W}/sf_findings.tsv", "w", newline="") as out:
+    wr = csv.DictWriter(out, fieldnames=["gene", "inheritance", "n_plp", "status"], delimiter="\t")
+    wr.writeheader()
+    wr.writerows(findings)
+summary["sf_screen"] = {"rows_with_pathogenic_in_clinsig": len(sf_rows), **sf_screen.public_counts(findings)}
 
 summary["minutes_total"] = round((time.time() - t0) / 60, 1)
 summary["finished"] = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
