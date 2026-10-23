@@ -47,7 +47,10 @@ def main():
     if not args.collect_only:
         rc, out = kaggle("kernels", "push", "-p", str(ROOT / "kaggle" / "mva_d02"))
         print(out.strip())
-        if rc:
+        # The CLI exits 0 even when Kaggle refuses the push (e.g. "Maximum batch CPU session count
+        # of 5 reached", 2026-10-23); polling would then collect the previous version's output.
+        if rc or "successfully pushed" not in out:
+            print("push refused; nothing collected")
             return 1
         time.sleep(30)
     deadline = time.time() + args.max_minutes * 60
