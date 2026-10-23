@@ -152,13 +152,19 @@ try:
     if not script:
         raise RuntimeError("custom_inference.py not found")
     sh(f"sed -n '1,200p' {script} | grep -n 'add_argument\\|yaml\\|load(' ", check=False)
+    # The repo's local.yaml holds its authors' paths; point it at this clone.
+    from omegaconf import OmegaConf  # noqa: E402
     local_yaml = Path(tm) / "local.yaml"
-    if not local_yaml.exists():
-        local_yaml.write_text(f"platform:\n  accel: {'gpu' if dev == 'cuda' else 'cpu'}\n  thermompnn_dir: {tm}\n")
+    print(local_yaml.read_text() if local_yaml.exists() else "(no local.yaml)", flush=True)
+    lcfg = OmegaConf.load(local_yaml) if local_yaml.exists() else OmegaConf.create({})
+    OmegaConf.update(lcfg, "platform.accel", "gpu" if dev == "cuda" else "cpu", force_add=True)
+    OmegaConf.update(lcfg, "platform.thermompnn_dir", str(tm), force_add=True)
+    OmegaConf.save(lcfg, local_yaml)
     outdir = WORK / "tm_out"
     outdir.mkdir(exist_ok=True)
     model_path = next(iter(glob.glob(f"{tm}/models/thermoMPNN_default.pt") + glob.glob(f"{tm}/**/*default*.pt", recursive=True)))
-    run = sh(f"cd {Path(script).parent} && {sys.executable} {script} --pdb {pdb_path} --chain A "
+    # The repo's datasets.py is shadowed by the Hugging Face 'datasets' package unless the repo comes first.
+    run = sh(f"cd {Path(script).parent} && PYTHONPATH={tm} {sys.executable} {script} --pdb {pdb_path} --chain A "
              f"--model_path {model_path} --out_dir {outdir}", check=False)
     csvs = glob.glob(f"{outdir}/**/*.csv", recursive=True) + glob.glob(f"{Path(script).parent}/*.csv")
     if not csvs:
