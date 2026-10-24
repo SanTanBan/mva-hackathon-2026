@@ -3,7 +3,7 @@
   "hf_user": "SantanuBanerjee",
   "github_user": "SanTanBan",
   "timezone": "India Standard Time (UTC+05:30)",
-  "last_run": "2026-10-23T13:51+05:30",
+  "last_run": "2026-10-24T21:02+05:30",
   "deadlines": {
     "submissions_close_utc": "2026-10-24T23:59:00Z",
     "submissions_close_local": "2026-10-25 05:29 IST",
@@ -15,7 +15,7 @@
   "gates": {
     "data_access_granted": {
       "value": true,
-      "checked": "2026-10-23T13:52+05:30",
+      "checked": "2026-10-24T21:05+05:30",
       "how": "Automatic: python tools/check_access.py each run. The user requests access personally on the dataset page (it is their attestation to the data-use terms)."
     },
     "llm_terms_confirmed": {
@@ -446,7 +446,8 @@
     {
       "id": "D07",
       "owner": "routine",
-      "status": "in_progress",
+      "status": "done",
+      "completed": "2026-10-23",
       "needs": [
         "D02",
         "D03",
@@ -455,7 +456,7 @@
       ],
       "title": "Track 1 final report (public and submitted versions)",
       "done_when": "The report is rendered in both versions; the brief says whether it justifies a second Track 1 submission.",
-      "progress": "2026-10-23: Track 1 model 2 rendered (full + public) and staged in D:/mva-hackathon/submissions/track1/2026-10-23-model2 with SUBMIT.md; same CSV rows as model 1. Not yet submitted. D03 low-pass depth not run (needs FASTQ in private compute and an HF token there, which is Santanu's step)."
+      "progress": "2026-10-23: Track 1 model 2 rendered (full + public) and staged in D:/mva-hackathon/submissions/track1/2026-10-23-model2 with SUBMIT.md; same CSV rows as model 1. Not yet submitted. D03 low-pass depth not run (needs FASTQ in private compute and an HF token there, which is Santanu's step). 2026-10-23: model 2 submitted (2/6); both versions rendered and the second submission was justified, so done_when is met. A model 3 with D03 depth would be a new Track 1 attempt."
     },
     {
       "id": "D08",
@@ -502,6 +503,7 @@
         "R07"
       ],
       "title": "Final QA and staging",
+      "progress": "2026-10-24 (scheduled run, light): privacy scan of all 89 tracked files against the 9 private-term patterns: 0 hits; LLM disclosure present in both public reports. Final packages for both tracks were staged and submitted on 2026-10-23. Left: citation spot-check (not redone) and the repo-compliance review before it goes public (U8).",
       "done_when": "Citations are checked, the privacy scan is clean, the LLM disclosure is present, and repo compliance is verified. Final Track 1 and Track 2 packages are staged by 2026-10-22."
     },
     {
@@ -550,6 +552,7 @@
     "2026-10-23 (live, afternoon IST): Santanu submitted Track 2 v2 (attempt 2/3, received). His Track 1 try was rejected: the scorer accepts only proband_id PROBAND01. Fixed: validator enforces PROBAND01 (test added), kaggle/mva_d02/d02.py writes it, corrected CSV staged in submissions/track1/2026-10-23. Both PDFs had tables cut off at the right margin; render_reports.py now adds break points to long table tokens and prints 8+-column tables smaller; all tables measured to fit at A4 width. Santanu granted unlimited use of free Kaggle/HF CPU, GPU and TPU for the remaining day (live chat).",
     "2026-10-23 (live): Track 1 model 1 scored 100/100 rank points, F-max 1.000, full match at rank 1 (1/6 used). The CSV cannot improve; only the report can. Track 2: 2/3 used, 1 left.",
     "2026-10-23 (live, evening IST): Santanu gave a free hand on free Kaggle/HF CPU, GPU and TPU for the remaining day and approved the R13 downloads inside Kaggle; asked for further Track 1 versions and agreed Track 2 v3 by 2026-10-24 20:00 IST. Done: R13 stability map (call inconclusive), D05 (SF screen negative, ACMG points), mva-d02 v5 (CSV identical, PROBAND01). Staged: Track 1 model 2 and Track 2 v3 (final). Kaggle CPU pushes can be refused when other projects fill the 5 CPU slots; tools/kaggle_d02.py now stops instead of collecting stale output.",
-    "2026-10-23 (live): Santanu submitted Track 2 v3 (3/3, final) and Track 1 model 2 (2/6). Track 2 has no attempts left."
+    "2026-10-23 (live): Santanu submitted Track 2 v3 (3/3, final) and Track 1 model 2 (2/6). Track 2 has no attempts left.",
+    "2026-10-24 (scheduled run, light, from 21:02 IST; started outside its 18:13 slot, CPU 100% x4, 0.51 GB RAM free): access granted; mva-refs-build, mva-d02, mva-pitch-video, mva-bub1b-stability-map COMPLETE (nothing new). mva-d03 (pushed by a live session running in parallel) shows ERROR; left to that session. Quota GPU 18.00 h, TPU 19.75 h until 10-31. D07 marked done; D09 privacy scan clean (0 hits in 89 tracked files). Nothing submitted (T1 2/6, best 100/100; T2 3/3). Submissions close 05:29 IST tomorrow."
   ]
 }
