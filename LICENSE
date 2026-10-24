@@ -1,0 +1,15 @@
+Copyright (c) 2026 Santanu Banerjee
+
+The code, documentation and reports in this repository are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0), as the
+Rare Disease, Real Kid: MVA Hackathon 2026 releases participant outputs.
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit, provide a link to the
+license, and indicate if changes were made.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+This repository contains no data from the hackathon's gated dataset. Third-party
+software fetched at run time (for example Pangolin, ThermoMPNN, ESM-2, bcftools
+and minimap2) remains under its own license and is not covered by this notice.
