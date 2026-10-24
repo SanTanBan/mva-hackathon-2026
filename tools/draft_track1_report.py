@@ -141,6 +141,67 @@ def stability_context(stab):
             f"abundance-class substitutions and {'above' if v > nd else 'not above'} both no-defect controls.")
 
 
+GC_RICH = {"16", "17", "19", "22"}  # GC-richest human autosomes; depth there is most sensitive to GC bias
+
+
+def model3_depth(t, d03, baf):
+    """Model 3: low-pass depth ratios (D03) beside the B-allele-fraction leads. Chromosome names stay private."""
+    depth = read_tsv(next(d03.rglob("depth_by_chromosome.tsv")))
+    s = json.loads(next(d03.rglob("summary.json")).read_text(encoding="utf-8"))
+    res = s["result"]
+
+    def z(r):
+        try:
+            return float(r.get("robust_z") or 0)
+        except ValueError:
+            return 0.0
+    flagged = [r for r in depth if abs(z(r)) >= 3]
+    _, baf_flagged = baf_leads(baf) if baf else ([], [])
+    by_chrom = {r["chrom"].removeprefix("chr"): r for r in depth}
+    agree = [b for b in baf_flagged if abs(z(by_chrom.get(b["chrom"].removeprefix("chr"), {}))) >= 3]
+    pairs = sum(s.get("pairs_streamed", {}).values()) // 2 if s.get("pairs_streamed") else None
+    text = ["**Results in model 3 (low-pass depth).**", "",
+            f"- **Data:** the first {pairs:,} read pairs of lane 1, streamed inside the private Kaggle notebook "
+            f"(`kaggle/mva_d03/d03.py`), aligned with minimap2 {s.get('minimap2', '')} (`-ax sr`) to the GRCh38 analysis set; "
+            f"{res['autosomal_reads_counted']:,} primary autosomal reads with MAPQ ≥ 20 counted in 100-kb bins and GC-corrected. "
+            "Only the per-chromosome ratios were kept.",
+            f"- **Detection limit:** across the 22 autosomes the ratios have a robust SD of {res['ratio_robust_sd']:.4f}, so a gain "
+            f"in about {100 * res['detectable_trisomy_fraction_3sd']:.0f}% of cells or more (3 SD) would stand out on a whole chromosome. "
+            "Variegated mosaicism, with different chromosomes gained or lost in different cells at low levels, can sit below this limit.",
+            f"- **Result:** {len(flagged)} of 22 autosomes {'deviates' if len(flagged) == 1 else 'deviate'} (robust z ≥ 3 in "
+            f"either direction, the cut-off used for the allele-balance screen)"
+            + (". It is one of the GC-richest chromosomes, where residual GC bias after per-bin correction is a common "
+               "technical cause of a depth excess in short-read data, and the allele-balance screen does not flag it, so it "
+               "is a weak lead" if flagged and all(r["chrom"].removeprefix("chr") in GC_RICH for r in flagged) else "")
+            + f". Of the {len(baf_flagged)} chromosome(s) flagged by the allele-balance screen, "
+            f"{len(agree)} also deviate in depth." + (
+                " Neither method alone is diagnostic; agreement between two independent measures makes a chromosome a stronger lead."
+                if agree else " The allele-balance leads are therefore not confirmed by depth, consistent with the mapping explanation "
+                "given in §B10 or with a level below the depth limit."),
+            "- X and Y are not reported, because their expected depth depends on sex, which this pipeline never infers."]
+    priv = ["| Chromosome | Bins | Depth ratio | Robust z | Trisomic fraction if gain | Monosomic fraction if loss |",
+            "|---|---|---|---|---|---|"]
+    for r in depth:
+        mark = " (allele-balance lead)" if any(r["chrom"].removeprefix("chr") == b["chrom"].removeprefix("chr") for b in baf_flagged) else ""
+        priv.append(f"| {r['chrom']}{mark} | {r['bins']} | {r['ratio']} | {r.get('robust_z', '')} | "
+                    f"{r['trisomy_fraction_if_gain']} | {r['monosomy_fraction_if_loss']} |")
+    if flagged:
+        priv += ["", "Depth-flagged: " + ", ".join(f"{r['chrom']} (ratio {r['ratio']}, robust z {r['robust_z']}; a {100 * float(r['trisomy_fraction_if_gain']):.1f}% "
+                                                   "trisomic fraction if real)" for r in flagged)]
+    t = append_to(t, "B6. Evidence for mosaic aneuploidy", "\n".join(text) + "\n\n" + private("\n".join(priv)))
+    t = t.replace("**Status in model 2:** B-allele fractions from the VCF only (results in §B10). Low-pass depth was not run.",
+                  "**Status in model 3:** B-allele fractions from the VCF (results in §B10) and low-pass depth from the head of lane 1 (below).")
+    t = t.replace("**Status in model 2:** the ranking and the submission file are model 1's, unchanged. Model 2 adds",
+                  "**Status in model 3:** the ranking and the submission file are model 1's, unchanged. Models 2 and 3 add")
+    t = t.replace("Low-pass depth and k-mer baiting were not run: both need the FASTQ files inside the private compute, "
+                  "and two rare *BUB1B* alleles were already found.",
+                  "Model 3 adds low-pass depth from the head of lane 1 (§B6). K-mer baiting was not run, because two rare "
+                  "*BUB1B* alleles were already found.")
+    t = t.replace("- Low-pass depth and k-mer baiting were not run in this model.",
+                  "- K-mer baiting was not run. Low-pass depth uses about 4 million read pairs from one lane, not the whole run.")
+    return t
+
+
 def model2_sections(t, d04, d02, extract):
     """Model 2: allele-level results (D04), other MVA genes and the SF screen (D05), ACMG points."""
     from pipeline.acmg_points import classify  # noqa: E402
@@ -313,6 +374,8 @@ def main():
     ap.add_argument("--model", type=int, required=True, help="submission number (1-6)")
     ap.add_argument("--out", default=str(OUT), help="source to write (outside the repository)")
     ap.add_argument("--d04", help="model 2+: folder with d08_alleles.json, splice_lookup.jsonl and stability.json")
+    ap.add_argument("--d03", help="model 3+: folder with depth_by_chromosome.tsv and summary.json from mva-d03")
+    ap.add_argument("--cite-tag", help="cite this git tag in B13 instead of the commit hash (survives history rewrites)")
     args = ap.parse_args()
     d02 = Path(args.d02)
     csv_path = next(d02.rglob("*_track1.csv"))
@@ -464,7 +527,8 @@ def main():
                 "- The B-allele-fraction screen cannot see low-level variegated mosaicism.")
     head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     t = section(t, "B13. Reproducibility",
-                f"- Repository: {REPO_URL} (commit `{head}`).\n"
+                f"- Repository: {REPO_URL} ("
+                + (f"tag `{args.cite_tag}`" if args.cite_tag else f"commit `{head}`") + ").\n"
                 "- Public references and tests: `kaggle/mva_refs_build/refs_build.py` (GRCh38 analysis set from NCBI, "
                 "md5-checked; ClinVar 2026-09-28; gnomAD v4.1 slices; bcftools/samtools/htslib 1.24).\n"
                 "- Patient data: `kaggle/mva_d02/d02.py`, run by `tools/kaggle_d02.py` after "
@@ -474,6 +538,10 @@ def main():
         if not args.d04:
             raise SystemExit("model 2 and later need --d04")
         t = model2_sections(t, Path(args.d04), d02, extract)
+    if args.model >= 3:
+        if not args.d03:
+            raise SystemExit("model 3 and later need --d03")
+        t = model3_depth(t, Path(args.d03), baf)
     out = assert_outside_repo(Path(args.out))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(t, encoding="utf-8")
