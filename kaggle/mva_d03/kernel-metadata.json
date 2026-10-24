@@ -8,7 +8,7 @@
   "enable_gpu": false,
   "enable_tpu": false,
   "enable_internet": true,
-  "dataset_sources": ["santanubanerjee9/mva-code"],
-  "kernel_sources": ["santanubanerjee9/mva-refs-build"],
+  "dataset_sources": [],
+  "kernel_sources": [],
   "competition_sources": []
 }
