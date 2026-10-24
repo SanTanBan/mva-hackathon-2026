@@ -65,6 +65,11 @@
       "value": true,
       "approved": "2026-10-14",
       "record": "Santanu, live chat 2026-10-14: 'Don't waste daily submissions! Please submit something and always test and keep trying to improve in the rankings', then 'Yes, you can submit autonomously for all tracks without asking me; you may notify me later'. Submit validated packages without asking and notify him afterwards. The Space signs people in with HF OAuth in a browser: submit through his logged-in Chrome (Claude in Chrome) when available, otherwise stage with SUBMIT.md and notify."
+    },
+    "public_release_ready": {
+      "value": false,
+      "checked": "2026-10-25T01:30+05:30",
+      "how": "True only when (1) tools/scan_history.py prints clean for the history that will be published, (2) the GitHub repo was recreated from the cleaned history at D:/mva-hackathon/work/repo-rewrite/clone (force-push alone leaves old commits reachable by hash), (3) README.md and LICENSE are present. Then Santanu switches visibility (his yes)."
     }
   },
   "submissions": {
@@ -530,7 +535,8 @@
       "status": "todo",
       "title": "After close: make the repo public, delete the data, send the confirmation email",
       "done_when": "The repo is public; D:\\mva-hackathon and the dataset under D:\\DevCache\\huggingface are deleted by 2026-11-23; the confirmation email is sent with a live yes.",
-      "notes": "HF thread #15 (read 2026-10-13): the confirmation address rejects mail from any address that is not registered with Synapse (554, 'not a recognized, registered Synapse address'). Send it from the email on Santanu's Synapse account. If it still bounces, the organisers accepted the bounce posted in thread #15 as the record (posting needs a live yes)."
+      "notes": "HF thread #15 (read 2026-10-13): the confirmation address rejects mail from any address that is not registered with Synapse (554, 'not a recognized, registered Synapse address'). Send it from the email on Santanu's Synapse account. If it still bounces, the organisers accepted the bounce posted in thread #15 as the record (posting needs a live yes).",
+      "progress": "2026-10-25 (live): public-repo requirement confirmed from both Submit tabs (may stay private during the hackathon; must be public after it ends; documented reproducible code). Done: history scan (one docstring leak, fixed in HEAD 9551713), cleaned history prepared and verified clean in D:/mva-hackathon/work/repo-rewrite/clone (final tree identical; pre-leak hashes unchanged), README.md and LICENSE (CC BY 4.0) added, tools/scan_history.py added, routine prompt updated with the gate and the full deletion list (D:/mva-hackathon, refs/, HF cache, private/briefs, webpages/, Kaggle mva-patient-vcf, mva-d02, mva-d03, mva-code, the HF token and Kaggle secret). Waiting on Santanu: recreate the GitHub repo from the cleaned history, then make it public; deletions by 2026-11-23; confirmation email."
     }
   ],
   "notes": [
