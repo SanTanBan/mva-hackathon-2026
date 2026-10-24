@@ -45,6 +45,12 @@ Each interpretive rule was committed before the data or result it applies to exi
 
 Unit tests: `python -m pytest pipeline/tests` and the `tools/test_*.py` scripts.
 
+## Data availability and privacy
+
+The hackathon dataset is gated and is **not** included here: request access on Hugging Face (`SageBio/mva-hackathon-2026-data`) under the organisers' data-use terms. It is shared under WCG IRB protocol #20252010. Under those terms, every copy we hold (local files and the private Kaggle datasets and notebooks) is deleted within 30 days of the close, by 2026-11-23. Nothing in this repository identifies the child or the family. Public reports give classes and counts, never variant names, coordinates or identifiers, and secondary findings appear as counts only.
+
+**Citing the data:** please use the reference given on the hackathon's Synapse page. Until that is published, cite the Hugging Face dataset `SageBio/mva-hackathon-2026-data` (Sage Bionetworks, 2026).
+
 ## Generative AI
 
 Anthropic Claude Max (consumer plan), used through Claude Code; model-training opt-out enabled; no feedback or ratings given in sessions involving the data.

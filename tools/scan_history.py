@@ -6,7 +6,8 @@ Run before the repository is made public. Terms are read from files outside the 
   D:\\mva-hackathon\\history-scan-terms.txt   extra terms for this scan only (for example allele names)
   D:\\mva-hackathon\\history-scan-allow.txt   accepted "term<TAB>path" pairs, e.g. a public worked example
 Prints only the term number, the commit or path and a category, never a matched value. Also flags
-VCF-style lines, chrom,pos,ref,alt rows and credential patterns. Exits 1 if anything not allowed is found.
+VCF-style lines, chrom,pos,ref,alt rows and credential patterns. PDFs are scanned on their extracted text
+too, because their streams are compressed. Exits 1 if anything not allowed is found.
 
 Run: python tools/scan_history.py [--repo PATH]
 """
@@ -60,6 +61,13 @@ def main():
     blobs = [k.split()[0] for k in kinds if len(k.split()) > 1 and k.split()[1] == "blob"]
     for oid in blobs:
         data = git("cat-file", "-p", oid)
+        if data[:5] == b"%PDF-":  # compressed streams: scan the extracted text as well
+            try:
+                import io
+                import pypdf
+                data += "\n".join(pg.extract_text() or "" for pg in pypdf.PdfReader(io.BytesIO(data)).pages).encode()
+            except Exception as e:  # an unreadable PDF must not pass silently
+                found.append(f"PDF text not extractable ({type(e).__name__}) in {paths[oid]}")
         if VCF_LINE.search(data) or VARIANT_ROW.search(data):
             found.append(f"VCF-style or variant row in {paths[oid]}")
         for name, pat in SECRETS.items():
