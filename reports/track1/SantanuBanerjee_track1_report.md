@@ -1,6 +1,6 @@
 # Track 1 methods report
 
-**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 1 · model 2, 2026-10-23**
+**Rare Disease, Real Kid: The MVA Hackathon 2026 · Track 1 · model 3, 2026-10-25**
 
 ---
 
@@ -10,7 +10,7 @@
 SantanuBanerjee (Hugging Face username, also used as the display name).
 
 ### A2. Model number
-2.
+3.
 
 ### A3. Model or approach in detail
 The approach combines a gene-agnostic pipeline with a mechanism-led search of *BUB1B*:
@@ -26,7 +26,7 @@ The approach combines a gene-agnostic pipeline with a mechanism-led search of *B
 5. **Show the differential MVA genes negative.** This includes a coverage check (Part B §B7).
 6. **Classify and rank.** Each allele is classified with ACMG/AMP points (Part B §B8), and candidate rows are ranked by EPCR (Part B §B9).
 
-**Status in model 2:** the ranking and the submission file are model 1's, unchanged. Model 2 adds the allele-level work of steps 3, 5 and 6 on the child's data: the splice lookup and phase of the *BUB1B* alleles, their mechanism class, a structure-based stability prediction, the coverage check of the other MVA genes, the ACMG SF v3.3 screen and the per-allele ACMG points. Low-pass depth and k-mer baiting were not run: both need the FASTQ files inside the private compute, and two rare *BUB1B* alleles were already found.
+**Status in model 3:** the ranking and the submission file are model 1's, unchanged. Models 2 and 3 add the allele-level work of steps 3, 5 and 6 on the child's data: the splice lookup and phase of the *BUB1B* alleles, their mechanism class, a structure-based stability prediction, the coverage check of the other MVA genes, the ACMG SF v3.3 screen and the per-allele ACMG points. Model 3 adds low-pass depth from the head of lane 1 (§B6). K-mer baiting was not run, because two rare *BUB1B* alleles were already found.
 
 ### A4. Generative AI used (required)
 Anthropic Claude Max (consumer plan), used through Claude Code, with model-training opt-out enabled and no feedback or ratings given in sessions involving the data. These are Sage's conditions for consumer plans (HF thread #2, 29 September 2026). The wording was confirmed on 2026-09-30 and matches `routine/plan.json` → `gates.llm_terms_confirmed.record`. No patient data was used with an LLM before that date.
@@ -140,7 +140,18 @@ We seek both alleles by mechanism, not by ClinVar status, because the classic hy
 - Low-pass depth from alignments of reads taken from the start of the FASTQs.
 - Stated detection limits, and the caveat that variegated mosaicism is spread across different chromosomes in different cells.
 
-**Status in model 2:** B-allele fractions from the VCF only (results in §B10). Low-pass depth was not run.
+**Status in model 3:** B-allele fractions from the VCF (results in §B10) and low-pass depth from the head of lane 1 (below).
+
+**Results in model 3 (low-pass depth).**
+
+- **Data:** the first 4,000,000 read pairs of lane 1, streamed inside the private Kaggle notebook (`kaggle/mva_d03/d03.py`), aligned with minimap2 2.31-r1302 (`-ax sr`) to the GRCh38 analysis set; 7,078,751 primary autosomal reads with MAPQ ≥ 20 counted in 100-kb bins and GC-corrected. Only the per-chromosome ratios were kept.
+- **Detection limit:** across the 22 autosomes the ratios have a robust SD of 0.0056, so a gain in about 3% of cells or more (3 SD) would stand out on a whole chromosome. Variegated mosaicism, with different chromosomes gained or lost in different cells at low levels, can sit below this limit.
+- **Result:** 1 of 22 autosomes deviates (robust z ≥ 3 in either direction, the cut-off used for the allele-balance screen). It is one of the GC-richest chromosomes, where residual GC bias after per-bin correction is a common technical cause of a depth excess in short-read data, and the allele-balance screen does not flag it, so it is a weak lead. Of the 3 chromosome(s) flagged by the allele-balance screen, 0 also deviate in depth. The allele-balance leads are therefore not confirmed by depth, consistent with the mapping explanation given in §B10 or with a level below the depth limit.
+- X and Y are not reported, because their expected depth depends on sex, which this pipeline never infers.
+
+
+*[Withheld from the public version: patient-level detail. It appears in the submitted report.]*
+
 
 ### B7. Differential genes and secondary findings
 - Coverage and negative results for the other MVA genes (locus dossier §7).
@@ -231,10 +242,10 @@ Input: 5012204 VCF records; 5149105 annotated (variant, gene) rows; frequency so
 - The B-allele-fraction screen cannot see low-level variegated mosaicism.
 
 - The missense allele's mechanism class rests on its position and a computational stability prediction, not on an experiment.
-- Low-pass depth and k-mer baiting were not run in this model.
+- K-mer baiting was not run. Low-pass depth uses about 4 million read pairs from one lane, not the whole run.
 
 ### B13. Reproducibility
-- Repository: https://github.com/SanTanBan/mva-hackathon-2026 (commit `91d0cb9`).
+- Repository: https://github.com/SanTanBan/mva-hackathon-2026 (tag `track1-model3`).
 - Public references and tests: `kaggle/mva_refs_build/refs_build.py` (GRCh38 analysis set from NCBI, md5-checked; ClinVar 2026-09-28; gnomAD v4.1 slices; bcftools/samtools/htslib 1.24).
 - Patient data: `kaggle/mva_d02/d02.py`, run by `tools/kaggle_d02.py` after `tools/fetch_vcf_first.py`, `tools/d01_intake.py` and `tools/kaggle_patient_upload.py`.
 - Validation: `tools/validate_track1_csv.py`.

@@ -95,6 +95,14 @@
           "report": "SantanuBanerjee_track1_report.pdf (model 2: allele-level results, SF screen, ACMG points; 12 pages)",
           "status": "SUBMITTED 2026-10-23 (evening IST) by Santanu: attempt 2/6. Score not yet reported (expected 100/100, F-max 1.000: same rows as model 1).",
           "purpose": "model 2"
+        },
+        {
+          "date": "2026-10-25",
+          "folder": "D:/mva-hackathon/submissions/track1/2026-10-25-model3",
+          "csv": "SantanuBanerjee_vcf-first-epcr-model3.csv (same rows; VALID)",
+          "report": "SantanuBanerjee_track1_report.pdf (model 3: + low-pass depth; 14 pages)",
+          "status": "STAGED for Santanu to submit before 05:29 IST 2026-10-25 (attempt 3/6).",
+          "purpose": "model 3"
         }
       ],
       "policy": "Autonomous (gates.auto_submit, 2026-10-14). Submit a validated CSV as soon as one exists, then again whenever the ranking or the report improves. Best of 6 counts; the CSV is auto-scored (rank points, F-max EPCR); the report is judged.",
@@ -399,13 +407,14 @@
     {
       "id": "D03",
       "owner": "routine",
-      "status": "todo",
+      "status": "done",
       "needs": [
         "D01",
         "R05"
       ],
       "title": "Mosaic aneuploidy from VCF allele balance and low-pass depth",
-      "done_when": "Per-chromosome B-allele-fraction and GC-corrected depth ratios, with stated detection limits and the variegated-mosaicism caveat."
+      "done_when": "Per-chromosome B-allele-fraction and GC-corrected depth ratios, with stated detection limits and the variegated-mosaicism caveat.",
+      "progress": "2026-10-24/25: private kernel santanubanerjee9/mva-d03, run from the Kaggle website (secrets reach only website-started runs, not CLI pushes), streamed the first 4,000,000 read pairs of lane 1 with Santanu's fine-grained read-only HF token (Kaggle secret HF_TOKEN; approved live 2026-10-24), aligned with minimap2 2.31 to the NCBI GRCh38 analysis set (md5 checked): 7.08 M autosomal reads, GC-corrected ratios, robust SD 0.0056 (about 3% trisomic fraction detectable); 1 GC-rich autosome deviates (weak lead), none of the 3 allele-balance leads confirmed. Only autosomal ratios kept (D:/mva-hackathon/work/d03/2026-10-24). Revoke the HF token after the close (U8)."
     },
     {
       "id": "D04",
@@ -456,7 +465,7 @@
       ],
       "title": "Track 1 final report (public and submitted versions)",
       "done_when": "The report is rendered in both versions; the brief says whether it justifies a second Track 1 submission.",
-      "progress": "2026-10-23: Track 1 model 2 rendered (full + public) and staged in D:/mva-hackathon/submissions/track1/2026-10-23-model2 with SUBMIT.md; same CSV rows as model 1. Not yet submitted. D03 low-pass depth not run (needs FASTQ in private compute and an HF token there, which is Santanu's step). 2026-10-23: model 2 submitted (2/6); both versions rendered and the second submission was justified, so done_when is met. A model 3 with D03 depth would be a new Track 1 attempt."
+      "progress": "2026-10-23: Track 1 model 2 rendered (full + public) and staged in D:/mva-hackathon/submissions/track1/2026-10-23-model2 with SUBMIT.md; same CSV rows as model 1. Not yet submitted. D03 low-pass depth not run (needs FASTQ in private compute and an HF token there, which is Santanu's step). 2026-10-23: model 2 submitted (2/6); both versions rendered and the second submission was justified, so done_when is met. A model 3 with D03 depth would be a new Track 1 attempt. 2026-10-25: Track 1 model 3 (model 2 + D03 depth) rendered and staged in D:/mva-hackathon/submissions/track1/2026-10-25-model3; report cites git tag track1-model3."
     },
     {
       "id": "D08",
@@ -553,6 +562,7 @@
     "2026-10-23 (live): Track 1 model 1 scored 100/100 rank points, F-max 1.000, full match at rank 1 (1/6 used). The CSV cannot improve; only the report can. Track 2: 2/3 used, 1 left.",
     "2026-10-23 (live, evening IST): Santanu gave a free hand on free Kaggle/HF CPU, GPU and TPU for the remaining day and approved the R13 downloads inside Kaggle; asked for further Track 1 versions and agreed Track 2 v3 by 2026-10-24 20:00 IST. Done: R13 stability map (call inconclusive), D05 (SF screen negative, ACMG points), mva-d02 v5 (CSV identical, PROBAND01). Staged: Track 1 model 2 and Track 2 v3 (final). Kaggle CPU pushes can be refused when other projects fill the 5 CPU slots; tools/kaggle_d02.py now stops instead of collecting stale output.",
     "2026-10-23 (live): Santanu submitted Track 2 v3 (3/3, final) and Track 1 model 2 (2/6). Track 2 has no attempts left.",
-    "2026-10-24 (scheduled run, light, from 21:02 IST; started outside its 18:13 slot, CPU 100% x4, 0.51 GB RAM free): access granted; mva-refs-build, mva-d02, mva-pitch-video, mva-bub1b-stability-map COMPLETE (nothing new). mva-d03 (pushed by a live session running in parallel) shows ERROR; left to that session. Quota GPU 18.00 h, TPU 19.75 h until 10-31. D07 marked done; D09 privacy scan clean (0 hits in 89 tracked files). Nothing submitted (T1 2/6, best 100/100; T2 3/3). Submissions close 05:29 IST tomorrow."
+    "2026-10-24 (scheduled run, light, from 21:02 IST; started outside its 18:13 slot, CPU 100% x4, 0.51 GB RAM free): access granted; mva-refs-build, mva-d02, mva-pitch-video, mva-bub1b-stability-map COMPLETE (nothing new). mva-d03 (pushed by a live session running in parallel) shows ERROR; left to that session. Quota GPU 18.00 h, TPU 19.75 h until 10-31. D07 marked done; D09 privacy scan clean (0 hits in 89 tracked files). Nothing submitted (T1 2/6, best 100/100; T2 3/3). Submissions close 05:29 IST tomorrow.",
+    "2026-10-25 (live, 00:20-01:00 IST): D03 done (low-pass depth); Track 1 model 3 staged. Pre-public history scan (88 commits, 218 blobs, all messages): no sample ID, positions, VCF/variant rows, tokens or keys; one leak found and fixed in HEAD (9551713): a docstring in pipeline/stability_map.py used the child's missense substitution as its example (commits from 68448cd). History must be rewritten, and the GitHub repo recreated, before it goes public (needs Santanu's yes; see U8). The pre-registered worked example that coincides with the child's stop allele (written 2026-09-29) is left as is unless Santanu decides otherwise. Repo lacks README and LICENSE: being added. Coordination message sent to the 'Rare Disease Hackathon' session."
   ]
 }
