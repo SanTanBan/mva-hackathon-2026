@@ -92,13 +92,15 @@ def gc_bins(lines, bin_size=100_000, min_called=0.5):
             yield from flush()
             chrom, pos, gc, called = line[1:].split()[0], 0, 0, 0
             continue
-        for base in line.upper():
-            if base in "GC":
-                gc += 1
-                called += 1
-            elif base in "AT":
-                called += 1
-            pos += 1
+        # Count whole line segments up to each bin boundary: a per-base loop takes hours on GRCh38.
+        line = line.upper()
+        while line:
+            take = min(len(line), bin_size - pos % bin_size)
+            seg, line = line[:take], line[take:]
+            g = seg.count("G") + seg.count("C")
+            gc += g
+            called += g + seg.count("A") + seg.count("T")
+            pos += take
             if pos % bin_size == 0:
                 yield chrom, pos - bin_size, (gc / called if called >= min_called * bin_size else None)
                 gc, called = 0, 0
