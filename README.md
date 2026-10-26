@@ -5,6 +5,18 @@ Code, pre-registered rules and public reports for both tracks of *Rare Disease, 
 - **Track 1, variant prediction.** A VCF-first, inheritance-aware ranking with a rule fixed before data access. The top-ranked *BUB1B* compound-heterozygous pair matched the clinically confirmed answer at rank 1 (100/100 rank points, F-max 1.000).
 - **Track 2, drug repurposing.** Five ranked repurposing hypotheses for expert follow-up, with safety filters for a cancer-predisposed child, re-ranked with the child's alleles under rules fixed in advance.
 
+## Links
+
+| What | Where |
+|---|---|
+| Track 2 pitch video (3 min) | https://youtu.be/OpTEsDaAQnM |
+| This repository | https://github.com/SanTanBan/mva-hackathon-2026 |
+| Hackathon page, rules and leaderboard | https://sagebio-rare-disease-real-kid-mva-hackathon-2026.hf.space/ |
+| Dataset (gated; access on request) | https://huggingface.co/datasets/SageBio/mva-hackathon-2026-data |
+| Hackathon community discussions | https://huggingface.co/spaces/SageBio/rare-disease-real-kid-mva-hackathon-2026/discussions |
+
+The video is a narrated slide talk built from [reports/track2/pitch_script.md](reports/track2/pitch_script.md) by `kaggle/mva_pitch_video`. It uses published science only: no patient data.
+
 **No patient data is in this repository.** The gated dataset (a real child's genome, shared under WCG IRB protocol #20252010) was processed only in private compute: private Kaggle notebooks named `mva-*`. The public reports describe results without variant names, coordinates or identifiers; the full versions went only to the organisers. A pre-commit guard (`tools/guard_commit.py`, run by `.githooks/pre-commit`) refuses VCF lines, variant rows and protected identifiers. All copies of the data are deleted within 30 days of the close, as the data-use terms require.
 
 ## Reports
@@ -12,9 +24,7 @@ Code, pre-registered rules and public reports for both tracks of *Rare Disease, 
 | Track | Public report | Supporting documents |
 |---|---|---|
 | 1 | [reports/track1/SantanuBanerjee_track1_report.md](reports/track1/SantanuBanerjee_track1_report.md) (also PDF) | [locus dossier](reports/track1/locus_dossier.md), [methods template](reports/track1/methods_report.md) |
-| 2 | [reports/track2/SantanuBanerjee_track2_report.md](reports/track2/SantanuBanerjee_track2_report.md) (also PDF) | [allele-classification rules](reports/track2/d08_worksheet.md), [stability-map rules](reports/track2/stability_map_rules.md), [pitch script](reports/track2/pitch_script.md), [methods form](reports/track2/methods_description.md) |
-
-Pitch video: https://youtu.be/OpTEsDaAQnM
+| 2 | [reports/track2/SantanuBanerjee_track2_report.md](reports/track2/SantanuBanerjee_track2_report.md) (also PDF) | [pitch video](https://youtu.be/OpTEsDaAQnM), [allele-classification rules](reports/track2/d08_worksheet.md), [stability-map rules](reports/track2/stability_map_rules.md), [pitch script](reports/track2/pitch_script.md), [methods form](reports/track2/methods_description.md) |
 
 ## Rules fixed before the results
 
