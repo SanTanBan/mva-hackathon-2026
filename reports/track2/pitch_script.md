@@ -1,5 +1,7 @@
 # Track 2 pitch: script and slide outline (3 minutes)
 
+**The finished video:** https://youtu.be/OpTEsDaAQnM (a narrated slide talk built from this script by `kaggle/mva_pitch_video`).
+
 **For:** the 3-minute video (package U6, record by 2026-10-21). **Pace:** about 140 words a minute. The spoken text below is about 370 words, roughly 2:40 when read aloud, which leaves about 20 seconds for slide transitions and pauses. Timings are cumulative.
 
 **Rules for the video.** Hypotheses only: no doses, no schedules, no advice to the family. Say "the child", never a name, sex, age, date or place beyond "UK". Show no genotypes or variant coordinates. The on-screen footer on every slide reads: *Research hypotheses for expert follow-up. Not medical advice.*
