@@ -17,7 +17,7 @@ Code, pre-registered rules and public reports for both tracks of *Rare Disease, 
 
 The video is a narrated slide talk built from [reports/track2/pitch_script.md](reports/track2/pitch_script.md) by `kaggle/mva_pitch_video`. It uses published science only: no patient data.
 
-**No patient data is in this repository.** The gated dataset (a real child's genome, shared under WCG IRB protocol #20252010) was processed only in private compute: private Kaggle notebooks named `mva-*`. The public reports describe results without variant names, coordinates or identifiers; the full versions went only to the organisers. A pre-commit guard (`tools/guard_commit.py`, run by `.githooks/pre-commit`) refuses VCF lines, variant rows and protected identifiers. All copies of the data are deleted within 30 days of the close, as the data-use terms require.
+**No patient data is in this repository.** The gated dataset (a real child's genome, shared under WCG IRB protocol #20252010) was processed only in private compute: private Kaggle notebooks named `mva-*`. The public reports describe results without variant names, coordinates or identifiers; the full versions went only to the organisers. A pre-commit guard (`tools/guard_commit.py`, run by `.githooks/pre-commit`) refuses VCF lines, variant rows and protected identifiers. As the data-use terms require, every copy of the data and of anything derived from it (local files, the private Kaggle datasets and notebooks, and working logs) was deleted on 2026-10-26, two days after the close.
 
 ## Reports
 
@@ -57,7 +57,7 @@ Unit tests: `python -m pytest pipeline/tests` and the `tools/test_*.py` scripts.
 
 ## Data availability and privacy
 
-The hackathon dataset is gated and is **not** included here: request access on Hugging Face (`SageBio/mva-hackathon-2026-data`) under the organisers' data-use terms. It is shared under WCG IRB protocol #20252010. Under those terms, every copy we hold (local files and the private Kaggle datasets and notebooks) is deleted within 30 days of the close, by 2026-11-23. Nothing in this repository identifies the child or the family. Public reports give classes and counts, never variant names, coordinates or identifiers, and secondary findings appear as counts only.
+The hackathon dataset is gated and is **not** included here: request access on Hugging Face (`SageBio/mva-hackathon-2026-data`) under the organisers' data-use terms. It is shared under WCG IRB protocol #20252010. Under those terms, every copy we held (local files and the private Kaggle datasets and notebooks) was deleted on 2026-10-26, ahead of the 2026-11-23 deadline. Nothing in this repository identifies the child or the family. Public reports give classes and counts, never variant names, coordinates or identifiers, and secondary findings appear as counts only.
 
 **Citing the data:** please use the reference given on the hackathon's Synapse page. Until that is published, cite the Hugging Face dataset `SageBio/mva-hackathon-2026-data` (Sage Bionetworks, 2026).
 

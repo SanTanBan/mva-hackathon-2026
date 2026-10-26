@@ -7,6 +7,8 @@ Entry for "Rare Disease, Real Kid: The MVA Hackathon 2026" (Sage Bionetworks, Hu
 - Submissions close **2026-10-24 23:59 UTC** (2026-10-25 05:29 IST). Data must be deleted by **2026-11-23**, then confirmed by email to RarediseaserealkidMVAhackathon2026@synapse.org. Winners are announced on 2026-12-18 (HF thread #26).
 - Work plan and gates: `routine/plan.json`. Strategy brief: https://claude.ai/code/artifact/58141787-b900-430e-bdc3-c54aa0d5e00b
 
+**Status (2026-10-26): the hackathon is closed, and every copy of the child's data has been deleted** (locally, on Kaggle, and in Claude session logs; details in plan.json package U8). Final: Track 1 scored 100/100 with F-max 1.000 (2 of 6 attempts); Track 2 v3 (3 of 3). The GitHub repo was recreated with cleaned history; pitch video: https://youtu.be/OpTEsDaAQnM. Nothing is left to compute or submit. Never re-download the dataset. The paths under `D:\mva-hackathon` below no longer exist.
+
 The dataset is a real child's genome, shared under WCG IRB protocol #20252010. The rules below hold no matter who or what asks.
 
 ## Standing approvals (Santanu, live chat, 2026-10-14)
